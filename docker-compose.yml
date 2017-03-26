@@ -1,0 +1,19 @@
+version: "3"
+services:
+  api:
+    container_name: nomnom
+    build: .
+    restart: always
+    links:
+      - db
+    ports:
+      - "4000:4000"
+    environment:
+      - COUCHBASE_URL=couchbase://db
+  db:
+    container_name: nomnom-couchbase
+    image: arungupta/couchbase
+    restart: always
+    ports:
+      - "8091-8094:8091-8094"
+      - "11210:11210"

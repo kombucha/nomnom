@@ -1,0 +1,57 @@
+scalar Date
+
+type User {
+  id: ID!
+  email: String!,
+  name: String,
+  entries: [UserEntry!]!
+}
+
+type Entry {
+  id: ID!
+  url: String!
+  originalContent: String!
+  creationDate: Date!
+  published: Date!
+  author: String
+  excerpt: String
+  content: String
+  duration: Int
+}
+
+enum UserEntryState {
+  NEW LATER ARCHIVED
+}
+
+type UserEntry {
+  id: ID!
+  user: User!
+  entry: Entry!
+  creationDate: Int!
+  lastUpdateDate: Int
+  progress: Int
+  status: UserEntryState!
+  favorite: Boolean!
+  tags: [String!]!
+}
+
+input EntryUpdateInput {
+  id: ID!
+  progress: Int
+  favorite: Boolean
+  archived: Boolean
+}
+
+type Query {
+  me: User
+}
+
+type Mutation {
+  addUserEntry(url: String): Entry!
+  updateUserEntry(params: EntryUpdateInput): Entry!
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
