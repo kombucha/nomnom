@@ -10,12 +10,15 @@ type User {
 type Entry {
   id: ID!
   url: String!
+  title: String!
   originalContent: String!
   creationDate: Date!
   published: Date!
   author: String
   excerpt: String
   content: String
+  imageUrl: String
+  wordCount: Int
   duration: Int
 }
 
@@ -27,8 +30,8 @@ type UserEntry {
   id: ID!
   user: User!
   entry: Entry!
-  creationDate: Int!
-  lastUpdateDate: Int
+  creationDate: Date!
+  lastUpdateDate: Date
   progress: Int
   status: UserEntryState!
   favorite: Boolean!
@@ -44,11 +47,12 @@ input EntryUpdateInput {
 
 type Query {
   me: User
+  userEntry(userEntryId: ID!): UserEntry!
 }
 
 type Mutation {
-  addUserEntry(url: String): Entry!
-  updateUserEntry(params: EntryUpdateInput): Entry!
+  addUserEntry(url: String!): UserEntry!
+  updateUserEntry(params: EntryUpdateInput): UserEntry!
 }
 
 schema {

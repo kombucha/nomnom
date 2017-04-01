@@ -17,35 +17,35 @@ const USER_ENTRY_STATE = {
 function createFromUrl(userId, url) {
   const id = generateId(userId);
 
-  return entry
-    .createFromUrl(url)
-    .then(entry => {
-      const userEntry = {
-        user: userId,
-        entry: entry.id,
-        creationDate: Date.now(),
-        lastUpdateDate: null,
-        progress: 0,
-        state: USER_ENTRY_STATE.LATER,
-        favorite: false,
-        tags: []
-      };
+  return entry.createFromUrl(url).then(entry => {
+    const userEntry = {
+      user: userId,
+      entry: entry.id,
+      creationDate: Date.now(),
+      lastUpdateDate: null,
+      progress: 0,
+      state: USER_ENTRY_STATE.LATER,
+      favorite: false,
+      tags: []
+    };
 
-      return db.insert(id, userEntry);
-    })
-    .then(userEntry => Object.assign({ id }, userEntry));
+    return db
+      .insert(id, userEntry)
+      .then(() => Object.assign({ id }, userEntry));
+  });
 }
 
 // TODO: pagination ???
 function getUserEntries(userId) {
   const userEntriesIdLike = `USER_ENTRY::${userId}::%`;
   const query = N1qlQuery.fromString(
-    "SELECT meta(t).id, t.* FROM `nomnom` as t WHERE meta(t).id LIKE $1"
+    "SELECT meta(t).id, t.* FROM `nomnom` as t WHERE meta(t).id LIKE $1 ORDER BY t.creationDate DESC"
   );
   return db.query(query, [userEntriesIdLike]);
 }
 
 module.exports = {
+  DB_TYPE,
   USER_ENTRY_STATE,
   createFromUrl,
   getUserEntries

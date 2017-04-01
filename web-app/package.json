@@ -1,10 +1,13 @@
 {
-  "name": "web-app",
+  "name": "nomnom-web-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "material-ui": "0.17.1",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react-apollo": "1.0.0",
+    "react-dom": "^15.4.2",
+    "react-tap-event-plugin": "2.0.1"
   },
   "devDependencies": {
     "react-scripts": "0.9.5"
@@ -14,5 +17,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "proxy": "http://localhost:4001"
 }

@@ -8,6 +8,7 @@ const schemaStr = readFileSync(schemaPath, { encoding: "utf-8" });
 const executableSchema = makeExecutableSchema({
   typeDefs: schemaStr,
   resolvers: {
+    Date: require("./types/date"),
     User: {
       entries: require("./relations/userEntries")
     },
@@ -16,7 +17,8 @@ const executableSchema = makeExecutableSchema({
       user: require("./relations/userEntryUser")
     },
     Query: {
-      me: require("./queries/me")
+      me: require("./queries/me"),
+      userEntry: require("./queries/userEntry")
     },
     Mutation: {
       addUserEntry: require("./mutations/addUserEntry")
