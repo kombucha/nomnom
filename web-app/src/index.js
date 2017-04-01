@@ -7,6 +7,7 @@ import {
   ApolloProvider,
   createNetworkInterface
 } from "react-apollo";
+import { BrowserRouter as Router } from "react-router-dom";
 
 import getTheme from "./myTheme";
 import App from "./App";
@@ -21,7 +22,9 @@ injectTapEventPlugin();
 ReactDOM.render(
   <ApolloProvider client={client}>
     <MuiThemeProvider muiTheme={getTheme()}>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </MuiThemeProvider>
   </ApolloProvider>,
   document.getElementById("root")
