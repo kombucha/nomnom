@@ -21,7 +21,8 @@ const executableSchema = makeExecutableSchema({
       userEntry: require("./queries/userEntry")
     },
     Mutation: {
-      addUserEntry: require("./mutations/addUserEntry")
+      addUserEntry: require("./mutations/addUserEntry"),
+      updateUserEntry: require("./mutations/updateUserEntry")
     }
   }
 });

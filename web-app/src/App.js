@@ -6,6 +6,12 @@ import Entries from "./pages/Entries";
 import Entry from "./pages/Entry";
 
 const STYLES = {
+  appBar: {
+    position: "fixed"
+  },
+  pageContent: {
+    paddingTop: 64
+  },
   title: {
     textDecoration: "none",
     color: "inherit"
@@ -16,9 +22,11 @@ class App extends Component {
     const title = <Link style={STYLES.title} to="/">NomNom</Link>;
     return (
       <div className="App">
-        <AppBar title={title} />
-        <Route exact path="/" component={Entries} />
-        <Route path="/entries/:entryId" component={Entry} />
+        <AppBar title={title} style={STYLES.appBar} />
+        <div style={STYLES.pageContent}>
+          <Route exact path="/" component={Entries} />
+          <Route path="/entries/:entryId" component={Entry} />
+        </div>
       </div>
     );
   }

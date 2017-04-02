@@ -58,9 +58,27 @@ function getUserEntries(userId, options) {
   return db.query(query, filtersParams);
 }
 
+const UPDATABLE_KEYS = ["status", "tags", "progress"];
+function updateUserEntry(userEntryId, updateValues) {
+  let mutationBuilder = db.mutateIn(userEntryId);
+
+  mutationBuilder = UPDATABLE_KEYS.reduce(
+    (mutationBuilder, key) => {
+      return updateValues[key]
+        ? mutationBuilder.replace(key, updateValues[key])
+        : mutationBuilder;
+    },
+    mutationBuilder
+  );
+
+  return mutationBuilder.execute();
+}
+
 module.exports = {
   DB_TYPE,
   USER_ENTRY_STATE,
+
   createFromUrl,
-  getUserEntries
+  getUserEntries,
+  updateUserEntry
 };

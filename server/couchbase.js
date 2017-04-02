@@ -53,8 +53,16 @@ function promisifyBucket(bucket) {
   ];
 
   fns.forEach(fnName => {
-    bucket[fnName] = promisify(bucket[fnName], bucket, fnName);
+    bucket[fnName] = promisify(bucket[fnName], bucket);
   });
+
+  const mutateIn = bucket.mutateIn.bind(bucket);
+
+  bucket.mutateIn = function(key, options) {
+    const builder = mutateIn(key, options);
+    builder.execute = promisify(builder.execute, builder);
+    return builder;
+  };
 
   return bucket;
 }

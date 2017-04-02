@@ -51,7 +51,7 @@ type Query {
 
 type Mutation {
   addUserEntry(url: String!): UserEntry!
-  updateUserEntry(params: EntryUpdateInput): UserEntry!
+  updateUserEntry(entryUpdateInput: EntryUpdateInput): UserEntry!
 }
 
 schema {

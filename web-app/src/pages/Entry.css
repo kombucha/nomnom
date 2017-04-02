@@ -1,0 +1,11 @@
+.entry-content p {
+  text-align: justify;
+}
+
+.entry-content img {
+  max-width: 100%;
+}
+
+.entry-content blockquote {
+  font-style: italic;
+}
