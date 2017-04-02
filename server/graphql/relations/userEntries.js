@@ -1,9 +1,9 @@
 const UserEntry = require("../../services/userEntry");
 
-module.exports = (parentUser, _, { user }) => {
+module.exports = (parentUser, { status }, { user }) => {
   if (parentUser.id !== user.id) {
     return [];
   }
 
-  return UserEntry.getUserEntries(parentUser.id);
+  return UserEntry.getUserEntries(parentUser.id, { status });
 };

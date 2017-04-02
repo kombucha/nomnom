@@ -4,7 +4,7 @@ type User {
   id: ID!
   email: String!,
   name: String,
-  entries: [UserEntry!]!
+  entries(status: UserEntryStatus = null): [UserEntry!]!
 }
 
 type Entry {
@@ -22,8 +22,8 @@ type Entry {
   duration: Int
 }
 
-enum UserEntryState {
-  NEW LATER ARCHIVED
+enum UserEntryStatus {
+  NEW LATER FAVORITE ARCHIVED
 }
 
 type UserEntry {
@@ -33,16 +33,15 @@ type UserEntry {
   creationDate: Date!
   lastUpdateDate: Date
   progress: Int
-  status: UserEntryState!
-  favorite: Boolean!
+  status: UserEntryStatus!
   tags: [String!]!
 }
 
 input EntryUpdateInput {
   id: ID!
   progress: Int
-  favorite: Boolean
-  archived: Boolean
+  status: UserEntryStatus
+  tags: [String!]
 }
 
 type Query {

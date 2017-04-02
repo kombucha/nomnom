@@ -1,15 +1,35 @@
 import React, { Component } from "react";
+
 import { Link } from "react-router-dom";
+
 import FloatingActionButton from "material-ui/FloatingActionButton";
 import { List, ListItem } from "material-ui/List";
 import Avatar from "material-ui/Avatar";
+import { Card, CardText } from "material-ui/Card";
+import Paper from "material-ui/Paper";
+import { Menu, MenuItem } from "material-ui/Menu";
 import ContentAdd from "material-ui/svg-icons/content/add";
 
 import { gql, graphql } from "react-apollo";
+import queryString from "query-string";
 
 import AddEntryDialog from "../components/AddEntryDialog";
 
+const DEFAULT_STATUS_FILTER = "NEW";
+
 const STYLES = {
+  container: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    padding: 16
+  },
+  content: {
+    flex: 1
+  },
+  filters: {
+    marginRight: 32
+  },
   link: {
     textDecoration: "none",
     color: "inherit"
@@ -30,11 +50,39 @@ const asDisplayedUserEntry = userEntry => ({
   tags: userEntry.tags
 });
 
+const statusFromLocation = location =>
+  queryString.parse(location.search).status;
+
 class Entries extends Component {
   constructor() {
     super();
     this.state = { showAddEntryDialog: false };
     this.handleAddEntryDialogClose = this.handleAddEntryDialogClose.bind(this);
+    this.handleStatusFilterChange = this.handleStatusFilterChange.bind(this);
+  }
+
+  handleAddEntryDialogClose(newEntryCreated) {
+    // TODO: investigate, weird race condition with refetch which causes the component not to rerender
+    if (newEntryCreated) {
+      this.props.data.refetch();
+    }
+
+    this.toggleAddEntryDialog(false);
+  }
+
+  toggleAddEntryDialog(opened) {
+    this.setState({ showAddEntryDialog: opened });
+  }
+
+  handleStatusFilterChange(_, newStatus) {
+    const queryParams = queryString.parse(this.props.location.search);
+    const newQueryParams = Object.assign({}, queryParams, {
+      status: newStatus
+    });
+
+    this.props.history.push({
+      search: "?" + queryString.stringify(newQueryParams)
+    });
   }
 
   renderList() {
@@ -57,32 +105,44 @@ class Entries extends Component {
     );
   }
 
-  toggleAddEntryDialog(opened) {
-    this.setState({ showAddEntryDialog: opened });
-  }
-
   renderLoading() {
     return <div>Loading...</div>;
   }
 
-  handleAddEntryDialogClose(newEntryCreated) {
-    // TODO: investigate, weird race condition with refetch which causes the component not to rerender
-    if (newEntryCreated) {
-      this.props.data.refetch();
-    }
+  renderFilters() {
+    const statusFilter = statusFromLocation(this.props.location) ||
+      DEFAULT_STATUS_FILTER;
 
-    this.toggleAddEntryDialog(false);
+    return (
+      <Paper style={STYLES.filters}>
+        <Menu value={statusFilter} onChange={this.handleStatusFilterChange}>
+          <MenuItem value="NEW">New</MenuItem>
+          <MenuItem value="LATER">Later</MenuItem>
+          <MenuItem value="FAVORITE">Favorites</MenuItem>
+          <MenuItem value="ARCHIVED">Archived</MenuItem>
+        </Menu>
+      </Paper>
+    );
+  }
+
+  renderContent() {
+    const { data } = this.props;
+    return (
+      <Card style={STYLES.content}>
+        <CardText>
+          {data.loading ? this.renderLoading() : this.renderList()}
+        </CardText>
+      </Card>
+    );
   }
 
   render() {
-    const { data } = this.props;
     const { showAddEntryDialog } = this.state;
 
     return (
-      <div className="Entries">
-        <div className="content">
-          {data.loading ? this.renderLoading() : this.renderList()}
-        </div>
+      <div style={STYLES.container}>
+        {this.renderFilters()}
+        {this.renderContent()}
         <AddEntryDialog
           open={showAddEntryDialog}
           onRequestClose={this.handleAddEntryDialogClose}
@@ -98,6 +158,17 @@ class Entries extends Component {
   }
 }
 
-const query = gql`{me {entries {id tags entry {title imageUrl url}}}}`;
-const EntriesWithData = graphql(query)(Entries);
+const query = gql`query($status: UserEntryStatus) {
+  me {
+    entries(status: $status) {id tags entry {title imageUrl url}}
+  }
+}`;
+
+const EntriesWithData = graphql(query, {
+  options: props => ({
+    variables: {
+      status: statusFromLocation(props.location) || DEFAULT_STATUS_FILTER
+    }
+  })
+})(Entries);
 export default EntriesWithData;
