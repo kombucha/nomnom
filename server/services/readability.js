@@ -10,6 +10,7 @@ const UNLIKELY_CANDIDATES = /banner|breadcrumbs|combx|comment|community|cover-wr
 const OK_MAYBE_ITS_A_CANDIDATE = /and|article|body|column|main|shadow/i;
 const POSITIVE_SCORE_NAMES = /article|body|content|entry|hentry|h-entry|main|page|pagination|post|text|blog|story/i;
 const NEGATIVE_SCORE_NAMES = /hidden|^hid$| hid$| hid |^hid |banner|combx|comment|com-|contact|foot|footer|footnote|masthead|media|meta|modal|outbrain|promo|related|scroll|share|shoutbox|sidebar|skyscraper|sponsor|shopping|tags|tool|widget/i;
+const ALTER_TO_DIV_EXCEPTIONS = ["div", "article", "section", "p"];
 const DEFAULT_TAGS_TO_SCORE = [
   "section",
   "h2",
@@ -32,7 +33,7 @@ function readability(url) {
 
     // Prepwork
     // Remove scripts
-    $("script").remove();
+    $("script,noscript").remove();
     // Remove styles
     $("style").remove();
     cleanUpBrs($);
@@ -50,12 +51,12 @@ function readability(url) {
     const imageUrl = $(IMAGE_META_SELECTOR).attr("content");
 
     // Article
-    grabArticle($);
-    const content = $.html();
-    const textContent = $.text();
+    const $article = grabArticle($);
+    const content = $article.html();
+    const textContent = $article.text();
 
     // Additional metadata
-    const wordCount = extractWordCount($);
+    const wordCount = extractWordCount($article);
     const duration = durationFromWordCount(wordCount);
 
     return {
@@ -80,7 +81,7 @@ function cleanUpBrs() {
   // TODO
 }
 
-function grabArticle($) {
+function grabArticle($page) {
   const CONTENT_ELEMENTS = [
     "div",
     "section",
@@ -95,7 +96,7 @@ function grabArticle($) {
 
   while (true) {
     const elementsToScore = [];
-    let $node = $("body");
+    let $node = $page("body").clone();
 
     while ($node) {
       const nodeName = getNodeName($node);
@@ -153,7 +154,7 @@ function grabArticle($) {
 
       const ancestors = $el.parents().slice(0, 3);
       ancestors.each((level, ancestor) => {
-        const $ancestor = $(ancestor);
+        const $ancestor = cheerio(ancestor);
         const ancestorName = getNodeName($ancestor);
         if (!ancestorName) {
           return;
@@ -171,8 +172,6 @@ function grabArticle($) {
       });
     });
 
-    console.log('OK got my candidates', candidates.length);
-
     // Top candidates
     const topCandidates = [];
     for (let c = 0; c < candidates.length; c++) {
@@ -183,36 +182,94 @@ function grabArticle($) {
 
       for (let t = 0; t < TOP_CANDIDATES; t++) {
         const $topCandidate = topCandidates[t];
-        const topCandidateScore = $topCandidate ? $topCandidate.data("readabilityScore") : 0;
+        const topCandidateScore = $topCandidate
+          ? $topCandidate.data("readabilityScore")
+          : 0;
 
         if (!$topCandidate || adjustedScore > topCandidateScore) {
           topCandidates.splice(t, 0, $candidate);
-          if (topCandidates.length > TOP_CANDIDATES)
-            topCandidates.pop();
+          if (topCandidates.length > TOP_CANDIDATES) topCandidates.pop();
           break;
         }
       }
     }
 
-    console.log('OK go my top candidates', topCandidates.length);
-
     const $topCandidate = topCandidates[0] || null;
-    let neededToCreateTopCandidate = false;
-    let parentOfTopCandidate;
+    let $parentOfTopCandidate;
 
     if (!$topCandidate) {
       // TODO
-      throw new Error('Handle case where no top candidate has been found')
+      throw new Error("Handle case where no top candidate has been found");
     }
 
+    // TODO: try to find better candidate
 
+    // Build article content
+    const topCandidateScore = $topCandidate.data("readabilityScore");
+    const $articleContent = cheerio.load("<div></div>")("div");
+    const siblingScoreThreshold = Math.max(10, topCandidateScore * 0.2);
+    $parentOfTopCandidate = $topCandidate.parent();
+    const $siblings = $parentOfTopCandidate.children();
 
-    break;
+    $siblings.each((i, $sibling) => {
+      $sibling = cheerio($sibling);
+      const siblingNodeName = getNodeName($sibling);
+      let append = false;
+
+      if ($sibling.eq($topCandidate)) {
+        append = true;
+      } else {
+        let contentBonus = 0;
+        const siblingScore = $sibling.data("readabilityScore");
+
+        if (
+          $sibling.attr("class") === $topCandidate.attr("class") &&
+          !!$topCandidate.attr("class")
+        ) {
+          contentBonus += topCandidateScore * 0.2;
+        }
+
+        if (
+          siblingScore && siblingScore + contentBonus >= siblingScoreThreshold
+        ) {
+          append = true;
+        } else if (siblingNodeName === "P") {
+          const linkDensity = getLinkDensity($sibling);
+          const normalizedText = normalizeText($sibling);
+          const textLength = normalizedText.length;
+
+          if (textLength > 80 && linkDensity < 0.25) {
+            append = true;
+          } else if (
+            textLength < 80 &&
+            textLength > 0 &&
+            linkDensity === 0 &&
+            normalizedText.search(/\.( |$)/) !== -1
+          ) {
+            append = true;
+          }
+        }
+      }
+
+      if (!append) {
+        return;
+      }
+
+      if (ALTER_TO_DIV_EXCEPTIONS.indexOf(siblingNodeName) !== -1) {
+        $sibling.replaceWith(`<div>${$sibling.html()}</div>`);
+      }
+
+      $articleContent.append($sibling);
+    });
+
+    // TODO: clean up article !
+
+    return $articleContent;
   }
 }
 
 function hasContent($el) {
-  return $el.text().trim().length > 0 &&
+  return $el.text().trim().length > 0 ||
     $el.children(":not(hr, br)").length > 0;
 }
 
@@ -223,7 +280,7 @@ function removeAndGetNext($node) {
 }
 
 function getNodeName($node) {
-  return ($node.get(0).name || $node.get(0).tagName || '').toLowerCase();
+  return ($node.get(0).name || $node.get(0).tagName || "").toLowerCase();
 }
 
 function getNextNode($node, ignoreSelfAndKids) {
@@ -312,9 +369,9 @@ function getLinkDensity($node) {
   }
 
   let linkLength = 0;
-  $node.find('a').each((i, el) => {
+  $node.find("a").each((i, el) => {
     linkLength += normalizeText(cheerio(el).text()).length;
-  })
+  });
 
   return linkLength / textLength;
 }
@@ -336,6 +393,8 @@ function durationFromWordCount(wordCount) {
 
 // Testing
 const TEST_URL = "https://medium.com/@reme.lehane/rendering-html-in-your-react-native-application-ca9d1585508e";
-readability(TEST_URL).catch(e => console.log(e));
+readability(TEST_URL)
+  .then(r => console.log(r.content()))
+  .catch(e => console.log(e));
 
 module.exports = readability;
