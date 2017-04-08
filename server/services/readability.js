@@ -35,7 +35,7 @@ function readability(url) {
     // Remove scripts
     $("script,noscript").remove();
     // Remove styles
-    $("style").remove();
+    $("style,link[rel=stylesheet]").remove();
     cleanUpBrs($);
     // Replace <font> by <span>
     $("font").each((i, el) => {
@@ -263,9 +263,30 @@ function grabArticle($page) {
     });
 
     // TODO: clean up article !
+    cleanArticle($articleContent);
 
     return $articleContent;
   }
+}
+
+function cleanArticle($article) {
+  $article.find("*").removeAttr("style");
+  // TODO: mark data tables ?
+
+  // TODO: clean conditionally form & fieldset
+  $article.find("h1,footer").remove();
+
+  // TODO: clean children with share in their id/class
+  // TODO: remove h2 in some conditions ?
+
+  $article.find("object,embed,iframe").remove(); // TODO except when it's a video
+  $article.find("input,textarea,select,button").remove();
+  // TODO: clean headers
+
+  // TODO: clean conditionnally table,ul,div
+  // TODO: remove "extra paragraphs"
+
+  return $article;
 }
 
 function hasContent($el) {
@@ -392,9 +413,9 @@ function durationFromWordCount(wordCount) {
 }
 
 // Testing
-const TEST_URL = "https://medium.com/@reme.lehane/rendering-html-in-your-react-native-application-ca9d1585508e";
+const TEST_URL = "https://www.rockpapershotgun.com/2017/04/03/why-fears-ai-is-still-the-best-in-first-person-shooters/";
 readability(TEST_URL)
-  .then(r => console.log(r.content()))
+  .then(r => console.log(r.content))
   .catch(e => console.log(e));
 
 module.exports = readability;
