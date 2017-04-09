@@ -1,5 +1,6 @@
 const cheerio = require("cheerio");
 const got = require("got");
+const url = require("url");
 
 const TOP_CANDIDATES = 5;
 const TITLE_META_SELECTOR = 'meta[property="og:title"],meta[name="title"]';
@@ -10,6 +11,7 @@ const UNLIKELY_CANDIDATES = /banner|breadcrumbs|combx|comment|community|cover-wr
 const OK_MAYBE_ITS_A_CANDIDATE = /and|article|body|column|main|shadow/i;
 const POSITIVE_SCORE_NAMES = /article|body|content|entry|hentry|h-entry|main|page|pagination|post|text|blog|story/i;
 const NEGATIVE_SCORE_NAMES = /hidden|^hid$| hid$| hid |^hid |banner|combx|comment|com-|contact|foot|footer|footnote|masthead|media|meta|modal|outbrain|promo|related|scroll|share|shoutbox|sidebar|skyscraper|sponsor|shopping|tags|tool|widget/i;
+const VIDEOS_EMBED_ATTRIBUTES = /\/\/(www\.)?(dailymotion|youtube|youtube-nocookie|player\.vimeo)\.com/i;
 const ALTER_TO_DIV_EXCEPTIONS = ["div", "article", "section", "p"];
 const DEFAULT_TAGS_TO_SCORE = [
   "section",
@@ -29,29 +31,21 @@ const AVG_WORDS_PER_SECOND = 275 / 60;
 function readability(url) {
   return got(url).then(response => {
     const originalContent = String(response.body);
-    const $ = cheerio.load(originalContent);
+    const $html = cheerio.load(originalContent);
 
     // Prepwork
-    // Remove scripts
-    $("script,noscript").remove();
-    // Remove styles
-    $("style,link[rel=stylesheet]").remove();
-    cleanUpBrs($);
-    // Replace <font> by <span>
-    $("font").each((i, el) => {
-      const e = $(el);
-      e.replaceWith(`<span>${e.html()}</span>`);
-    });
+    preProcessHtml($html);
 
     // Metadata
     // ENHANCEMENT: get first non null ? (right now, just gets the first that matches)
-    const title = getArticleTitle($);
-    const author = $(AUTHOR_META_SELECTOR).attr("content");
-    const excerpt = $(DESCRIPTION_META_SELECTOR).attr("content");
-    const imageUrl = $(IMAGE_META_SELECTOR).attr("content");
+    const title = getArticleTitle($html);
+    const author = $html(AUTHOR_META_SELECTOR).attr("content");
+    const excerpt = $html(DESCRIPTION_META_SELECTOR).attr("content");
+    const imageUrl = $html(IMAGE_META_SELECTOR).attr("content");
 
     // Article
-    const $article = grabArticle($);
+    const $article = grabArticle($html);
+    fixRelativeUrls(url, $article);
     const content = $article.html();
     const textContent = $article.text();
 
@@ -75,12 +69,6 @@ function readability(url) {
   });
 }
 
-// CLEANUP HELPERS
-// Turn <div>foo<br>bar<br> <br><br>abc</div>  into   <div>foo<br>bar<p>abc</p></div>
-function cleanUpBrs() {
-  // TODO
-}
-
 function grabArticle($page) {
   const CONTENT_ELEMENTS = [
     "div",
@@ -100,7 +88,7 @@ function grabArticle($page) {
 
     while ($node) {
       const nodeName = getNodeName($node);
-      const matchString = `${$node.attr("class") || ""} ${$node.attr("id") || ""}`;
+      const matchString = getNodeMatchString($node);
 
       // Remove unlikely candidate
       const isUnlikelyCandidate = UNLIKELY_CANDIDATES.test(matchString) &&
@@ -262,31 +250,207 @@ function grabArticle($page) {
       $articleContent.append($sibling);
     });
 
-    // TODO: clean up article !
     cleanArticle($articleContent);
 
     return $articleContent;
   }
 }
 
+// METADATA HELPERS
+// Should I be smarter for the title ? they do a lot of stuff in readability.js
+// See https://github.com/mozilla/readability/blob/master/Readability.js#L304
+function getArticleTitle($html) {
+  return $html(TITLE_META_SELECTOR).attr("content") || $html("title").text();
+}
+
+function extractWordCount($html) {
+  return $html.text().match(WORD_REGEX).length;
+}
+
+function durationFromWordCount(wordCount) {
+  return Math.round(wordCount / AVG_WORDS_PER_SECOND);
+}
+
+// HELPERS
+function preProcessHtml($html) {
+  $html("script,noscript").remove();
+  $html("style,link[rel=stylesheet]").remove();
+
+  // TODO Turn <div>foo<br>bar<br> <br><br>abc</div>  into   <div>foo<br>bar<p>abc</p></div>
+  // Replace <font> by <span>
+  $html("font").each((i, el) => {
+    const e = cheerio(el);
+    e.replaceWith(`<span>${e.html()}</span>`);
+  });
+}
+
+function fixRelativeUrls(baseUrl, $html) {
+  $html.find("a").each((i, link) => {
+    const $link = cheerio(link);
+    const href = $link.attr("href") || "";
+    if (href.indexOf("javascript:") === 0) {
+      $link.removeAttr("href");
+    } else {
+      $link.attr("href", toAbsoluteUrl(baseUrl, href));
+    }
+  });
+
+  $html.find("img").each((i, img) => {
+    const $img = cheerio(img);
+    const src = $img.attr("src") || "";
+    $img.attr("src", toAbsoluteUrl(baseUrl, src));
+  });
+
+  return $html;
+}
+
+function toAbsoluteUrl(from, to) {
+  // Remove anchor and last /
+  const normalizedFrom = from.replace(/#.*?$/, "").replace(/\/$/, "");
+  return url.resolve(normalizedFrom, to);
+}
+
 function cleanArticle($article) {
   $article.find("*").removeAttr("style");
-  // TODO: mark data tables ?
 
-  // TODO: clean conditionally form & fieldset
+  markDataTable($article);
+
+  cleanFishyNodes($article, "form,fieldset");
   $article.find("h1,footer").remove();
 
-  // TODO: clean children with share in their id/class
-  // TODO: remove h2 in some conditions ?
+  // Clean sharing content
+  $article.find("[class*=share],[id*=share]").remove();
+  // TODO: Remove h2 which are actually the article title
 
-  $article.find("object,embed,iframe").remove(); // TODO except when it's a video
+  // Clean embed that are not whitelisted
+  $article
+    .find("object,embed,iframe")
+    .filter((i, el) => !isWhitelistedEmbed(el))
+    .remove();
+
+  // Clean form elements
   $article.find("input,textarea,select,button").remove();
-  // TODO: clean headers
 
-  // TODO: clean conditionnally table,ul,div
-  // TODO: remove "extra paragraphs"
+  // Clean out spurious headers
+  $article
+    .find("h1,h2,h3")
+    .filter((i, header) => getClassIdScore(cheerio(header)) < 0)
+    .remove();
+
+  // Do these last as the previous stuff may have removed junk that will affect these
+  cleanFishyNodes($article, "table");
+  cleanFishyNodes($article, "ul");
+  cleanFishyNodes($article, "div");
+
+  // Remove extra, empty Ps
+  $article
+    .find("p")
+    .filter((i, el) => {
+      const $el = cheerio(el);
+      const contentElCount = $el.find("img,embed,object,iframe").length;
+      return contentElCount === 0 && $el.text().length === 0;
+    })
+    .remove();
+
+  $article.find("img").removeAttr("srcset,onerror"); // Remove srcset for now, handle it later
+  $article.find("*").removeAttr("class");
+  // TODO: remove custom data- attributes
 
   return $article;
+}
+
+function markDataTable($html) {
+  $html.find("table").each((i, table) => {
+    const $table = cheerio(table);
+    if ($table.attr("role") === "presentation") {
+      $table.data("readabilityDataTable", false);
+      return;
+    }
+    if ($table.attr("summary")) {
+      $table.data("readabilityDataTable", true);
+      return;
+    }
+
+    const captions = $table.find("caption");
+    if (captions.length && captions.children().length > 0) {
+      $table.data("readabilityDataTable", true);
+      return;
+    }
+
+    if ($table.find("col,colgroup,tfoot,thead,th,table").length > 0) {
+      $table.data("readabilityDataTable", true);
+      return;
+    }
+
+    const columnsCount = $table.find("tr").length;
+    const rowsCount = $table.find("tr").length;
+
+    $table.data(
+      "readabilityDataTable",
+      rowsCount >= 10 || columnsCount < 4 || rowsCount * columnsCount > 10
+    );
+  });
+}
+
+function cleanFishyNodes($node, selector) {
+  $node.find(selector).filter((i, el) => isFishy(cheerio(el))).remove();
+}
+
+function isFishy($node) {
+  const tagName = getNodeName($node);
+  const isList = tagName === "ul" || tagName === "ol";
+  const score = getClassIdScore($node);
+  const text = $node.text();
+  const commasCount = text.split(",").length;
+  const pCount = $node.find("p").length;
+  const imgCount = $node.find("img").length;
+  const liCount = $node.find("li").length - 100;
+  const inputCount = $node.find("input").length;
+  const embedCount = $node.find("embed");
+  const hasDataTableAncestor = hasAncestor(
+    $node,
+    $n => !!$n.data("readabilityDataTable")
+  );
+  const hasFigureAncestor = hasAncestor(
+    $node,
+    $n => getNodeName($n) === "figure"
+  );
+  const linkDensity = getLinkDensity($node);
+
+  const shouldBeRemoved = commasCount < 10 &&
+    ((imgCount > 1 && pCount / imgCount < 0.5 && hasFigureAncestor) ||
+      (!isList && liCount > pCount) ||
+      inputCount > Math.floor(pCount / 3) ||
+      (!isList &&
+        text.length < 25 &&
+        (imgCount === 0 || imgCount > 2) &&
+        hasFigureAncestor) ||
+      (!isList && score < 25 && linkDensity > 0.2) ||
+      (score >= 25 && linkDensity > 0.5) ||
+      ((embedCount === 1 && text.length < 75) || embedCount > 1));
+  const isScoreOk = score >= 0;
+  const isOk = hasDataTableAncestor || isScoreOk || !shouldBeRemoved;
+
+  return !isOk;
+}
+
+function hasAncestor($node, matchFn) {
+  let $parent = $node.parent();
+  let matches = false;
+
+  while ($parent.length && !matches) {
+    matches = matchFn($parent);
+    $parent = $parent.parent();
+  }
+
+  return matches;
+}
+
+function isWhitelistedEmbed(embedEl) {
+  const attributeValues = Object.values(embedEl.attribs).join("|");
+
+  return VIDEOS_EMBED_ATTRIBUTES.test(attributeValues) ||
+    VIDEOS_EMBED_ATTRIBUTES.test(cheerio(embedEl).html());
 }
 
 function hasContent($el) {
@@ -302,6 +466,10 @@ function removeAndGetNext($node) {
 
 function getNodeName($node) {
   return ($node.get(0).name || $node.get(0).tagName || "").toLowerCase();
+}
+
+function getNodeMatchString($node) {
+  return `${$node.attr("class") || ""} ${$node.attr("id") || ""}`;
 }
 
 function getNextNode($node, ignoreSelfAndKids) {
@@ -326,34 +494,35 @@ function getInitialAncestorReadabilityScore($node) {
   let readabilityScore = 0;
 
   switch (getNodeName($node)) {
-    case "DIV":
+    case "div":
       readabilityScore += 5;
       break;
 
-    case "PRE":
-    case "TD":
-    case "BLOCKQUOTE":
+    case "pre":
+    case "td":
+    case "blockquote":
+    case "code":
       readabilityScore += 3;
       break;
 
-    case "ADDRESS":
-    case "OL":
-    case "UL":
-    case "DL":
-    case "DD":
-    case "DT":
-    case "LI":
-    case "FORM":
+    case "address":
+    case "ol":
+    case "ul":
+    case "dl":
+    case "dd":
+    case "dt":
+    case "li":
+    case "form":
       readabilityScore -= 3;
       break;
 
-    case "H1":
-    case "H2":
-    case "H3":
-    case "H4":
-    case "H5":
-    case "H6":
-    case "TH":
+    case "h1":
+    case "h2":
+    case "h3":
+    case "h4":
+    case "h5":
+    case "h6":
+    case "th":
       readabilityScore -= 5;
       break;
   }
@@ -397,23 +566,8 @@ function getLinkDensity($node) {
   return linkLength / textLength;
 }
 
-// METADATA HELPERS
-// Should I be smarter for the title ? they do a lot of stuff in readability.js
-// See https://github.com/mozilla/readability/blob/master/Readability.js#L304
-function getArticleTitle($) {
-  return $(TITLE_META_SELECTOR).attr("content") || $("title").text();
-}
-
-function extractWordCount($) {
-  return $.text().match(WORD_REGEX).length;
-}
-
-function durationFromWordCount(wordCount) {
-  return Math.round(wordCount / AVG_WORDS_PER_SECOND);
-}
-
 // Testing
-const TEST_URL = "https://www.rockpapershotgun.com/2017/04/03/why-fears-ai-is-still-the-best-in-first-person-shooters/";
+const TEST_URL = "https://www.smashingmagazine.com/2016/12/mistakes-developers-make-when-learning-design/";
 readability(TEST_URL)
   .then(r => console.log(r.content))
   .catch(e => console.log(e));
