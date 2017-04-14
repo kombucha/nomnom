@@ -1,7 +1,7 @@
 const express = require("express");
 const config = require("./config");
-const authMiddleware = require("./authMiddleware");
-const loadersMiddleware = require("./graphql/loadersMiddleware");
+const authMiddleware = require("./middlewares/authMiddleware");
+const loadersMiddleware = require("./middlewares/loadersMiddleware");
 const graphqlMiddleware = require("./graphql/middleware");
 
 const app = express();

@@ -1,7 +1,7 @@
 // TODO: Probably a bad choice, should probably move to postgre...
 
 const couchbase = require("couchbase");
-const config = require("./config");
+const config = require("../config");
 
 console.log(
   `Connecting to bucket ${config.couchbase.bucket} on ${config.couchbase.url}`

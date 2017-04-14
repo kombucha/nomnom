@@ -1,5 +1,5 @@
 const uuid = require("node-uuid");
-const db = require("../couchbase");
+const db = require("./couchbase");
 const readability = require("./readability");
 
 const DB_TYPE = "ENTRY";

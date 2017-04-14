@@ -1,5 +1,5 @@
 const DataLoader = require("dataloader");
-const db = require("../couchbase");
+const db = require("../services/couchbase");
 
 function mapToArray(map) {
   return Object.keys(map).reduce(

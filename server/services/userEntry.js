@@ -1,7 +1,7 @@
 const uuid = require("node-uuid");
 const N1qlQuery = require("couchbase").N1qlQuery;
 
-const db = require("../couchbase");
+const db = require("./couchbase");
 const entry = require("./entry");
 
 const DB_TYPE = "USER_ENTRY";

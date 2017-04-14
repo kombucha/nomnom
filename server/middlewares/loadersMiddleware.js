@@ -1,4 +1,4 @@
-const loaders = require("./loaders");
+const loaders = require("../graphql/loaders");
 
 module.exports = () =>
   (req, res, next) => {

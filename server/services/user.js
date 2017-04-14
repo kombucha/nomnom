@@ -1,5 +1,5 @@
 const uuid = require("node-uuid");
-const db = require("../couchbase");
+const db = require("./couchbase");
 
 const DB_TYPE = "USER";
 const generateId = () => `${DB_TYPE}::${uuid.v4()}`;
