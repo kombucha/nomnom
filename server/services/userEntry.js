@@ -15,24 +15,22 @@ const USER_ENTRY_STATE = {
 };
 
 // TODO: source (rss, user etc)
-function createFromUrl(userId, url) {
+async function createFromUrl(userId, url) {
   const id = generateId(userId);
 
-  return entry.createFromUrl(url).then(entry => {
-    const userEntry = {
-      user: userId,
-      entry: entry.id,
-      creationDate: Date.now(),
-      lastUpdateDate: null,
-      progress: 0,
-      status: USER_ENTRY_STATE.LATER,
-      tags: []
-    };
+  const newEntry = await entry.createFromUrl(url);
+  const userEntry = {
+    user: userId,
+    entry: newEntry.id,
+    creationDate: Date.now(),
+    lastUpdateDate: null,
+    progress: 0,
+    status: USER_ENTRY_STATE.LATER,
+    tags: []
+  };
+  await db.insert(id, userEntry);
 
-    return db
-      .insert(id, userEntry)
-      .then(() => Object.assign({ id }, userEntry));
-  });
+  return Object.assign({ id }, userEntry);
 }
 
 // TODO: pagination ???
@@ -48,8 +46,8 @@ function getUserEntries(userId, options) {
 
   const query = N1qlQuery.fromString(
     `
-    SELECT meta(t).id, t.* 
-    FROM \`nomnom\` as t 
+    SELECT meta(t).id, t.*
+    FROM \`nomnom\` as t
     WHERE ${filters.join(" AND ")}
     ORDER BY t.creationDate DESC
     `

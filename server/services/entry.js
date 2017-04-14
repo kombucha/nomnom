@@ -7,17 +7,17 @@ const generateId = () => `${DB_TYPE}::${uuid.v4()}`;
 
 // TODO: handle deduplication (createOrUpdate-like behavior ?)
 // TODO: handle multiple types of entries (only generic "article" behavior now)
-function createFromUrl(url) {
+async function createFromUrl(url) {
   const id = generateId();
   const baseEntry = Object.assign({
     creationDate: Date.now(),
     url
   });
 
-  return readability(url)
-    .then(entry => Object.assign(baseEntry, entry))
-    .then(entry => db.insert(id, entry))
-    .then(entry => Object.assign({ id }, entry));
+  let entry = await readability(url);
+  entry = Object.assign(baseEntry, entry);
+  await db.insert(id, entry);
+  return Object.assign({ id }, entry);
 }
 
 module.exports = {

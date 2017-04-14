@@ -35,42 +35,44 @@ const DEFAULT_TAGS_TO_SCORE = [
 const WORD_REGEX = /[a-zA-Z0-9_\u0392-\u03c9\u0400-\u04FF]+|[\u4E00-\u9FFF\u3400-\u4dbf\uf900-\ufaff\u3040-\u309f\uac00-\ud7af\u0400-\u04FF]+|[\u00E4\u00C4\u00E5\u00C5\u00F6\u00D6]+|\w+/g;
 const AVG_WORDS_PER_SECOND = 275 / 60;
 
-function readability(url) {
-  return got(url).then(response => {
-    const originalContent = String(response.body);
-    const $html = cheerio.load(originalContent);
+async function readability(url) {
+  const response = await got(url);
+  const originalContent = String(response.body);
+  const $html = cheerio.load(originalContent);
 
-    // Prepwork
-    preProcessHtml($html);
+  // Prepwork
+  preProcessHtml($html);
 
-    // Metadata
-    // ENHANCEMENT: get first non null ? (right now, just gets the first that matches)
-    const title = getArticleTitle($html);
-    const author = $html(AUTHOR_META_SELECTOR).attr("content");
-    const excerpt = $html(DESCRIPTION_META_SELECTOR).attr("content");
-    const imageUrl = $html(IMAGE_META_SELECTOR).attr("content");
+  // Metadata
+  // ENHANCEMENT: get first non null ? (right now, just gets the first that matches)
+  const title = getArticleTitle($html);
+  const author = $html(AUTHOR_META_SELECTOR).attr("content");
+  const excerpt = $html(DESCRIPTION_META_SELECTOR).attr("content");
+  const imageUrl = $html(IMAGE_META_SELECTOR).attr("content");
 
-    // Article
-    const $article = grabArticle($html);
-    fixRelativeUrls(url, $article);
-    const textContent = $article.text();
-    const wordCount = extractWordCount($article);
-    const duration = durationFromWordCount(wordCount);
+  // Article
+  const $article = grabArticle($html);
+  fixRelativeUrls(url, $article);
+  await processImages($article);
 
-    return processImages($article).then(() => ({
-      title,
-      author,
-      excerpt,
-      imageUrl,
+  const content = $article.html();
+  const textContent = $article.text();
+  const wordCount = extractWordCount($article);
+  const duration = durationFromWordCount(wordCount);
 
-      content: $article.html(),
-      textContent,
-      originalContent,
+  return {
+    title,
+    author,
+    excerpt,
+    imageUrl,
 
-      wordCount,
-      duration
-    }));
-  });
+    content,
+    textContent,
+    originalContent,
+
+    wordCount,
+    duration
+  };
 }
 
 function grabArticle($page) {
@@ -260,23 +262,20 @@ function grabArticle($page) {
   }
 }
 
-function processImages($html) {
+async function processImages($html) {
   // TODO: check for duplicates
-  const imageReplacement = $html
+  $html
     .find("img")
-    .map((i, img) => {
+    .each(async (i, img) => {
       const $img = cheerio(img);
       const imgUrl = $img.attr("src");
-
-      return cacheImage(imgUrl).then(cachedUrl => {
-        $img.attr("src", cachedUrl);
-      });
+      const cachedUrl = await cacheImage(imgUrl);
+      $img.attr("src", cachedUrl);
     })
     .get();
-  return Promise.all(imageReplacement);
 }
 
-function cacheImage(imageUrl) {
+async function cacheImage(imageUrl) {
   return new Promise((resolve, reject) => {
     const imgStream = got.stream(imageUrl);
     let newImageUrl;
@@ -608,11 +607,5 @@ function getLinkDensity($node) {
 
   return linkLength / textLength;
 }
-
-// Testing
-const TEST_URL = "https://www.smashingmagazine.com/2016/12/mistakes-developers-make-when-learning-design/";
-readability(TEST_URL)
-  .then(r => console.log(r.content))
-  .catch(e => console.log(e));
 
 module.exports = readability;

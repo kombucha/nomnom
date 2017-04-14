@@ -11,6 +11,11 @@ function mapToArray(map) {
   );
 }
 
+async function batchLoadFn(ids) {
+  const data = await db.getMulti(ids);
+  return mapToArray(data);
+}
+
 module.exports = () => ({
-  genericLoader: new DataLoader(ids => db.getMulti(ids).then(mapToArray))
+  genericLoader: new DataLoader(batchLoadFn)
 });

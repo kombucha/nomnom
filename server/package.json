@@ -27,6 +27,7 @@
     "readability": "git+https://github.com/mozilla/readability.git"
   },
   "devDependencies": {
+    "babel-eslint": "7.2.2",
     "eslint": "3.18.0",
     "husky": "0.13.3",
     "lint-staged": "3.4.0",
