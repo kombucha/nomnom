@@ -1,9 +1,10 @@
 // TODO: Probably a bad choice, should probably move to postgre...
 
 const couchbase = require("couchbase");
+const logger = require("./logger");
 const config = require("../config");
 
-console.log(
+logger.info(
   `Connecting to bucket ${config.couchbase.bucket} on ${config.couchbase.url}`
 );
 const cluster = new couchbase.Cluster(config.couchbase.url);

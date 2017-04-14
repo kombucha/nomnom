@@ -1,5 +1,5 @@
 const graphqlHTTP = require("express-graphql");
-const schema = require("./schema");
+const schema = require("../graphql/schema");
 
 module.exports = () =>
   graphqlHTTP(req => ({

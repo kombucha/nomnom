@@ -1,4 +1,5 @@
 const user = require("../services/user");
+const logger = require("../services/logger");
 
 module.exports = () =>
   async (req, res, next) => {
@@ -8,7 +9,7 @@ module.exports = () =>
       req.user = await user.getById(id);
       next();
     } catch (err) {
-      console.log(err);
+      logger.error(err);
       next(err);
     }
   };
