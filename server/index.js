@@ -8,6 +8,7 @@ const app = express();
 
 app.use(authMiddleware());
 app.use(loadersMiddleware());
+app.use("/img", express.static(config.imagesPath));
 app.use("/graphql", graphqlMiddleware());
 
 app.listen(config.port);

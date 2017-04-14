@@ -1,6 +1,13 @@
-const cheerio = require("cheerio");
-const got = require("got");
 const url = require("url");
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+
+const cheerio = require("cheerio");
+const mime = require("mime-types");
+const got = require("got");
+
+const { imagesPath } = require("../config");
 
 const TOP_CANDIDATES = 5;
 const TITLE_META_SELECTOR = 'meta[property="og:title"],meta[name="title"]';
@@ -46,26 +53,23 @@ function readability(url) {
     // Article
     const $article = grabArticle($html);
     fixRelativeUrls(url, $article);
-    const content = $article.html();
     const textContent = $article.text();
-
-    // Additional metadata
     const wordCount = extractWordCount($article);
     const duration = durationFromWordCount(wordCount);
 
-    return {
+    return processImages($article).then(() => ({
       title,
       author,
       excerpt,
       imageUrl,
 
-      content,
+      content: $article.html(),
       textContent,
       originalContent,
 
       wordCount,
       duration
-    };
+    }));
   });
 }
 
@@ -254,6 +258,45 @@ function grabArticle($page) {
 
     return $articleContent;
   }
+}
+
+function processImages($html) {
+  // TODO: check for duplicates
+  const imageReplacement = $html
+    .find("img")
+    .map((i, img) => {
+      const $img = cheerio(img);
+      const imgUrl = $img.attr("src");
+
+      return cacheImage(imgUrl).then(cachedUrl => {
+        $img.attr("src", cachedUrl);
+      });
+    })
+    .get();
+  return Promise.all(imageReplacement);
+}
+
+function cacheImage(imageUrl) {
+  return new Promise((resolve, reject) => {
+    const imgStream = got.stream(imageUrl);
+    let newImageUrl;
+
+    imgStream
+      .on("response", response => {
+        const imgHash = hash(imageUrl);
+        const imgExtension = mime.extension(response.headers["content-type"]);
+        const newImageName = `${imgHash}.${imgExtension}`;
+        const imagePath = path.resolve(imagesPath, newImageName);
+        newImageUrl = url.resolve("/img/", newImageName);
+        imgStream.pipe(fs.createWriteStream(imagePath));
+      })
+      .on("end", () => resolve(newImageUrl))
+      .on("error", reject);
+  });
+}
+
+function hash(data) {
+  return crypto.createHash("md5").update(data).digest("hex");
 }
 
 // METADATA HELPERS
