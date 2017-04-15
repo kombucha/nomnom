@@ -7,7 +7,9 @@ const cheerio = require("cheerio");
 const mime = require("mime-types");
 const got = require("got");
 
-const { imagesPath } = require("../config");
+const {
+  imagesPath
+} = require("../config");
 
 const TOP_CANDIDATES = 5;
 const TITLE_META_SELECTOR = 'meta[property="og:title"],meta[name="title"]';
@@ -48,7 +50,8 @@ async function readability(url) {
   const title = getArticleTitle($html);
   const author = $html(AUTHOR_META_SELECTOR).attr("content");
   const excerpt = $html(DESCRIPTION_META_SELECTOR).attr("content");
-  const imageUrl = $html(IMAGE_META_SELECTOR).attr("content");
+  const originalImageUrl = toAbsoluteUrl(url, $html(IMAGE_META_SELECTOR).attr("content"));
+  const imageUrl = await cacheImage(originalImageUrl);
 
   // Article
   const $article = grabArticle($html);
@@ -176,9 +179,9 @@ function grabArticle($page) {
 
       for (let t = 0; t < TOP_CANDIDATES; t++) {
         const $topCandidate = topCandidates[t];
-        const topCandidateScore = $topCandidate
-          ? $topCandidate.data("readabilityScore")
-          : 0;
+        const topCandidateScore = $topCandidate ?
+          $topCandidate.data("readabilityScore") :
+          0;
 
         if (!$topCandidate || adjustedScore > topCandidateScore) {
           topCandidates.splice(t, 0, $candidate);
@@ -266,7 +269,7 @@ async function processImages($html) {
   // TODO: check for duplicates
   $html
     .find("img")
-    .each(async (i, img) => {
+    .each(async(i, img) => {
       const $img = cheerio(img);
       const imgUrl = $img.attr("src");
       const cachedUrl = await cacheImage(imgUrl);
