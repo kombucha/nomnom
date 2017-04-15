@@ -1,12 +1,11 @@
-const graphqlHTTP = require("express-graphql");
+const { graphqlExpress } = require("graphql-server-express");
 const schema = require("../graphql/schema");
 
 module.exports = () =>
-  graphqlHTTP(req => ({
+  graphqlExpress(req => ({
     schema,
     context: {
       user: req.user,
       loaders: req.loaders
-    },
-    graphiql: true
+    }
   }));

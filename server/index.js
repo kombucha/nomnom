@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const bodyParser = require("body-parser");
 
 const config = require("./config");
 const authMiddleware = require("./middlewares/authMiddleware");
@@ -14,7 +15,13 @@ app.use(morgan("dev", { stream: logger.stream }));
 
 app.use("/img", express.static(config.imagesPath));
 app.use("/login", loginRouter);
-app.use("/graphql", authMiddleware(), loadersMiddleware(), graphqlMiddleware());
+app.use(
+  "/graphql",
+  authMiddleware(),
+  loadersMiddleware(),
+  bodyParser.json(),
+  graphqlMiddleware()
+);
 
 app.use(function(err, req, res, next) {
   logger.error(err.stack);
