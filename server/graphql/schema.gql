@@ -4,6 +4,7 @@ type User {
   id: ID!
   email: String!,
   name: String,
+  avatarUrl: String,
   entries(status: UserEntryStatus = null): [UserEntry!]!
 }
 

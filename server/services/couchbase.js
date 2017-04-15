@@ -3,21 +3,13 @@
 const couchbase = require("couchbase");
 const logger = require("./logger");
 const config = require("../config");
+const promisify = require("../utils/promisify");
 
 logger.info(
   `Connecting to bucket ${config.couchbase.bucket} on ${config.couchbase.url}`
 );
 const cluster = new couchbase.Cluster(config.couchbase.url);
 const bucket = cluster.openBucket(config.couchbase.bucket);
-
-const promisify = (fn, that) =>
-  (...args) =>
-    new Promise((resolve, reject) => {
-      fn.apply(that, [
-        ...args,
-        (err, value) => err ? reject(err) : resolve(value)
-      ]);
-    });
 
 // Yeww but no callbacks >:(
 function promisifyBucket(bucket) {

@@ -16,6 +16,18 @@ import "./index.css";
 const networkInterface = createNetworkInterface({
   uri: "http://localhost:3000/graphql"
 });
+const authMiddleware = {
+  applyMiddleware(req, next) {
+    if (!req.options.headers) {
+      req.options.headers = {};
+    }
+
+    const token = localStorage.getItem("token");
+    req.options.headers.authorization = token ? `Bearer ${token}` : null;
+    next();
+  }
+};
+networkInterface.use([authMiddleware]);
 const client = new ApolloClient({ networkInterface });
 
 injectTapEventPlugin();

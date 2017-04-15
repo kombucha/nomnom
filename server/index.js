@@ -5,15 +5,21 @@ const config = require("./config");
 const authMiddleware = require("./middlewares/authMiddleware");
 const loadersMiddleware = require("./middlewares/loadersMiddleware");
 const graphqlMiddleware = require("./middlewares/graphlMiddleware");
+const loginRouter = require("./routes/login");
 const logger = require("./services/logger");
 
 const app = express();
 
 app.use(morgan("dev", { stream: logger.stream }));
-app.use(authMiddleware());
-app.use(loadersMiddleware());
+
 app.use("/img", express.static(config.imagesPath));
-app.use("/graphql", graphqlMiddleware());
+app.use("/login", loginRouter);
+app.use("/graphql", authMiddleware(), loadersMiddleware(), graphqlMiddleware());
+
+app.use(function(err, req, res, next) {
+  logger.error(err.stack);
+  res.status(500).send("Something broke!");
+});
 
 app.listen(config.port);
 logger.info(

@@ -3,10 +3,9 @@ const logger = require("../services/logger");
 
 module.exports = () =>
   async (req, res, next) => {
-    // Fake it til you make it !
-    const id = "USER::first-user";
     try {
-      req.user = await user.getById(id);
+      const token = req.headers.authorization.split(" ")[1];
+      req.user = await user.getFromToken(token);
       next();
     } catch (err) {
       logger.error(err);
