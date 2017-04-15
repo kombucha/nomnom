@@ -9,3 +9,7 @@
 .entry-content blockquote {
   font-style: italic;
 }
+
+.entry-content pre {
+  overflow-x: scroll;
+}
