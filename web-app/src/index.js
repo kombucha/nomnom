@@ -28,7 +28,7 @@ const authMiddleware = {
   }
 };
 networkInterface.use([authMiddleware]);
-const client = new ApolloClient({ networkInterface });
+const client = new ApolloClient({ networkInterface, queryDeduplication: true });
 
 injectTapEventPlugin();
 ReactDOM.render(

@@ -45,11 +45,22 @@ class Entry extends Component {
 
     const disableArchive = userEntry.status === "ARCHIVED";
     const disableFavorite = userEntry.status === "FAVORITE";
+    const domain = new URL(userEntry.entry.url).host;
+    const publicationDate = userEntry.entry.publicationDate
+      ? new Date(userEntry.entry.publicationDate).toISOString()
+      : "Unknown publication date";
 
     return (
       <Card style={STYLES.article}>
         <CardTitle title={userEntry.entry.title} />
         <CardText>
+          <div>
+            <span> By {userEntry.entry.author}, </span>
+            <a target="_blank" href={userEntry.entry.url}>{domain}</a> <br />
+            <span>
+              {publicationDate}
+            </span>
+          </div>
           <div
             className="entry-content"
             dangerouslySetInnerHTML={htmlContent}
@@ -83,8 +94,8 @@ class Entry extends Component {
   }
 }
 
-const query = gql`query ($userEntryId: ID!) { 
-  userEntry(userEntryId: $userEntryId) {id status entry { url title content }} 
+const query = gql`query ($userEntryId: ID!) {
+  userEntry(userEntryId: $userEntryId) {id status entry { url title content author publicationDate }}
 }`;
 // TODO: Update store
 // http://dev.apollodata.com/react/cache-updates.html

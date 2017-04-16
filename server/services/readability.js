@@ -1,21 +1,24 @@
 const url = require("url");
 const fs = require("fs");
 const path = require("path");
+const cookie = require("cookie");
 const crypto = require("crypto");
+const getStream = require("get-stream");
+const parseDate = require("date-fns/parse");
+const isValidDate = require("date-fns/is_valid");
 
 const cheerio = require("cheerio");
 const mime = require("mime-types");
 const got = require("got");
 
-const {
-  imagesPath
-} = require("../config");
+const { imagesPath } = require("../config");
 
 const TOP_CANDIDATES = 5;
-const TITLE_META_SELECTOR = 'meta[property="og:title"],meta[name="title"]';
-const AUTHOR_META_SELECTOR = 'meta[property="author"],meta[property="article:author"],meta[name="twitter:creator"]';
-const DESCRIPTION_META_SELECTOR = 'meta[property="og:description"],meta[name="twitter:description"],meta[name="description"]';
-const IMAGE_META_SELECTOR = 'meta[property="og:image"],meta[name="twitter:image:src"]';
+const TITLE_META_NAMES = /og:title|title/i;
+const AUTHOR_META_NAMES = /author|article:author|twitter:creator/i;
+const DESCRIPTION_META_NAMES = /og:description|twitter:description|description/i;
+const IMAGE_META_NAMES = /og:image|twitter:image:src/i;
+const PUBLICATION_DATE_META_NAMES = /publication|publish|date|time[\b|$]/i;
 const UNLIKELY_CANDIDATES = /banner|breadcrumbs|combx|comment|community|cover-wrap|disqus|extra|foot|header|legends|menu|modal|related|remark|replies|rss|shoutbox|sidebar|skyscraper|social|sponsor|supplemental|ad-break|agegate|pagination|pager|popup|yom-remote/i;
 const OK_MAYBE_ITS_A_CANDIDATE = /and|article|body|column|main|shadow/i;
 const POSITIVE_SCORE_NAMES = /article|body|content|entry|hentry|h-entry|main|page|pagination|post|text|blog|story/i;
@@ -38,7 +41,7 @@ const WORD_REGEX = /[a-zA-Z0-9_\u0392-\u03c9\u0400-\u04FF]+|[\u4E00-\u9FFF\u3400
 const AVG_WORDS_PER_SECOND = 275 / 60;
 
 async function readability(url) {
-  const response = await got(url);
+  const response = await load(url);
   const originalContent = String(response.body);
   const $html = cheerio.load(originalContent);
 
@@ -48,10 +51,10 @@ async function readability(url) {
   // Metadata
   // ENHANCEMENT: get first non null ? (right now, just gets the first that matches)
   const title = getArticleTitle($html);
-  const author = $html(AUTHOR_META_SELECTOR).attr("content");
-  const excerpt = $html(DESCRIPTION_META_SELECTOR).attr("content");
-  const originalImageUrl = toAbsoluteUrl(url, $html(IMAGE_META_SELECTOR).attr("content"));
-  const imageUrl = await cacheImage(originalImageUrl);
+  const author = getMetaValue($html, AUTHOR_META_NAMES);
+  const excerpt = getMetaValue($html, DESCRIPTION_META_NAMES);
+  const publicationDate = getPublicationDate($html);
+  const imageUrl = await getArticleImage(url, $html);
 
   // Article
   const $article = grabArticle($html);
@@ -66,6 +69,7 @@ async function readability(url) {
   return {
     title,
     author,
+    publicationDate,
     excerpt,
     imageUrl,
 
@@ -76,6 +80,45 @@ async function readability(url) {
     wordCount,
     duration
   };
+}
+
+function load(url) {
+  const baseOptions = {
+    headers: {
+      "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36"
+    }
+  };
+  return new Promise((resolve, reject) => {
+    const responseStream = got
+      .stream(url, baseOptions)
+      .on("redirect", (response, nextOptions) => {
+        const cookies = response.headers["set-cookie"];
+        if (!cookies) {
+          return;
+        }
+
+        const cookiesStr = cookies.join(";");
+        const parsedCookie = cookie.parse(cookiesStr);
+        const serializedCookies = Object.keys(parsedCookie)
+          .filter(key => !key.match(/expires|path|domain/i))
+          .map(key => `${key}=${encodeURIComponent(parsedCookie[key])}`)
+          .join(";");
+        nextOptions.headers.cookie = serializedCookies;
+      })
+      .on("response", async res => {
+        try {
+          // Doesnt work if using getStream(res)...dunno why
+          const data = await getStream(responseStream);
+          res.body = data;
+          resolve(res);
+        } catch (error) {
+          reject(error);
+        }
+      })
+      .on("error", error => {
+        reject(error);
+      });
+  });
 }
 
 function grabArticle($page) {
@@ -179,9 +222,9 @@ function grabArticle($page) {
 
       for (let t = 0; t < TOP_CANDIDATES; t++) {
         const $topCandidate = topCandidates[t];
-        const topCandidateScore = $topCandidate ?
-          $topCandidate.data("readabilityScore") :
-          0;
+        const topCandidateScore = $topCandidate
+          ? $topCandidate.data("readabilityScore")
+          : 0;
 
         if (!$topCandidate || adjustedScore > topCandidateScore) {
           topCandidates.splice(t, 0, $candidate);
@@ -269,7 +312,7 @@ async function processImages($html) {
   // TODO: check for duplicates
   $html
     .find("img")
-    .each(async(i, img) => {
+    .each(async (i, img) => {
       const $img = cheerio(img);
       const imgUrl = $img.attr("src");
       const cachedUrl = await cacheImage(imgUrl);
@@ -305,7 +348,33 @@ function hash(data) {
 // Should I be smarter for the title ? they do a lot of stuff in readability.js
 // See https://github.com/mozilla/readability/blob/master/Readability.js#L304
 function getArticleTitle($html) {
-  return $html(TITLE_META_SELECTOR).attr("content") || $html("title").text();
+  return getMetaValue($html, TITLE_META_NAMES) || $html("title").text();
+}
+
+async function getArticleImage(url, $html) {
+  const originalImageRelativeUrl = getMetaValue($html, IMAGE_META_NAMES);
+  if (!originalImageRelativeUrl) return;
+
+  const originalImageUrl = toAbsoluteUrl(url, originalImageRelativeUrl);
+  const cachedImageUrl = await cacheImage(originalImageUrl);
+  return cachedImageUrl;
+}
+
+function getPublicationDate($html) {
+  const publicationDateValue = getMetaValue($html, PUBLICATION_DATE_META_NAMES);
+  const date = publicationDateValue ? parseDate(publicationDateValue) : null;
+
+  return date && isValidDate(date) ? date.getTime() : null;
+}
+
+function getMetaValue($html, metaNameRegex) {
+  const meta = $html("meta").get().find(meta => {
+    const $meta = cheerio(meta);
+    const name = $meta.attr("name") || $meta.attr("property") || "";
+    return name.match(metaNameRegex);
+  });
+
+  return meta ? cheerio(meta).attr("content") : null;
 }
 
 function extractWordCount($html) {

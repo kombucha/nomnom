@@ -14,7 +14,7 @@ type Entry {
   title: String!
   originalContent: String!
   creationDate: Date!
-  published: Date!
+  publicationDate: Date
   author: String
   excerpt: String
   content: String
