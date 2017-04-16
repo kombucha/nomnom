@@ -309,19 +309,19 @@ function grabArticle($page) {
 }
 
 async function processImages($html) {
-  // TODO: check for duplicates
-  $html
-    .find("img")
-    .each(async (i, img) => {
+  const images = $html.find("img").get();
+  await Promise.all(
+    images.map(async img => {
       const $img = cheerio(img);
       const imgUrl = $img.attr("src");
       const cachedUrl = await cacheImage(imgUrl);
       $img.attr("src", cachedUrl);
     })
-    .get();
+  );
 }
 
 async function cacheImage(imageUrl) {
+  // TODO: check if already in cache
   return new Promise((resolve, reject) => {
     const imgStream = got.stream(imageUrl);
     let newImageUrl;
