@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import GoogleLogin from "react-google-login";
-
-const CLIENT_ID = "388702499328-ld8l7lj9kggb3nfs53aoq7k651udla6u.apps.googleusercontent.com";
+import authenticationService from "../services/authentication";
 
 // See https://reacttraining.com/react-router/web/example/auth-workflow
 class LoginPage extends Component {
@@ -13,10 +12,9 @@ class LoginPage extends Component {
   }
 
   _handleLoginSucessful({ code }) {
-    return fetch("/login/google", { method: "POST", body: code })
-      .then(r => r.ok ? r.text() : Promise.reject("Fail !"))
+    return authenticationService
+      .login(code)
       .then(token => {
-        localStorage.setItem("token", token);
         this.setState({ redirectToReferrer: true });
       })
       .catch(e => {
@@ -32,7 +30,7 @@ class LoginPage extends Component {
       ? <Redirect to={from} />
       : <div>
           <GoogleLogin
-            clientId={CLIENT_ID}
+            clientId={authenticationService.GOOGLE_CLIENT_ID}
             buttonText="Log in with Google"
             offline
             onSuccess={this._handleLoginSucessful}

@@ -11,6 +11,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 
 import getTheme from "./myTheme";
 import App from "./App";
+import authService from "./services/authentication";
 import "./index.css";
 
 const networkInterface = createNetworkInterface({
@@ -22,8 +23,9 @@ const authMiddleware = {
       req.options.headers = {};
     }
 
-    const token = localStorage.getItem("token");
-    req.options.headers.authorization = token ? `Bearer ${token}` : null;
+    req.options.headers.authorization = authService.isAuthenticated()
+      ? `Bearer ${authService.getToken()}`
+      : null;
     next();
   }
 };
