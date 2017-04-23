@@ -1,4 +1,5 @@
-const GOOGLE_CLIENT_ID = "388702499328-ld8l7lj9kggb3nfs53aoq7k651udla6u.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID =
+  "388702499328-ld8l7lj9kggb3nfs53aoq7k651udla6u.apps.googleusercontent.com";
 const TOKEN_STORAGE_KEY = "token";
 
 function login(googleAuthorizationCode) {
@@ -6,7 +7,7 @@ function login(googleAuthorizationCode) {
     method: "POST",
     body: googleAuthorizationCode
   })
-    .then(r => r.ok ? r.text() : Promise.reject("Fail !"))
+    .then(r => (r.ok ? r.text() : Promise.reject("Fail !")))
     .then(token => {
       localStorage.setItem(TOKEN_STORAGE_KEY, token);
       notifyListeners(true);
@@ -16,7 +17,7 @@ function login(googleAuthorizationCode) {
 
 function logout() {
   const hasChanged = isAuthenticated();
-  localStorage.setItem(TOKEN_STORAGE_KEY, null);
+  localStorage.removeItem(TOKEN_STORAGE_KEY);
 
   if (hasChanged) {
     notifyListeners(false);

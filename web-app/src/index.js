@@ -2,11 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import injectTapEventPlugin from "react-tap-event-plugin";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import {
-  ApolloClient,
-  ApolloProvider,
-  createNetworkInterface
-} from "react-apollo";
+import { ApolloClient, ApolloProvider } from "react-apollo";
+import { createBatchingNetworkInterface } from "apollo-client"; // Transitive dep, so I dunno...
 import { BrowserRouter as Router } from "react-router-dom";
 
 import getTheme from "./myTheme";
@@ -14,11 +11,12 @@ import App from "./App";
 import authService from "./services/authentication";
 import "./index.css";
 
-const networkInterface = createNetworkInterface({
-  uri: "http://localhost:3000/graphql"
+const networkInterface = createBatchingNetworkInterface({
+  uri: "http://localhost:3000/graphql",
+  batchInterval: 10
 });
 const authMiddleware = {
-  applyMiddleware(req, next) {
+  applyBatchMiddleware(req, next) {
     if (!req.options.headers) {
       req.options.headers = {};
     }

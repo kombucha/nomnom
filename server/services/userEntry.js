@@ -34,7 +34,7 @@ async function createFromUrl(userId, url) {
 }
 
 // TODO: pagination ???
-function getUserEntries(userId, options) {
+function list(userId, options) {
   const userEntriesIdLike = `USER_ENTRY::${userId}::%`;
   const filters = ["meta(t).id LIKE $1"];
   const filtersParams = [userEntriesIdLike];
@@ -57,7 +57,7 @@ function getUserEntries(userId, options) {
 }
 
 const UPDATABLE_KEYS = ["status", "tags", "progress"];
-function updateUserEntry(userEntryId, updateValues) {
+function update(userEntryId, updateValues) {
   let mutationBuilder = db.mutateIn(userEntryId);
 
   mutationBuilder = UPDATABLE_KEYS.reduce(
@@ -72,11 +72,24 @@ function updateUserEntry(userEntryId, updateValues) {
   return mutationBuilder.execute();
 }
 
+function deleteAll(userId) {
+  const userEntriesIdLike = `USER_ENTRY::${userId}::%`;
+  const query = N1qlQuery.fromString(
+    `
+    DELETE FROM \`nomnom\` as t
+    WHERE meta(t).id LIKE $1
+    `
+  );
+
+  return db.query(query, [userEntriesIdLike]);
+}
+
 module.exports = {
   DB_TYPE,
   USER_ENTRY_STATE,
 
   createFromUrl,
-  getUserEntries,
-  updateUserEntry
+  list,
+  update,
+  deleteAll
 };

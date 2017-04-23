@@ -37,6 +37,7 @@ class AddEntryDialog extends Component {
       <FlatButton
         label="Add"
         primary
+        disabled={!entryUrl}
         onTouchTap={() => this.handleAddEntry(this.state.entryUrl)}
       />
     ];
@@ -51,6 +52,7 @@ class AddEntryDialog extends Component {
           hintText="Enter url"
           value={entryUrl}
           onChange={this.handleChange}
+          fullWidth
           autoFocus
         />
       </Dialog>
@@ -73,7 +75,13 @@ const addEntryMutation = gql`mutation addUserEntry($url: String!) {
 
 const AddEntryDialogWithMutation = graphql(addEntryMutation, {
   props: ({ mutate }) => ({
-    addUserEntry: url => mutate({ variables: { url } })
+    addUserEntry: url =>
+      mutate({
+        variables: { url },
+        update: (...args) => {
+          console.log(args);
+        }
+      })
   })
 })(AddEntryDialog);
 

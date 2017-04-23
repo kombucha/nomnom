@@ -5,5 +5,5 @@ module.exports = (parentUser, { status }, { user }) => {
     return [];
   }
 
-  return UserEntry.getUserEntries(parentUser.id, { status });
+  return UserEntry.list(parentUser.id, { status });
 };

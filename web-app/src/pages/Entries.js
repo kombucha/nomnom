@@ -14,6 +14,7 @@ import { gql, graphql } from "react-apollo";
 import queryString from "query-string";
 
 import AddEntryDialog from "../components/AddEntryDialog";
+import "./Entries.css";
 
 const DEFAULT_STATUS_FILTER = "NEW";
 
@@ -85,7 +86,30 @@ class Entries extends Component {
     });
   }
 
-  renderList() {
+  renderPlaceholderList() {
+    return (
+      <List>
+        {Array(15)
+          .fill()
+          .map((_, idx) => (
+            <ListItem
+              key={idx}
+              disabled
+              leftAvatar={
+                <div className="placeholder-item placeholder-item--avatar" />
+              }
+              primaryText={<div className="placeholder-item" />}
+              secondaryText={
+                <div className="placeholder-item placeholder-item--half" />
+              }
+            />
+          ))}
+
+      </List>
+    );
+  }
+
+  renderLoading() {
     const userEntries = this.props.data.me.entries.map(asDisplayedUserEntry);
     return (
       <List>
@@ -105,13 +129,9 @@ class Entries extends Component {
     );
   }
 
-  renderLoading() {
-    return <div>Loading...</div>;
-  }
-
   renderFilters() {
-    const statusFilter = statusFromLocation(this.props.location) ||
-      DEFAULT_STATUS_FILTER;
+    const statusFilter =
+      statusFromLocation(this.props.location) || DEFAULT_STATUS_FILTER;
 
     return (
       <Paper style={STYLES.filters}>
@@ -130,7 +150,7 @@ class Entries extends Component {
     return (
       <Card style={STYLES.content}>
         <CardText>
-          {data.loading ? this.renderLoading() : this.renderList()}
+          {data.loading ? this.renderPlaceholderList() : this.renderLoading()}
         </CardText>
       </Card>
     );

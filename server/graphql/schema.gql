@@ -53,6 +53,7 @@ type Query {
 type Mutation {
   addUserEntry(url: String!): UserEntry!
   updateUserEntry(entryUpdateInput: EntryUpdateInput): UserEntry!
+  deleteAllMyEntries: Boolean
 }
 
 schema {

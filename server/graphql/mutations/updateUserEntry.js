@@ -5,6 +5,6 @@ module.exports = async (_, { entryUpdateInput }, { loaders, user }) => {
     throw new Error("Unauthorized");
   }
 
-  await UserEntry.updateUserEntry(entryUpdateInput.id, entryUpdateInput);
+  await UserEntry.update(entryUpdateInput.id, entryUpdateInput);
   return loaders.genericLoader.load(entryUpdateInput.id);
 };
