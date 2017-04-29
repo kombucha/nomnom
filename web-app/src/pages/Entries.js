@@ -51,10 +51,9 @@ const asDisplayedUserEntry = userEntry => ({
   tags: userEntry.tags
 });
 
-const statusFromLocation = location =>
-  queryString.parse(location.search).status;
+const statusFromLocation = location => queryString.parse(location.search).status;
 
-class Entries extends Component {
+export class Entries extends Component {
   constructor() {
     super();
     this.state = { showAddEntryDialog: false };
@@ -86,22 +85,18 @@ class Entries extends Component {
     });
   }
 
-  renderPlaceholderList() {
+  _renderPlaceholderList() {
     return (
       <List>
-        {Array(15)
+        {Array(10)
           .fill()
           .map((_, idx) => (
             <ListItem
               key={idx}
               disabled
-              leftAvatar={
-                <div className="placeholder-item placeholder-item--avatar" />
-              }
+              leftAvatar={<div className="placeholder-item placeholder-item--avatar" />}
               primaryText={<div className="placeholder-item" />}
-              secondaryText={
-                <div className="placeholder-item placeholder-item--half" />
-              }
+              secondaryText={<div className="placeholder-item placeholder-item--half" />}
             />
           ))}
 
@@ -109,19 +104,30 @@ class Entries extends Component {
     );
   }
 
-  renderLoading() {
+  _renderSecondaryText(userEntry) {
+    const tagsCount = userEntry.tags.length;
+    const tags = tagsCount > 0
+      ? <span>
+          {" | "}
+          {userEntry.tags.map((tag, idx) => (
+            <span key={tag}>{`${tag}${idx < tagsCount - 1 ? ", " : ""}`}</span>
+          ))}
+        </span>
+      : null;
+    return <span>{userEntry.domain}{tags}</span>;
+  }
+
+  _renderList() {
     const userEntries = this.props.data.me.entries.map(asDisplayedUserEntry);
+
     return (
       <List>
         {userEntries.map(userEntry => (
-          <Link
-            key={userEntry.id}
-            to={`/entries/${userEntry.id}`}
-            style={STYLES.link}>
+          <Link key={userEntry.id} to={`/entries/${userEntry.id}`} style={STYLES.link}>
             <ListItem
               leftAvatar={<Avatar src={userEntry.imageUrl} />}
               primaryText={userEntry.title}
-              secondaryText={userEntry.domain}
+              secondaryText={this._renderSecondaryText(userEntry)}
             />
           </Link>
         ))}
@@ -129,9 +135,8 @@ class Entries extends Component {
     );
   }
 
-  renderFilters() {
-    const statusFilter =
-      statusFromLocation(this.props.location) || DEFAULT_STATUS_FILTER;
+  _renderFilters() {
+    const statusFilter = statusFromLocation(this.props.location) || DEFAULT_STATUS_FILTER;
 
     return (
       <Paper style={STYLES.filters}>
@@ -145,12 +150,12 @@ class Entries extends Component {
     );
   }
 
-  renderContent() {
+  _renderContent() {
     const { data } = this.props;
     return (
       <Card style={STYLES.content}>
         <CardText>
-          {data.loading ? this.renderPlaceholderList() : this.renderLoading()}
+          {data.loading ? this._renderPlaceholderList() : this._renderList()}
         </CardText>
       </Card>
     );
@@ -161,12 +166,9 @@ class Entries extends Component {
 
     return (
       <div style={STYLES.container}>
-        {this.renderFilters()}
-        {this.renderContent()}
-        <AddEntryDialog
-          open={showAddEntryDialog}
-          onRequestClose={this.handleAddEntryDialogClose}
-        />
+        {this._renderFilters()}
+        {this._renderContent()}
+        <AddEntryDialog open={showAddEntryDialog} onRequestClose={this.handleAddEntryDialogClose} />
         <FloatingActionButton
           secondary
           style={STYLES.fab}
@@ -191,4 +193,5 @@ const EntriesWithData = graphql(query, {
     }
   })
 })(Entries);
+
 export default EntriesWithData;

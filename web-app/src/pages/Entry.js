@@ -4,6 +4,7 @@ import FlatButton from "material-ui/FlatButton";
 import { gql, graphql, compose } from "react-apollo";
 
 import "./Entry.css";
+import EditEntryTagsDialog from "../components/EditEntryTagsDialog";
 
 const STYLES = {
   container: {
@@ -19,8 +20,12 @@ const STYLES = {
 class Entry extends Component {
   constructor() {
     super();
+    this.state = {
+      editingTags: false
+    };
     this.archiveEntry = this.archiveEntry.bind(this);
     this.favoriteEntry = this.favoriteEntry.bind(this);
+    this.editTags = this.editTags.bind(this);
   }
 
   renderLoading() {
@@ -37,8 +42,13 @@ class Entry extends Component {
     this.props.updateUserEntry({ id, status: "FAVORITE" });
   }
 
+  editTags() {
+    this.setState({ editingTags: true });
+  }
+
   renderEntry() {
     const { userEntry } = this.props.data;
+    const { editingTags } = this.state;
     const htmlContent = {
       __html: userEntry.entry.content
     };
@@ -61,26 +71,24 @@ class Entry extends Component {
               {publicationDate}
             </span>
           </div>
-          <div
-            className="entry-content"
-            dangerouslySetInnerHTML={htmlContent}
-          />
+          <div className="entry-content" dangerouslySetInnerHTML={htmlContent} />
         </CardText>
         <CardActions>
           <a href={userEntry.entry.url} target="__blank">
             <FlatButton label="View original" />
           </a>
-          <FlatButton
-            label="Archive"
-            onClick={this.archiveEntry}
-            disabled={disableArchive}
-          />
-          <FlatButton
-            label="Favorite"
-            onClick={this.favoriteEntry}
-            disabled={disableFavorite}
-          />
+          <FlatButton label="Archive" onTouchTap={this.archiveEntry} disabled={disableArchive} />
+          <FlatButton label="Favorite" onTouchTap={this.favoriteEntry} disabled={disableFavorite} />
+          <FlatButton label="Edit tags" onTouchTap={this.editTags} />
         </CardActions>
+
+        <EditEntryTagsDialog
+          userEntryId={userEntry.id}
+          open={editingTags}
+          onRequestClose={() => {
+            this.setState({ editingTags: false });
+          }}
+        />
       </Card>
     );
   }
@@ -94,7 +102,7 @@ class Entry extends Component {
   }
 }
 
-const query = gql`query ($userEntryId: ID!) {
+const query = gql`query userEntry($userEntryId: ID!) {
   userEntry(userEntryId: $userEntryId) {id status entry { url title content author publicationDate }}
 }`;
 // TODO: Update store
@@ -112,8 +120,7 @@ const withQuery = graphql(query, {
 });
 const withMutation = graphql(mutation, {
   props: ({ mutate }) => ({
-    updateUserEntry: entryUpdateInput =>
-      mutate({ variables: { entryUpdateInput } })
+    updateUserEntry: entryUpdateInput => mutate({ variables: { entryUpdateInput } })
   })
 });
 
