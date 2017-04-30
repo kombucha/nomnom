@@ -1,22 +1,15 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import Avatar from "material-ui/Avatar";
-import IconMenu from "material-ui/IconMenu";
-import MenuItem from "material-ui/MenuItem";
-import FlatButton from "material-ui/FlatButton";
 import { gql, graphql } from "react-apollo";
+import styled from "styled-components";
 
-import withAuth from "./withAuth";
 import authService from "../services/authentication";
+import withAuth from "./withAuth";
+import { MenuContainer, MenuItem } from "./Menu";
+import FlatButton from "./FlatButton";
+import Avatar from "./Avatar";
 
-const STYLES = {
-  icon: {
-    color: "white"
-  }
-};
-
-// A FlatButton that can be placed in lieu of an IconButton (ie. without iconStyle warning)
-const FlatIconButton = ({ iconStyle, ...rest }) => <FlatButton {...rest} />;
+const MenuButton = styled(FlatButton)`color: white;`;
 
 export class UserMenu extends Component {
   constructor() {
@@ -41,22 +34,17 @@ export class UserMenu extends Component {
     }
 
     return (
-      <IconMenu
-        iconButtonElement={
-          <FlatIconButton
-            style={{ color: "white" }}
-            label={data.me.name}
-            labelPosition="before"
-            icon={<Avatar src={data.me.avatarUrl} size={30} />}
-          />
-        }
-        iconStyle={STYLES.icon}
-        anchorOrigin={{ horizontal: "right", vertical: "top" }}
-        targetOrigin={{ horizontal: "right", vertical: "bottom" }}>
-        <MenuItem primaryText="Settings" onTouchTap={this._goToSettings} />
-        <MenuItem primaryText="Send feedback" />
-        <MenuItem primaryText="Sign out" onTouchTap={this._logout} />
-      </IconMenu>
+      <MenuContainer
+        target={
+          <MenuButton>
+            <span style={{ paddingRight: 8 }}>{data.me.name}</span>
+            <Avatar size="30px" src={data.me.avatarUrl} />
+          </MenuButton>
+        }>
+        <MenuItem onClick={this._goToSettings}>Settings</MenuItem>
+        <MenuItem>Send feedback</MenuItem>
+        <MenuItem onClick={this._logout}>Sign out</MenuItem>
+      </MenuContainer>
     );
   }
 }

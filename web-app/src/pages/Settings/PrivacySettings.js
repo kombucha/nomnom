@@ -1,19 +1,17 @@
 import React, { Component } from "react";
-import { Card, CardHeader, CardText } from "material-ui/Card";
 import ActionDelete from "material-ui/svg-icons/action/delete";
-import RaisedButton from "material-ui/RaisedButton";
-import TextField from "material-ui/TextField";
-import Dialog from "material-ui/Dialog";
 import CircularProgress from "material-ui/CircularProgress";
-import FlatButton from "material-ui/FlatButton";
+import styled from "styled-components";
 import { gql, graphql } from "react-apollo";
 
+import Dialog from "../../components/Dialog";
+import TextField from "../../components/TextField";
+import FlatButton from "../../components/FlatButton";
+import RaisedButton from "../../components/RaisedButton";
+import { Card, CardTitle } from "../../components/Card";
+
 const CONFIRMATION_TEXT = "Ya, I'm sure";
-const STYLES = {
-  confirmationText: {
-    userSelect: "none"
-  }
-};
+const ConfirmationText = styled.b`user-select: none;`;
 
 const DEFAULT_STATE = {
   showConfirmDelete: false,
@@ -48,48 +46,39 @@ export class PrivacySettings extends Component {
   render() {
     const { confirmationText, deleting } = this.state;
     const showConfirmDelete = () => this.setState({ showConfirmDelete: true });
-    const handleDismissDialog = () =>
-      (deleting ? null : this._handleConfirmDelete(false));
+    const handleDismissDialog = () => (deleting ? null : this._handleConfirmDelete(false));
     const updateConfirmationText = (e, value) =>
       this.setState({
         confirmationText: value
       });
 
     const actions = [
-      <FlatButton
-        label="Cancel"
-        secondary
-        disabled={deleting}
-        onTouchTap={() => this._handleConfirmDelete(false)}
-      />,
+      <FlatButton secondary disabled={deleting} onClick={() => this._handleConfirmDelete(false)}>
+        Cancel
+      </FlatButton>,
       deleting
-        ? <FlatButton
-            label="Deleting"
-            primary
-            disabled
-            labelPosition="before"
-            icon={<CircularProgress size={24} />}
-          />
+        ? <FlatButton primary disabled>
+            <span>Deleting</span>
+            <CircularProgress size={24} />
+          </FlatButton>
         : <FlatButton
-            label="Delete"
             primary
             disabled={confirmationText !== CONFIRMATION_TEXT}
-            onTouchTap={() => this._handleConfirmDelete(true)}
-          />
+            onClick={() => this._handleConfirmDelete(true)}>
+            Delete
+          </FlatButton>
     ];
 
     return (
       <div style={this.props.style}>
         <Card>
-          <CardHeader title="Privacy" />
-          <CardText>
-            <RaisedButton
-              label="Clear all my content"
-              icon={<ActionDelete />}
-              secondary
-              onTouchTap={showConfirmDelete}
-            />
-          </CardText>
+          <CardTitle>Privacy</CardTitle>
+
+          <RaisedButton secondary onClick={showConfirmDelete}>
+            <ActionDelete style={{ color: "inherit" }} />
+            <span>Clear all my content</span>
+          </RaisedButton>
+
         </Card>
         <Dialog
           title="Clearing content"
@@ -100,15 +89,15 @@ export class PrivacySettings extends Component {
           <p>Are you sure you want to delete all your content ?</p>
           <p>
             Type "
-            <b style={STYLES.confirmationText}>{CONFIRMATION_TEXT}</b>
+            <ConfirmationText>{CONFIRMATION_TEXT}</ConfirmationText>
             " to confirm
           </p>
           <TextField
-            floatingLabelText="confirmation"
             autoFocus
             value={confirmationText}
-            disabled={deleting}
+            hintText="confirmation"
             onChange={updateConfirmationText}
+            disabled={deleting}
           />
         </Dialog>
       </div>

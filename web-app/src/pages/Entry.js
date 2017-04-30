@@ -1,21 +1,38 @@
 import React, { Component } from "react";
-import { Card, CardTitle, CardText, CardActions } from "material-ui/Card";
-import FlatButton from "material-ui/FlatButton";
 import { gql, graphql, compose } from "react-apollo";
+import styled from "styled-components";
 
-import "./Entry.css";
 import EditEntryTagsDialog from "../components/EditEntryTagsDialog";
+import FlatButton from "../components/FlatButton";
+import { Card, CardTitle } from "../components/Card";
 
-const STYLES = {
-  container: {
-    display: "flex",
-    justifyContent: "center",
-    padding: 20
-  },
-  article: {
-    maxWidth: 800
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+`;
+
+const EntryCard = styled(Card)`
+  max-width: 800px;
+`;
+
+const Article = styled.article`
+  p {
+    text-align: justify;
   }
-};
+
+  img {
+    max-width: 100%;
+  }
+
+  blockquote {
+    font-style: italic;
+  }
+
+  pre {
+    overflow-x: scroll;
+  }
+`;
 
 class Entry extends Component {
   constructor() {
@@ -61,9 +78,10 @@ class Entry extends Component {
       : "Unknown publication date";
 
     return (
-      <Card style={STYLES.article}>
-        <CardTitle title={userEntry.entry.title} />
-        <CardText>
+      <EntryCard>
+        <CardTitle>{userEntry.entry.title}</CardTitle>
+
+        <div>
           <div>
             <span> By {userEntry.entry.author}, </span>
             <a target="_blank" href={userEntry.entry.url}>{domain}</a> <br />
@@ -71,16 +89,19 @@ class Entry extends Component {
               {publicationDate}
             </span>
           </div>
-          <div className="entry-content" dangerouslySetInnerHTML={htmlContent} />
-        </CardText>
-        <CardActions>
+          <Article dangerouslySetInnerHTML={htmlContent} />
+        </div>
+
+        <div>
           <a href={userEntry.entry.url} target="__blank">
-            <FlatButton label="View original" />
+            <FlatButton>View original</FlatButton>
           </a>
-          <FlatButton label="Archive" onTouchTap={this.archiveEntry} disabled={disableArchive} />
-          <FlatButton label="Favorite" onTouchTap={this.favoriteEntry} disabled={disableFavorite} />
-          <FlatButton label="Edit tags" onTouchTap={this.editTags} />
-        </CardActions>
+          <FlatButton onClick={this.archiveEntry} disabled={disableArchive}>Archive</FlatButton>
+          <FlatButton onClick={this.favoriteEntry} disabled={disableFavorite}>
+            Favorite
+          </FlatButton>
+          <FlatButton onClick={this.editTags}>Edit tags</FlatButton>
+        </div>
 
         <EditEntryTagsDialog
           userEntryId={userEntry.id}
@@ -89,15 +110,15 @@ class Entry extends Component {
             this.setState({ editingTags: false });
           }}
         />
-      </Card>
+      </EntryCard>
     );
   }
   render() {
     const { data } = this.props;
     return (
-      <div style={STYLES.container}>
+      <Container>
         {data.loading ? this.renderLoading() : this.renderEntry()}
-      </div>
+      </Container>
     );
   }
 }

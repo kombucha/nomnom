@@ -1,20 +1,14 @@
 import React, { Component } from "react";
-
-import { Link } from "react-router-dom";
-
-import FloatingActionButton from "material-ui/FloatingActionButton";
-import { List, ListItem } from "material-ui/List";
-import Avatar from "material-ui/Avatar";
-import { Card, CardText } from "material-ui/Card";
-import Paper from "material-ui/Paper";
-import { Menu, MenuItem } from "material-ui/Menu";
-import ContentAdd from "material-ui/svg-icons/content/add";
-
 import { gql, graphql } from "react-apollo";
 import queryString from "query-string";
+import ContentAdd from "material-ui/svg-icons/content/add";
 
+import { Menu, MenuItem } from "../components/Menu";
+import { List, ListItem } from "../components/List";
+import Card from "../components/Card";
 import AddEntryDialog from "../components/AddEntryDialog";
-import "./Entries.css";
+import FloatingActionButton from "../components/FloatingActionButton";
+import { UserEntryItem, UserEntryItemPlaceholder } from "../components/UserEntryItem";
 
 const DEFAULT_STATUS_FILTER = "NEW";
 
@@ -30,10 +24,6 @@ const STYLES = {
   },
   filters: {
     marginRight: 32
-  },
-  link: {
-    textDecoration: "none",
-    color: "inherit"
   },
   fab: {
     position: "fixed",
@@ -74,7 +64,7 @@ export class Entries extends Component {
     this.setState({ showAddEntryDialog: opened });
   }
 
-  handleStatusFilterChange(_, newStatus) {
+  handleStatusFilterChange(newStatus) {
     const queryParams = queryString.parse(this.props.location.search);
     const newQueryParams = Object.assign({}, queryParams, {
       status: newStatus
@@ -88,33 +78,14 @@ export class Entries extends Component {
   _renderPlaceholderList() {
     return (
       <List>
-        {Array(10)
-          .fill()
-          .map((_, idx) => (
-            <ListItem
-              key={idx}
-              disabled
-              leftAvatar={<div className="placeholder-item placeholder-item--avatar" />}
-              primaryText={<div className="placeholder-item" />}
-              secondaryText={<div className="placeholder-item placeholder-item--half" />}
-            />
-          ))}
+        {Array(10).fill().map((_, idx) => (
+          <ListItem key={idx}>
+            <UserEntryItemPlaceholder />
+          </ListItem>
+        ))}
 
       </List>
     );
-  }
-
-  _renderSecondaryText(userEntry) {
-    const tagsCount = userEntry.tags.length;
-    const tags = tagsCount > 0
-      ? <span>
-          {" | "}
-          {userEntry.tags.map((tag, idx) => (
-            <span key={tag}>{`${tag}${idx < tagsCount - 1 ? ", " : ""}`}</span>
-          ))}
-        </span>
-      : null;
-    return <span>{userEntry.domain}{tags}</span>;
   }
 
   _renderList() {
@@ -123,13 +94,9 @@ export class Entries extends Component {
     return (
       <List>
         {userEntries.map(userEntry => (
-          <Link key={userEntry.id} to={`/entries/${userEntry.id}`} style={STYLES.link}>
-            <ListItem
-              leftAvatar={<Avatar src={userEntry.imageUrl} />}
-              primaryText={userEntry.title}
-              secondaryText={this._renderSecondaryText(userEntry)}
-            />
-          </Link>
+          <ListItem key={userEntry.id}>
+            <UserEntryItem userEntry={userEntry} />
+          </ListItem>
         ))}
       </List>
     );
@@ -139,24 +106,20 @@ export class Entries extends Component {
     const statusFilter = statusFromLocation(this.props.location) || DEFAULT_STATUS_FILTER;
 
     return (
-      <Paper style={STYLES.filters}>
-        <Menu value={statusFilter} onChange={this.handleStatusFilterChange}>
-          <MenuItem value="NEW">New</MenuItem>
-          <MenuItem value="LATER">Later</MenuItem>
-          <MenuItem value="FAVORITE">Favorites</MenuItem>
-          <MenuItem value="ARCHIVED">Archived</MenuItem>
-        </Menu>
-      </Paper>
+      <Menu style={STYLES.filters} value={statusFilter} onChange={this.handleStatusFilterChange}>
+        <MenuItem value="NEW">New</MenuItem>
+        <MenuItem value="LATER">Later</MenuItem>
+        <MenuItem value="FAVORITE">Favorites</MenuItem>
+        <MenuItem value="ARCHIVED">Archived</MenuItem>
+      </Menu>
     );
   }
 
   _renderContent() {
     const { data } = this.props;
     return (
-      <Card style={STYLES.content}>
-        <CardText>
-          {data.loading ? this._renderPlaceholderList() : this._renderList()}
-        </CardText>
+      <Card fullBleed style={STYLES.content}>
+        {data.loading ? this._renderPlaceholderList() : this._renderList()}
       </Card>
     );
   }
@@ -169,11 +132,9 @@ export class Entries extends Component {
         {this._renderFilters()}
         {this._renderContent()}
         <AddEntryDialog open={showAddEntryDialog} onRequestClose={this.handleAddEntryDialogClose} />
-        <FloatingActionButton
-          secondary
-          style={STYLES.fab}
-          onClick={() => this.toggleAddEntryDialog(true)}>
-          <ContentAdd />
+
+        <FloatingActionButton secondary fixed onClick={() => this.toggleAddEntryDialog(true)}>
+          <ContentAdd style={{ color: "inherit" }} />
         </FloatingActionButton>
       </div>
     );

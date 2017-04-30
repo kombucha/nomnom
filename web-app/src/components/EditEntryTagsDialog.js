@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import Dialog from "material-ui/Dialog";
-import FlatButton from "material-ui/FlatButton";
-import ChipInput from "material-ui-chip-input";
-
 import { gql, graphql, compose } from "react-apollo";
+
+import Dialog from "./Dialog";
+import ChipInput from "./ChipInput";
+import FlatButton from "./FlatButton";
 
 const DEFAULT_STATE = {
   newTags: [],
@@ -19,12 +19,19 @@ export class EditEntryTagsDialog extends Component {
     this._handleSave = this._handleSave.bind(this);
   }
 
+  componentWillReceiveProps(newProps) {
+    if (!newProps.data.loading) {
+      this.setState({ newTags: newProps.data.userEntry.tags });
+    }
+  }
+
   _handleSave() {
     const { newTags } = this.state;
     const { userEntryId, updateUserEntryTags, onRequestClose } = this.props;
 
     const updateParams = { id: userEntryId, tags: newTags };
     updateUserEntryTags(updateParams).then(() => {
+      console.log("Im done");
       this.setState(DEFAULT_STATE);
       onRequestClose(true);
     });
@@ -36,15 +43,20 @@ export class EditEntryTagsDialog extends Component {
 
   render() {
     const { open, onRequestClose, data: { loading, userEntry } } = this.props;
-    const { enableSave } = this.state;
+    const { newTags, enableSave } = this.state;
     const actions = [
-      <FlatButton label="Cancel" secondary onClick={onRequestClose} />,
-      <FlatButton label="Save" primary disabled={!enableSave} onClick={this._handleSave} />
+      <FlatButton secondary onClick={onRequestClose}>Cancel</FlatButton>,
+      <FlatButton primary disabled={!enableSave} onClick={this._handleSave}>Save</FlatButton>
     ];
 
     return (
       <Dialog title="Edit tags entry" open={open} actions={actions} onRequestClose={onRequestClose}>
-        {loading ? null : <ChipInput defaultValue={userEntry.tags} onChange={this._handleChange} />}
+        <ChipInput
+          hintText="Enter new tags"
+          value={newTags}
+          onChange={this._handleChange}
+          disabled={loading}
+        />
       </Dialog>
     );
   }

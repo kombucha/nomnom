@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import Dialog from "material-ui/Dialog";
-import TextField from "material-ui/TextField";
-import FlatButton from "material-ui/FlatButton";
-
 import { gql, graphql } from "react-apollo";
+
+import Dialog from "./Dialog";
+import FlatButton from "./FlatButton";
+import TextField from "./TextField";
 
 class AddEntryDialog extends Component {
   constructor() {
@@ -33,28 +33,18 @@ class AddEntryDialog extends Component {
     const { entryUrl } = this.state;
     const { open, onRequestClose } = this.props;
     const actions = [
-      <FlatButton label="Cancel" secondary onTouchTap={onRequestClose} />,
+      <FlatButton secondary onClick={onRequestClose}>Cancel</FlatButton>,
       <FlatButton
-        label="Add"
         primary
         disabled={!entryUrl}
-        onTouchTap={() => this.handleAddEntry(this.state.entryUrl)}
-      />
+        onTouchTap={() => this.handleAddEntry(this.state.entryUrl)}>
+        Add
+      </FlatButton>
     ];
 
     return (
-      <Dialog
-        title="Add entry"
-        open={open}
-        actions={actions}
-        onRequestClose={onRequestClose}>
-        <TextField
-          hintText="Enter url"
-          value={entryUrl}
-          onChange={this.handleChange}
-          fullWidth
-          autoFocus
-        />
+      <Dialog title="Add entry" open={open} actions={actions} onRequestClose={onRequestClose}>
+        <TextField hintText="Enter url" value={entryUrl} onChange={this.handleChange} autoFocus />
       </Dialog>
     );
   }

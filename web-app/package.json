@@ -4,14 +4,14 @@
   "private": true,
   "dependencies": {
     "material-ui": "0.17.1",
-    "material-ui-chip-input": "0.13.5",
     "query-string": "4.3.2",
     "react": "^15.4.2",
     "react-apollo": "1.0.0",
     "react-dom": "^15.4.2",
     "react-google-login": "2.8.5",
     "react-router-dom": "4.0.0",
-    "react-tap-event-plugin": "2.0.1"
+    "react-tap-event-plugin": "2.0.1",
+    "styled-components": "1.4.5"
   },
   "devDependencies": {
     "react-scripts": "0.9.5"
