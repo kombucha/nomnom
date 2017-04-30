@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import styled from "styled-components";
+import PropTypes from "prop-types";
 
 import Chip from "./Chip";
 import TextField from "./TextField";
@@ -62,7 +62,7 @@ export class ChipInput extends Component {
 }
 
 ChipInput.propTypes = {
-  value: React.PropTypes.array
+  value: PropTypes.array
 };
 ChipInput.defaultProps = {
   value: []

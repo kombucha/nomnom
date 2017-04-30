@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { gql, graphql } from "react-apollo";
 import queryString from "query-string";
-import ContentAdd from "material-ui/svg-icons/content/add";
+import ContentAdd from "react-icons/lib/md/add";
 
 import { Menu, MenuItem } from "../components/Menu";
 import { List, ListItem } from "../components/List";
@@ -134,7 +134,7 @@ export class Entries extends Component {
         <AddEntryDialog open={showAddEntryDialog} onRequestClose={this.handleAddEntryDialogClose} />
 
         <FloatingActionButton secondary fixed onClick={() => this.toggleAddEntryDialog(true)}>
-          <ContentAdd style={{ color: "inherit" }} />
+          <ContentAdd className="icon" />
         </FloatingActionButton>
       </div>
     );

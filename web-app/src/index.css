@@ -8,3 +8,12 @@ body {
 * {
   box-sizing: border-box;
 }
+
+.icon {
+  color: inherit;
+  display: inline-block;
+  fill: currentcolor;
+  height: 24px;
+  width: 24px;
+  user-select: none;
+}

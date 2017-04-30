@@ -1,5 +1,7 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
+
 import Card from "./Card";
 import { List, ListItem } from "./List";
 
@@ -46,12 +48,12 @@ export class Menu extends Component {
 }
 
 Menu.propTypes = {
-  children: React.PropTypes.arrayOf(
-    React.PropTypes.shape({
-      type: React.PropTypes.oneOf([MenuItem])
+  children: PropTypes.arrayOf(
+    PropTypes.shape({
+      type: PropTypes.oneOf([MenuItem])
     })
   ),
-  onChange: React.PropTypes.func
+  onChange: PropTypes.func
 };
 Menu.defaultProps = {
   onChange: () => {}

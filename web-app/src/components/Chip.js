@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import DeleteIcon from "material-ui/svg-icons/navigation/cancel";
+import DeleteIcon from "react-icons/lib/md/cancel";
 
 const ChipWrapper = styled.div`
     display: inline-block;
@@ -54,7 +54,7 @@ export const Chip = ({ children, onClick, onRequestDelete }) => (
   <ChipWrapper onClick={onClick}>
     <ChipContent>
       <ChipText>{React.Children.toArray(children)}</ChipText>
-      {onRequestDelete ? <StyledDeleteIcon onClick={onRequestDelete} /> : null}
+      {onRequestDelete ? <StyledDeleteIcon className="icon" onClick={onRequestDelete} /> : null}
     </ChipContent>
   </ChipWrapper>
 );

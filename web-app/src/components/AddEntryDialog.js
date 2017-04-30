@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { gql, graphql } from "react-apollo";
+import PropTypes from "prop-types";
 
 import Dialog from "./Dialog";
 import FlatButton from "./FlatButton";
@@ -51,8 +52,8 @@ class AddEntryDialog extends Component {
 }
 
 AddEntryDialog.propTypes = {
-  open: React.PropTypes.bool.isRequired,
-  onRequestClose: React.PropTypes.func.isRequired
+  open: PropTypes.bool.isRequired,
+  onRequestClose: PropTypes.func.isRequired
 };
 
 AddEntryDialog.defaultProps = {

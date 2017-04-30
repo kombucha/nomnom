@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { gql, graphql, compose } from "react-apollo";
+import PropTypes from "prop-types";
 
 import Dialog from "./Dialog";
 import ChipInput from "./ChipInput";
@@ -63,9 +64,9 @@ export class EditEntryTagsDialog extends Component {
 }
 
 EditEntryTagsDialog.propTypes = {
-  userEntryId: React.PropTypes.string.isRequired,
-  open: React.PropTypes.bool.isRequired,
-  onRequestClose: React.PropTypes.func.isRequired
+  userEntryId: PropTypes.string.isRequired,
+  open: PropTypes.bool.isRequired,
+  onRequestClose: PropTypes.func.isRequired
 };
 
 EditEntryTagsDialog.defaultProps = {

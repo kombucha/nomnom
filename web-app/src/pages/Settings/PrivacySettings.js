@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import ActionDelete from "material-ui/svg-icons/action/delete";
-import CircularProgress from "material-ui/CircularProgress";
+import ActionDelete from "react-icons/lib/md/delete";
 import styled from "styled-components";
 import { gql, graphql } from "react-apollo";
 
@@ -59,7 +58,7 @@ export class PrivacySettings extends Component {
       deleting
         ? <FlatButton primary disabled>
             <span>Deleting</span>
-            <CircularProgress size={24} />
+            {/* TODO: <CircularProgress size={24} />*/}
           </FlatButton>
         : <FlatButton
             primary
@@ -75,7 +74,7 @@ export class PrivacySettings extends Component {
           <CardTitle>Privacy</CardTitle>
 
           <RaisedButton secondary onClick={showConfirmDelete}>
-            <ActionDelete style={{ color: "inherit" }} />
+            <ActionDelete className="icon" />
             <span>Clear all my content</span>
           </RaisedButton>
 
