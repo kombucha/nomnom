@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { gql, graphql, compose } from "react-apollo";
 import PropTypes from "prop-types";
 
@@ -11,7 +11,7 @@ const DEFAULT_STATE = {
   enableSave: false
 };
 
-export class EditEntryTagsDialog extends Component {
+export class EditEntryTagsDialog extends PureComponent {
   constructor() {
     super();
     this.state = DEFAULT_STATE;
@@ -32,7 +32,6 @@ export class EditEntryTagsDialog extends Component {
 
     const updateParams = { id: userEntryId, tags: newTags };
     updateUserEntryTags(updateParams).then(() => {
-      console.log("Im done");
       this.setState(DEFAULT_STATE);
       onRequestClose(true);
     });

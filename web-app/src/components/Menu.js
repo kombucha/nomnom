@@ -21,31 +21,25 @@ export const MenuItem = styled(ListItem)`
   }
 `;
 
-export class Menu extends Component {
-  render() {
-    const { children, ...rest } = this.props;
+export const Menu = ({ children, value, onChange, ...rest }) => (
+  <Card fullBleed {...rest}>
+    <List>
+      {React.Children.map(children, menuItem => {
+        const newProps = {
+          onClick: ev => {
+            onChange(menuItem.props.value);
+            if (menuItem.props.onClick) {
+              menuItem.props.onClick(ev);
+            }
+          },
+          selected: menuItem.props.value === value
+        };
 
-    return (
-      <Card fullBleed {...rest}>
-        <List>
-          {React.Children.map(children, menuItem => {
-            const newProps = {
-              onClick: ev => {
-                this.props.onChange(menuItem.props.value);
-                if (menuItem.props.onClick) {
-                  menuItem.props.onClick(ev);
-                }
-              },
-              selected: menuItem.props.value === this.props.value
-            };
-
-            return React.cloneElement(menuItem, newProps);
-          })}
-        </List>
-      </Card>
-    );
-  }
-}
+        return React.cloneElement(menuItem, newProps);
+      })}
+    </List>
+  </Card>
+);
 
 Menu.propTypes = {
   children: PropTypes.arrayOf(

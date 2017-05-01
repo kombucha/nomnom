@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { gql, graphql } from "react-apollo";
 import PropTypes from "prop-types";
 
@@ -6,7 +6,7 @@ import Dialog from "./Dialog";
 import FlatButton from "./FlatButton";
 import TextField from "./TextField";
 
-class AddEntryDialog extends Component {
+class AddEntryDialog extends PureComponent {
   constructor() {
     super();
     this.state = {
@@ -69,10 +69,7 @@ const AddEntryDialogWithMutation = graphql(addEntryMutation, {
   props: ({ mutate }) => ({
     addUserEntry: url =>
       mutate({
-        variables: { url },
-        update: (...args) => {
-          console.log(args);
-        }
+        variables: { url }
       })
   })
 })(AddEntryDialog);

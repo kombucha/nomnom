@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import { Card, CardTitle } from "./Card";
@@ -68,5 +69,15 @@ export class Dialog extends Component {
     );
   }
 }
+
+Dialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  title: PropTypes.string,
+  actions: PropTypes.arrayOf(PropTypes.node)
+};
+
+Dialog.defaultProps = {
+  open: true
+};
 
 export default Dialog;

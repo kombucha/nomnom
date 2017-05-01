@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 
 const CardWrapper = styled.section`
@@ -13,6 +14,13 @@ export const Card = ({ children, ...rest }) => (
     {children}
   </CardWrapper>
 );
+
+Card.propTypes = {
+  fullBleed: PropTypes.bool
+};
+Card.defaultProps = {
+  fullBleed: false
+};
 
 export const CardTitle = styled.h2`
   padding: 0;

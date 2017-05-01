@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 
 const FieldContainer = styled.div`
@@ -39,6 +40,7 @@ const HintText = styled.div`
   color: rgba(0, 0, 0, 0.298);
   transition: opacity ${props => props.theme.transitionConfig};
   user-select: none;
+  pointer-events: none;
 `;
 
 const BottomBorder = styled.div`
@@ -51,8 +53,8 @@ const BottomBorder = styled.div`
 
 const FocusBottomBorder = styled.div`
   position: absolute;
-  bottom: 8px;
   width: 100%;
+  bottom: 8px;
 
   border: none;
   border-bottom: 2px solid ${props => props.theme.primary1Color};
@@ -87,6 +89,11 @@ export class TextField extends Component {
   }
 }
 
+TextField.propTypes = {
+  type: PropTypes.string,
+  onChange: PropTypes.func,
+  hintText: PropTypes.string
+};
 TextField.defaultProps = {
   type: "text",
   onChange: () => {}

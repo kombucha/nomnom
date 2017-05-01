@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import ActionDelete from "react-icons/lib/md/delete";
 import styled from "styled-components";
 import { gql, graphql } from "react-apollo";
@@ -18,7 +18,7 @@ const DEFAULT_STATE = {
   confirmationText: ""
 };
 
-export class PrivacySettings extends Component {
+export class PrivacySettings extends PureComponent {
   constructor() {
     super();
     this.state = DEFAULT_STATE;

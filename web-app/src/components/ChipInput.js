@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 
 import Chip from "./Chip";
@@ -6,7 +6,7 @@ import TextField from "./TextField";
 
 const ENTER_KEY_CODE = 13;
 
-export class ChipInput extends Component {
+export class ChipInput extends PureComponent {
   constructor() {
     super();
     this.state = { textValue: "" };
@@ -51,6 +51,7 @@ export class ChipInput extends Component {
           hintText={hintText}
           disabled={disabled}
           value={textValue}
+          autoFocus
           onChange={this._handleTextChange}
           onKeyDown={ev => {
             if (ev.keyCode === ENTER_KEY_CODE) this._handleAddValue(this.state.textValue);
@@ -62,10 +63,13 @@ export class ChipInput extends Component {
 }
 
 ChipInput.propTypes = {
-  value: PropTypes.array
+  value: PropTypes.array,
+  disabled: PropTypes.bool,
+  hintText: PropTypes.string
 };
 ChipInput.defaultProps = {
-  value: []
+  value: [],
+  disabled: false
 };
 
 export default ChipInput;

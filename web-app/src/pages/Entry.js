@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { gql, graphql, compose } from "react-apollo";
 import styled from "styled-components";
 
@@ -34,7 +34,7 @@ const Article = styled.article`
   }
 `;
 
-class Entry extends Component {
+class Entry extends PureComponent {
   constructor() {
     super();
     this.state = {
