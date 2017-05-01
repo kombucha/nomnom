@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import DeleteIcon from "react-icons/lib/md/cancel";
 
@@ -58,5 +59,10 @@ export const Chip = ({ children, onClick, onRequestDelete }) => (
     </ChipContent>
   </ChipWrapper>
 );
+
+Chip.propTypes = {
+  onClick: PropTypes.func,
+  onRequestDelete: PropTypes.func
+};
 
 export default Chip;
