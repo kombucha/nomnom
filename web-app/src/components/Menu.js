@@ -56,6 +56,7 @@ Menu.propTypes = {
   onChange: PropTypes.func
 };
 Menu.defaultProps = {
+  value: null,
   onChange: () => {}
 };
 

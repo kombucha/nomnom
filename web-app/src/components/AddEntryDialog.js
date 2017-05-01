@@ -20,6 +20,7 @@ class AddEntryDialog extends Component {
   handleAddEntry() {
     const { entryUrl } = this.state;
     const { addUserEntry, onRequestClose } = this.props;
+
     addUserEntry(entryUrl).then(() => {
       this.setState({ entryUrl: "" });
       onRequestClose(true);
@@ -38,7 +39,7 @@ class AddEntryDialog extends Component {
       <FlatButton
         primary
         disabled={!entryUrl}
-        onTouchTap={() => this.handleAddEntry(this.state.entryUrl)}>
+        onClick={() => this.handleAddEntry(this.state.entryUrl)}>
         Add
       </FlatButton>
     ];

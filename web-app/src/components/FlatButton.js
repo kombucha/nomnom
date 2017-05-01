@@ -19,7 +19,7 @@ const StyledButton = styled.button`
   margin: 0;
 
   outline: none;
-  border: 10px;
+  border: none;
   cursor: pointer;
   user-select: none;
 

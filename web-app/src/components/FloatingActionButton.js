@@ -37,12 +37,12 @@ export const FloatingActionButton = styled.button`
   height: ${size};
 
   outline: none;
+  border: none;
   cursor: pointer;
   user-select: none;
-  border: 10px;
 
   border-radius: 50%;
-  box-shadow: rgba(0, 0, 0, 0.156863) 0px 3px 10px, rgba(0, 0, 0, 0.227451) 0px 3px 10px;
+  box-shadow: ${props => props.theme.shadow};
 
   color: ${textColor};
   background: ${props => asGradient(backgroundColor(props))};

@@ -69,7 +69,7 @@ export class PrivacySettings extends Component {
     ];
 
     return (
-      <div style={this.props.style}>
+      <div>
         <Card>
           <CardTitle>Privacy</CardTitle>
 

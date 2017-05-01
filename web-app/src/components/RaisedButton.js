@@ -32,16 +32,16 @@ const StyledButton = styled.button`
   margin: 0;
 
   outline: none;
+  border: none;
   cursor: pointer;
   user-select: none;
-  border: 10px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
   border-radius: 2px;
-  box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
+  box-shadow: ${props => props.theme.shadow};
 
   color: ${textColor};
   background: ${props => asGradient(backgroundColor(props))};
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
   line-height: ${height};
   font-weight: 500;

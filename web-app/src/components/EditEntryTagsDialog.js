@@ -43,7 +43,7 @@ export class EditEntryTagsDialog extends Component {
   }
 
   render() {
-    const { open, onRequestClose, data: { loading, userEntry } } = this.props;
+    const { open, onRequestClose, data: { loading } } = this.props;
     const { newTags, enableSave } = this.state;
     const actions = [
       <FlatButton secondary onClick={onRequestClose}>Cancel</FlatButton>,

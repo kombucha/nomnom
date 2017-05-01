@@ -1,27 +1,23 @@
-import React, { Component } from "react";
+import React from "react";
+import styled from "styled-components";
 import PrivacySettings from "./PrivacySettings";
 
-const STYLES = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    margin: 8
-  },
-  settingPanel: {
-    minWidth: 600,
-    maxWidth: 800
-  }
-};
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 16px;
 
-export class Settings extends Component {
-  render() {
-    return (
-      <div style={STYLES.container}>
-        <PrivacySettings style={STYLES.settingPanel} />
-      </div>
-    );
+  > div {
+    min-width: 600px;
+    max-width: 800px;
   }
-}
+`;
+
+export const Settings = () => (
+  <Container>
+    <PrivacySettings />
+  </Container>
+);
 
 export default Settings;

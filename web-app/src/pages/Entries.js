@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { gql, graphql } from "react-apollo";
+import styled from "styled-components";
 import queryString from "query-string";
 import ContentAdd from "react-icons/lib/md/add";
 
@@ -12,26 +13,14 @@ import { UserEntryItem, UserEntryItemPlaceholder } from "../components/UserEntry
 
 const DEFAULT_STATUS_FILTER = "NEW";
 
-const STYLES = {
-  container: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    padding: 16
-  },
-  content: {
-    flex: 1
-  },
-  filters: {
-    marginRight: 32
-  },
-  fab: {
-    position: "fixed",
-    bottom: 16,
-    right: 16,
-    zIndex: 100
-  }
-};
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 16px;
+`;
+const MainContainer = styled.main`flex: 1;`;
+const FilterContainer = styled.section`margin-right: 32px;`;
 
 const asDisplayedUserEntry = userEntry => ({
   id: userEntry.id,
@@ -106,21 +95,25 @@ export class Entries extends Component {
     const statusFilter = statusFromLocation(this.props.location) || DEFAULT_STATUS_FILTER;
 
     return (
-      <Menu style={STYLES.filters} value={statusFilter} onChange={this.handleStatusFilterChange}>
-        <MenuItem value="NEW">New</MenuItem>
-        <MenuItem value="LATER">Later</MenuItem>
-        <MenuItem value="FAVORITE">Favorites</MenuItem>
-        <MenuItem value="ARCHIVED">Archived</MenuItem>
-      </Menu>
+      <FilterContainer>
+        <Menu value={statusFilter} onChange={this.handleStatusFilterChange}>
+          <MenuItem value="NEW">New</MenuItem>
+          <MenuItem value="LATER">Later</MenuItem>
+          <MenuItem value="FAVORITE">Favorites</MenuItem>
+          <MenuItem value="ARCHIVED">Archived</MenuItem>
+        </Menu>
+      </FilterContainer>
     );
   }
 
   _renderContent() {
     const { data } = this.props;
     return (
-      <Card fullBleed style={STYLES.content}>
-        {data.loading ? this._renderPlaceholderList() : this._renderList()}
-      </Card>
+      <MainContainer>
+        <Card fullBleed>
+          {data.loading ? this._renderPlaceholderList() : this._renderList()}
+        </Card>
+      </MainContainer>
     );
   }
 
@@ -128,7 +121,7 @@ export class Entries extends Component {
     const { showAddEntryDialog } = this.state;
 
     return (
-      <div style={STYLES.container}>
+      <PageContainer>
         {this._renderFilters()}
         {this._renderContent()}
         <AddEntryDialog open={showAddEntryDialog} onRequestClose={this.handleAddEntryDialogClose} />
@@ -136,7 +129,7 @@ export class Entries extends Component {
         <FloatingActionButton secondary fixed onClick={() => this.toggleAddEntryDialog(true)}>
           <ContentAdd className="icon" />
         </FloatingActionButton>
-      </div>
+      </PageContainer>
     );
   }
 }

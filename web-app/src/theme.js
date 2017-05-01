@@ -8,5 +8,6 @@ export default {
   disabledColor: "rgba(0, 0, 0, 0.3)",
   disabledBackgroundColor: "rgb(229, 229, 229)",
 
-  transitionConfig: "450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms"
+  transitionConfig: "450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms",
+  shadow: "rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px"
 };

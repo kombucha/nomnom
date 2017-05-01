@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import { gql, graphql } from "react-apollo";
 import styled from "styled-components";
 
+import { truncate } from "../style-utils";
 import authService from "../services/authentication";
 import withAuth from "./withAuth";
 import { MenuContainer, MenuItem } from "./Menu";
@@ -10,6 +11,10 @@ import FlatButton from "./FlatButton";
 import Avatar from "./Avatar";
 
 const MenuButton = styled(FlatButton)`color: white;`;
+const UserName = styled.span`
+  ${truncate("160px")}
+  padding-right: 8px;
+`;
 
 export class UserMenu extends Component {
   constructor() {
@@ -37,7 +42,7 @@ export class UserMenu extends Component {
       <MenuContainer
         target={
           <MenuButton>
-            <span style={{ paddingRight: 8 }}>{data.me.name}</span>
+            <UserName>{data.me.name}</UserName>
             <Avatar size="30px" src={data.me.avatarUrl} />
           </MenuButton>
         }>

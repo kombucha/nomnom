@@ -25,17 +25,7 @@ const POSITIVE_SCORE_NAMES = /article|body|content|entry|hentry|h-entry|main|pag
 const NEGATIVE_SCORE_NAMES = /hidden|^hid$| hid$| hid |^hid |banner|combx|comment|com-|contact|foot|footer|footnote|masthead|media|meta|modal|outbrain|promo|related|scroll|share|shoutbox|sidebar|skyscraper|sponsor|shopping|tags|tool|widget/i;
 const VIDEOS_EMBED_ATTRIBUTES = /\/\/(www\.)?(dailymotion|youtube|youtube-nocookie|player\.vimeo)\.com/i;
 const ALTER_TO_DIV_EXCEPTIONS = ["div", "article", "section", "p"];
-const DEFAULT_TAGS_TO_SCORE = [
-  "section",
-  "h2",
-  "h3",
-  "h4",
-  "h5",
-  "h6",
-  "p",
-  "td",
-  "pre"
-];
+const DEFAULT_TAGS_TO_SCORE = ["section", "h2", "h3", "h4", "h5", "h6", "p", "td", "pre"];
 // Lifted from https://github.com/regexhq/word-regex, wtf npm ^^
 const WORD_REGEX = /[a-zA-Z0-9_\u0392-\u03c9\u0400-\u04FF]+|[\u4E00-\u9FFF\u3400-\u4dbf\uf900-\ufaff\u3040-\u309f\uac00-\ud7af\u0400-\u04FF]+|[\u00E4\u00C4\u00E5\u00C5\u00F6\u00D6]+|\w+/g;
 const AVG_WORDS_PER_SECOND = 275 / 60;
@@ -122,17 +112,7 @@ function load(url) {
 }
 
 function grabArticle($page) {
-  const CONTENT_ELEMENTS = [
-    "div",
-    "section",
-    "header",
-    "h1",
-    "h2",
-    "h3",
-    "h4",
-    "h5",
-    "h6"
-  ];
+  const CONTENT_ELEMENTS = ["div", "section", "header", "h1", "h2", "h3", "h4", "h5", "h6"];
 
   while (true) {
     const elementsToScore = [];
@@ -222,9 +202,7 @@ function grabArticle($page) {
 
       for (let t = 0; t < TOP_CANDIDATES; t++) {
         const $topCandidate = topCandidates[t];
-        const topCandidateScore = $topCandidate
-          ? $topCandidate.data("readabilityScore")
-          : 0;
+        const topCandidateScore = $topCandidate ? $topCandidate.data("readabilityScore") : 0;
 
         if (!$topCandidate || adjustedScore > topCandidateScore) {
           topCandidates.splice(t, 0, $candidate);
@@ -263,15 +241,12 @@ function grabArticle($page) {
         const siblingScore = $sibling.data("readabilityScore");
 
         if (
-          $sibling.attr("class") === $topCandidate.attr("class") &&
-          !!$topCandidate.attr("class")
+          $sibling.attr("class") === $topCandidate.attr("class") && !!$topCandidate.attr("class")
         ) {
           contentBonus += topCandidateScore * 0.2;
         }
 
-        if (
-          siblingScore && siblingScore + contentBonus >= siblingScoreThreshold
-        ) {
+        if (siblingScore && siblingScore + contentBonus >= siblingScoreThreshold) {
           append = true;
         } else if (siblingNodeName === "P") {
           const linkDensity = getLinkDensity($sibling);
@@ -406,6 +381,7 @@ function fixRelativeUrls(baseUrl, $html) {
       $link.removeAttr("href");
     } else {
       $link.attr("href", toAbsoluteUrl(baseUrl, href));
+      $link.attr("target", "_blank");
     }
   });
 
@@ -437,19 +413,13 @@ function cleanArticle($article) {
   // TODO: Remove h2 which are actually the article title
 
   // Clean embed that are not whitelisted
-  $article
-    .find("object,embed,iframe")
-    .filter((i, el) => !isWhitelistedEmbed(el))
-    .remove();
+  $article.find("object,embed,iframe").filter((i, el) => !isWhitelistedEmbed(el)).remove();
 
   // Clean form elements
   $article.find("input,textarea,select,button").remove();
 
   // Clean out spurious headers
-  $article
-    .find("h1,h2,h3")
-    .filter((i, header) => getClassIdScore(cheerio(header)) < 0)
-    .remove();
+  $article.find("h1,h2,h3").filter((i, header) => getClassIdScore(cheerio(header)) < 0).remove();
 
   // Do these last as the previous stuff may have removed junk that will affect these
   cleanFishyNodes($article, "table");
@@ -521,24 +491,15 @@ function isFishy($node) {
   const liCount = $node.find("li").length - 100;
   const inputCount = $node.find("input").length;
   const embedCount = $node.find("embed");
-  const hasDataTableAncestor = hasAncestor(
-    $node,
-    $n => !!$n.data("readabilityDataTable")
-  );
-  const hasFigureAncestor = hasAncestor(
-    $node,
-    $n => getNodeName($n) === "figure"
-  );
+  const hasDataTableAncestor = hasAncestor($node, $n => !!$n.data("readabilityDataTable"));
+  const hasFigureAncestor = hasAncestor($node, $n => getNodeName($n) === "figure");
   const linkDensity = getLinkDensity($node);
 
   const shouldBeRemoved = commasCount < 10 &&
     ((imgCount > 1 && pCount / imgCount < 0.5 && hasFigureAncestor) ||
       (!isList && liCount > pCount) ||
       inputCount > Math.floor(pCount / 3) ||
-      (!isList &&
-        text.length < 25 &&
-        (imgCount === 0 || imgCount > 2) &&
-        hasFigureAncestor) ||
+      (!isList && text.length < 25 && (imgCount === 0 || imgCount > 2) && hasFigureAncestor) ||
       (!isList && score < 25 && linkDensity > 0.2) ||
       (score >= 25 && linkDensity > 0.5) ||
       ((embedCount === 1 && text.length < 75) || embedCount > 1));
@@ -568,8 +529,7 @@ function isWhitelistedEmbed(embedEl) {
 }
 
 function hasContent($el) {
-  return $el.text().trim().length > 0 ||
-    $el.children(":not(hr, br)").length > 0;
+  return $el.text().trim().length > 0 || $el.children(":not(hr, br)").length > 0;
 }
 
 function removeAndGetNext($node) {
