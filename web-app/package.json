@@ -11,7 +11,7 @@
     "react-google-login": "git://github.com/kombucha/react-google-login.git#update-to-latest-react",
     "react-icons": "2.2.3",
     "react-router-dom": "4.1.1",
-    "styled-components": "1.4.5"
+    "styled-components": "2.0.0-17"
   },
   "devDependencies": {
     "@kadira/react-storybook-addon-info": "3.4.0",
