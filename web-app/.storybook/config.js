@@ -4,9 +4,12 @@ import infoAddon from "@kadira/react-storybook-addon-info";
 import { ThemeProvider } from "styled-components";
 
 import theme from "../src/theme";
+import "../src/index.css";
+
+const req = require.context("../src/components", true, /.stories.js$/);
 
 function loadStories() {
-  require("../src/stories");
+  req.keys().forEach(filename => req(filename));
 }
 
 addDecorator(story => (

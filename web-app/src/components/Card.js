@@ -2,11 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
+const spacing = "16px";
 const CardWrapper = styled.section`
   background-color: white;
   border-radius: 2px;
   box-shadow: ${props => props.theme.shadow};
-  padding: ${props => (props.fullBleed ? 0 : "16px")}
+  padding: ${props => (props.fullBleed ? 0 : spacing)}
 `;
 
 export const Card = ({ children, ...rest }) => (
@@ -25,8 +26,9 @@ Card.defaultProps = {
 export const CardTitle = styled.h2`
   padding: 0;
   margin: 0;
-  margin-bottom: 16px;
+  margin-bottom: ${spacing};
   font-weight: normal;
 `;
+CardTitle.displayName = "CardTitle";
 
 export default Card;

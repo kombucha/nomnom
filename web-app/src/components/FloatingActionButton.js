@@ -61,5 +61,6 @@ export const FloatingActionButton = styled.button`
     pointer-events: none;
   }
 `;
+FloatingActionButton.displayName = "FloatingActionButton";
 
 export default FloatingActionButton;

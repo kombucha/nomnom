@@ -96,6 +96,7 @@ TextField.propTypes = {
 };
 TextField.defaultProps = {
   type: "text",
+  value: "",
   onChange: () => {}
 };
 

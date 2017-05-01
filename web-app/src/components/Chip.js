@@ -4,21 +4,21 @@ import styled from "styled-components";
 import DeleteIcon from "react-icons/lib/md/cancel";
 
 const ChipWrapper = styled.div`
-    display: inline-block;
-    margin: 4px;
-    width: fit-content;
+  display: inline-block;
+  margin: 4px;
+  width: fit-content;
 
-    cursor: pointer;
-    text-decoration: none;
-    font-size: inherit;
-    font-weight: inherit;
-    background-color: rgb(224, 224, 224);
-    border-radius: 16px;
-    white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: inherit;
+  font-weight: inherit;
+  background-color: rgb(224, 224, 224);
+  border-radius: 16px;
+  white-space: nowrap;
 
-    &:hover {
-      background-color: rgb(206, 206, 206);
-    }
+  &:hover {
+    background-color: rgb(206, 206, 206);
+  }
 `;
 
 const ChipContent = styled.span`
@@ -55,7 +55,16 @@ export const Chip = ({ children, onClick, onRequestDelete }) => (
   <ChipWrapper onClick={onClick}>
     <ChipContent>
       <ChipText>{React.Children.toArray(children)}</ChipText>
-      {onRequestDelete ? <StyledDeleteIcon className="icon" onClick={onRequestDelete} /> : null}
+      {onRequestDelete
+        ? <StyledDeleteIcon
+            className="icon"
+            onClick={ev => {
+              ev.preventDefault();
+              ev.stopPropagation();
+              onRequestDelete(ev);
+            }}
+          />
+        : null}
     </ChipContent>
   </ChipWrapper>
 );
