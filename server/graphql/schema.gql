@@ -45,13 +45,18 @@ input EntryUpdateInput {
   tags: [String!]
 }
 
+input AddUserEntryInput {
+  url: String!
+  status: UserEntryStatus
+}
+
 type Query {
   me: User
   userEntry(userEntryId: ID!): UserEntry!
 }
 
 type Mutation {
-  addUserEntry(url: String!): UserEntry!
+  addUserEntry(addUserEntryInput: AddUserEntryInput): UserEntry!
   updateUserEntry(entryUpdateInput: EntryUpdateInput): UserEntry!
   deleteAllMyEntries: Boolean
 }

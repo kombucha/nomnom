@@ -15,7 +15,7 @@ const USER_ENTRY_STATE = {
 };
 
 // TODO: source (rss, user etc)
-async function createFromUrl(userId, url) {
+async function createFromUrl(userId, url, status) {
   const id = generateId(userId);
 
   const newEntry = await entry.createFromUrl(url);
@@ -25,7 +25,7 @@ async function createFromUrl(userId, url) {
     creationDate: Date.now(),
     lastUpdateDate: null,
     progress: 0,
-    status: USER_ENTRY_STATE.LATER,
+    status: status || USER_ENTRY_STATE.LATER,
     tags: []
   };
   await db.insert(id, userEntry);
@@ -62,9 +62,7 @@ function update(userEntryId, updateValues) {
 
   mutationBuilder = UPDATABLE_KEYS.reduce(
     (mutationBuilder, key) => {
-      return updateValues[key]
-        ? mutationBuilder.replace(key, updateValues[key])
-        : mutationBuilder;
+      return updateValues[key] ? mutationBuilder.replace(key, updateValues[key]) : mutationBuilder;
     },
     mutationBuilder
   );

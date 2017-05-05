@@ -71,7 +71,7 @@ export const Chip = ({ children, onClick, onRequestDelete }) => (
 
 Chip.propTypes = {
   onClick: PropTypes.func,
-  onRequestDelete: PropTypes.func
+  onRequestDelete: React.PropTypes.func
 };
 
 export default Chip;

@@ -18,10 +18,10 @@ class AddEntryDialog extends PureComponent {
   }
 
   handleAddEntry() {
-    const { entryUrl } = this.state;
+    const { entryUrl: url } = this.state;
     const { addUserEntry, onRequestClose } = this.props;
 
-    addUserEntry(entryUrl).then(() => {
+    addUserEntry({ url }).then(() => {
       this.setState({ entryUrl: "" });
       onRequestClose(true);
     });
@@ -61,16 +61,13 @@ AddEntryDialog.defaultProps = {
   open: false
 };
 
-const addEntryMutation = gql`mutation addUserEntry($url: String!) {
-  addUserEntry(url: $url) {id}
+const addEntryMutation = gql`mutation addUserEntry($addUserEntryInput: AddUserEntryInput!) {
+  addUserEntry(addUserEntryInput: $addUserEntryInput) {id}
 }`;
 
 const AddEntryDialogWithMutation = graphql(addEntryMutation, {
   props: ({ mutate }) => ({
-    addUserEntry: url =>
-      mutate({
-        variables: { url }
-      })
+    addUserEntry: addUserEntryInput => mutate({ variables: { addUserEntryInput } })
   })
 })(AddEntryDialog);
 
