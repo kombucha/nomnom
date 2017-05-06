@@ -46,9 +46,9 @@ export class PrivacySettings extends PureComponent {
     const { confirmationText, deleting } = this.state;
     const showConfirmDelete = () => this.setState({ showConfirmDelete: true });
     const handleDismissDialog = () => (deleting ? null : this._handleConfirmDelete(false));
-    const updateConfirmationText = (e, value) =>
+    const updateConfirmationText = ev =>
       this.setState({
-        confirmationText: value
+        confirmationText: ev.target.value
       });
 
     const actions = [

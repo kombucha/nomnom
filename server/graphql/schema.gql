@@ -47,7 +47,9 @@ input EntryUpdateInput {
 
 input AddUserEntryInput {
   url: String!
+  creationDate: Date
   status: UserEntryStatus
+  tags: [String!]
 }
 
 type Query {
@@ -56,8 +58,9 @@ type Query {
 }
 
 type Mutation {
-  addUserEntry(addUserEntryInput: AddUserEntryInput): UserEntry!
-  updateUserEntry(entryUpdateInput: EntryUpdateInput): UserEntry!
+  addUserEntry(addUserEntryInput: AddUserEntryInput!): UserEntry!
+  batchAddUserEntries(batchAddUserEntriesInput: [AddUserEntryInput!]!): [UserEntry]
+  updateUserEntry(entryUpdateInput: EntryUpdateInput!): UserEntry!
   deleteAllMyEntries: Boolean
 }
 

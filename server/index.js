@@ -15,20 +15,12 @@ app.use(morgan("dev", { stream: logger.stream }));
 
 app.use("/img", express.static(config.imagesPath));
 app.use("/login", loginRouter);
-app.use(
-  "/graphql",
-  authMiddleware(),
-  loadersMiddleware(),
-  bodyParser.json(),
-  graphqlMiddleware()
-);
+app.use("/graphql", authMiddleware(), loadersMiddleware(), bodyParser.json(), graphqlMiddleware());
 
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
   logger.error(err.stack);
   res.status(500).send("Something broke!");
 });
 
 app.listen(config.port);
-logger.info(
-  `Running a GraphQL API server at http://localhost:${config.port}/graphql`
-);
+logger.info(`Running a GraphQL API server at http://localhost:${config.port}/graphql`);

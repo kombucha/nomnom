@@ -6,6 +6,7 @@ const crypto = require("crypto");
 const getStream = require("get-stream");
 const parseDate = require("date-fns/parse");
 const isValidDate = require("date-fns/is_valid");
+const Promise = require("bluebird");
 
 const cheerio = require("cheerio");
 const mime = require("mime-types");
@@ -285,13 +286,15 @@ function grabArticle($page) {
 
 async function processImages($html) {
   const images = $html.find("img").get();
-  await Promise.all(
-    images.map(async img => {
+  await Promise.map(
+    images,
+    async img => {
       const $img = cheerio(img);
       const imgUrl = $img.attr("src");
       const cachedUrl = await cacheImage(imgUrl);
       $img.attr("src", cachedUrl);
-    })
+    },
+    { concurrency: 4 }
   );
 }
 
@@ -353,7 +356,8 @@ function getMetaValue($html, metaNameRegex) {
 }
 
 function extractWordCount($html) {
-  return $html.text().match(WORD_REGEX).length;
+  const wordCountMatch = $html.text().match(WORD_REGEX);
+  return wordCountMatch ? wordCountMatch.length : 0;
 }
 
 function durationFromWordCount(wordCount) {

@@ -15,18 +15,20 @@ const USER_ENTRY_STATE = {
 };
 
 // TODO: source (rss, user etc)
-async function createFromUrl(userId, url, status) {
+async function create(userId, userEntryParam) {
   const id = generateId(userId);
 
-  const newEntry = await entry.createFromUrl(url);
+  const newEntry = await entry.createFromUrl(userEntryParam.url);
   const userEntry = {
     user: userId,
     entry: newEntry.id,
-    creationDate: Date.now(),
+    creationDate: userEntryParam.creationDate
+      ? new Date(userEntryParam.creationDate).getTime()
+      : Date.now(),
     lastUpdateDate: null,
     progress: 0,
-    status: status || USER_ENTRY_STATE.LATER,
-    tags: []
+    status: userEntryParam.status || USER_ENTRY_STATE.LATER,
+    tags: userEntryParam.tags || []
   };
   await db.insert(id, userEntry);
 
@@ -86,7 +88,7 @@ module.exports = {
   DB_TYPE,
   USER_ENTRY_STATE,
 
-  createFromUrl,
+  create,
   list,
   update,
   deleteAll

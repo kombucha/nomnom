@@ -22,6 +22,7 @@ const executableSchema = makeExecutableSchema({
     },
     Mutation: {
       addUserEntry: require("./mutations/addUserEntry"),
+      batchAddUserEntries: require("./mutations/batchAddUserEntries"),
       updateUserEntry: require("./mutations/updateUserEntry"),
       deleteAllMyEntries: require("./mutations/deleteAllMyEntries")
     }
