@@ -73,11 +73,13 @@ export class Dialog extends Component {
 Dialog.propTypes = {
   open: PropTypes.bool.isRequired,
   title: PropTypes.string,
-  actions: PropTypes.arrayOf(PropTypes.node)
+  actions: PropTypes.arrayOf(PropTypes.node),
+  onRequestClose: PropTypes.func
 };
 
 Dialog.defaultProps = {
-  open: true
+  open: true,
+  onRequestClose: () => {}
 };
 
 export default Dialog;

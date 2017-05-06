@@ -7,7 +7,8 @@ const CardWrapper = styled.section`
   background-color: white;
   border-radius: 2px;
   box-shadow: ${props => props.theme.shadow};
-  padding: ${props => (props.fullBleed ? 0 : spacing)}
+  padding: ${props => (props.fullBleed ? 0 : spacing)};
+  overflow: hidden;
 `;
 
 export const Card = ({ children, ...rest }) => (

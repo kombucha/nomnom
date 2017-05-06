@@ -19,7 +19,7 @@ const backgroundColor = props => {
 };
 
 const fadeColor = props =>
-  (props.primary || props.secondary ? "rgba(255, 255, 255, 0.2)" : "rgba(153, 153, 153, 0.2)");
+  props.primary || props.secondary ? "rgba(255, 255, 255, 0.2)" : "rgba(153, 153, 153, 0.2)";
 
 const asGradient = color => `linear-gradient(${color}, ${color})`;
 
@@ -43,6 +43,8 @@ export const FloatingActionButton = styled.button`
 
   border-radius: 50%;
   box-shadow: ${props => props.theme.shadow};
+
+  font-size: 24px;
 
   color: ${textColor};
   background: ${props => asGradient(backgroundColor(props))};

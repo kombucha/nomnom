@@ -40,6 +40,7 @@ export class UserMenu extends Component {
 
     return (
       <MenuContainer
+        alignRight
         target={
           <MenuButton>
             <UserName>{data.me.name}</UserName>

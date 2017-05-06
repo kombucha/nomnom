@@ -14,6 +14,7 @@ export const MenuItem = styled(ListItem)`
 
   color: ${props => (props.selected ? props.theme.accent1Color : props.theme.textColor)};
   background: none;
+  white-space: nowrap;
   transition: background ${props => props.theme.transitionConfig};
 
   &:hover {
@@ -68,7 +69,7 @@ const Container = styled.div`
 const WrappedMenu = styled(Menu)`
   position: absolute;
   top: 100%;
-  right: 0;
+  ${props => (props.alignRight ? "right: 0;" : "left: 0;")}
   z-index: 10001;
 `;
 
@@ -84,7 +85,7 @@ export class MenuContainer extends Component {
   }
 
   render() {
-    const { target, children: menuItems } = this.props;
+    const { target, children: menuItems, alignRight } = this.props;
     const { showMenu } = this.state;
     const menuButton = React.cloneElement(target, {
       onClick: this._toggleMenu
@@ -96,7 +97,7 @@ export class MenuContainer extends Component {
         <Container>
           {menuButton}
           {showMenu
-            ? <WrappedMenu onClick={this._toggleMenu}>
+            ? <WrappedMenu alignRight={alignRight} onClick={this._toggleMenu}>
                 {menuItems}
               </WrappedMenu>
             : null}
@@ -105,3 +106,5 @@ export class MenuContainer extends Component {
     );
   }
 }
+
+export default Menu;
