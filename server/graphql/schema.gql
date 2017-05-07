@@ -6,6 +6,7 @@ type User {
   name: String,
   avatarUrl: String,
   entries(status: UserEntryStatus = null): [UserEntry!]!
+  feeds: [Feed!]!
 }
 
 type Entry {
@@ -38,6 +39,16 @@ type UserEntry {
   tags: [String!]!
 }
 
+type Feed {
+  id: ID!
+  feedType: FeedType!
+  uri: String!
+}
+
+enum FeedType {
+  RSS
+}
+
 input EntryUpdateInput {
   id: ID!
   progress: Int
@@ -52,6 +63,11 @@ input AddUserEntryInput {
   tags: [String!]
 }
 
+input SubscribeToFeedInput {
+  uri: String!
+  type: FeedType!
+}
+
 type Query {
   me: User
   userEntry(userEntryId: ID!): UserEntry!
@@ -59,9 +75,15 @@ type Query {
 
 type Mutation {
   addUserEntry(addUserEntryInput: AddUserEntryInput!): UserEntry!
-  batchAddUserEntries(batchAddUserEntriesInput: [AddUserEntryInput!]!): [UserEntry]
+  batchAddUserEntries(batchAddUserEntriesInput: [AddUserEntryInput!]!): [UserEntry]!
   updateUserEntry(entryUpdateInput: EntryUpdateInput!): UserEntry!
-  deleteAllMyEntries: Boolean
+
+  subscribeToFeed(subscribeToFeedInput: SubscribeToFeedInput!): Feed!
+  batchSubscribeToFeeds(batchSubscribeToFeedsInput: [SubscribeToFeedInput!]!): [Feed]!
+  unsubscribeFromFeed(id: ID!): Boolean!
+  batchUnsubscribeFromFeeds(ids: [ID!]!): [Boolean!]!
+
+  deleteAllMyData: Boolean!
 }
 
 schema {

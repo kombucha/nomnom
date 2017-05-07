@@ -15,11 +15,26 @@ app.use(morgan("dev", { stream: logger.stream }));
 
 app.use("/img", express.static(config.imagesPath));
 app.use("/login", loginRouter);
-app.use("/graphql", authMiddleware(), loadersMiddleware(), bodyParser.json(), graphqlMiddleware());
+app.use(
+  "/graphql",
+  authMiddleware(),
+  loadersMiddleware(),
+  bodyParser.json({ limit: "2mb" }),
+  graphqlMiddleware()
+);
 
+// Error handling
 app.use((err, req, res, next) => {
   logger.error(err.stack);
   res.status(500).send("Something broke!");
+});
+
+process.on("uncaughtException", err => {
+  logger.error("uncaughtException", err.stack);
+});
+
+process.on("unhandledRejection", reason => {
+  logger.error("unhandledRejection", reason);
 });
 
 app.listen(config.port);

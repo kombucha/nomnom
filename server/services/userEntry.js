@@ -3,6 +3,7 @@ const N1qlQuery = require("couchbase").N1qlQuery;
 
 const db = require("./couchbase");
 const entry = require("./entry");
+const logger = require("./logger");
 
 const DB_TYPE = "USER_ENTRY";
 const generateId = userId => `${DB_TYPE}::${userId}::${uuid.v4()}`;
@@ -17,6 +18,7 @@ const USER_ENTRY_STATE = {
 // TODO: source (rss, user etc)
 async function create(userId, userEntryParam) {
   const id = generateId(userId);
+  logger.debug(`Importing ${userEntryParam.url} for user ${userId}`);
 
   const newEntry = await entry.createFromUrl(userEntryParam.url);
   const userEntry = {

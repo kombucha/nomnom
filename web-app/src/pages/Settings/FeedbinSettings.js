@@ -5,7 +5,7 @@ import { Card, CardTitle } from "../../components/Card";
 import FileInput from "../../components/FileInput";
 import RaisedButton from "../../components/RaisedButton";
 
-import importPocket from "../../services/pocket";
+import feedbin from "../../services/feedbin";
 
 const DEFAULT_STATE = {
   showConfirmDelete: false,
@@ -15,7 +15,7 @@ const DEFAULT_STATE = {
   importFiles: []
 };
 
-export class PocketSettings extends PureComponent {
+export class FeedbinSettings extends PureComponent {
   constructor() {
     super();
     this.state = DEFAULT_STATE;
@@ -30,7 +30,8 @@ export class PocketSettings extends PureComponent {
   _handleImport() {
     // Can be quite long !
     this.setState({ importing: true }, () => {
-      importPocket(this.state.importFiles[0]).then(this.props.batchAddUserEntries).then(() => {
+      const favoritesFile = this.state.importFiles[0];
+      feedbin.importFavorites(favoritesFile).then(this.props.batchAddUserEntries).then(() => {
         this.setState({ importing: false });
       });
     });
@@ -42,16 +43,17 @@ export class PocketSettings extends PureComponent {
 
     return (
       <Card>
-        <CardTitle>Import from pocket</CardTitle>
+        <CardTitle>Import from feedbin</CardTitle>
         <p>
           Go to the
           {" "}
-          <a href="https://getpocket.com/export" target="_blank">Export settings</a>
+          <a href="https://feedbin.com/settings/import_export" target="_blank">Export settings</a>
           {" "}
-          of your Pocket account and click on "Export HTML file".
+          of your Feedbin account and click on "Export starred articles".
         </p>
+        <p>You will receive an email with the exported file.</p>
         <p>
-          Then drag and drop that file in the zone below
+          Just drag and drop that file in the zone below
         </p>
         <FileInput onChange={this._handleFileChange} value={importFiles} /> <br />
         <RaisedButton primary disabled={!enableImport} onClick={this._handleImport}>
@@ -66,11 +68,11 @@ const addEntryMutation = gql`mutation batchAddUserEntries($batchAddUserEntriesIn
   batchAddUserEntries(batchAddUserEntriesInput: $batchAddUserEntriesInput) { id }
 }`;
 
-export const PocketSettingsWithMutation = graphql(addEntryMutation, {
+export const FeedbinSettingsWithMutation = graphql(addEntryMutation, {
   props: ({ mutate }) => ({
     batchAddUserEntries: batchAddUserEntriesInput =>
       mutate({ variables: { batchAddUserEntriesInput } })
   })
-})(PocketSettings);
+})(FeedbinSettings);
 
-export default PocketSettingsWithMutation;
+export default FeedbinSettingsWithMutation;

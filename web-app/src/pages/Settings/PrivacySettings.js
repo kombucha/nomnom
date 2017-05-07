@@ -27,7 +27,7 @@ export class PrivacySettings extends PureComponent {
   _doDelete() {
     return new Promise((resolve, reject) => {
       this.setState({ deleting: true }, () => {
-        this.props.deleteAllMyEntries().then(resolve, reject);
+        this.props.deleteAllMyData().then(resolve, reject);
       });
     });
   }
@@ -85,7 +85,7 @@ export class PrivacySettings extends PureComponent {
           modal={false}
           open={this.state.showConfirmDelete}
           onRequestClose={handleDismissDialog}>
-          <p>Are you sure you want to delete all your content ?</p>
+          <p>Are you sure you want to delete all your content (entries, feeds) ?</p>
           <p>
             Type "
             <ConfirmationText>{CONFIRMATION_TEXT}</ConfirmationText>
@@ -104,11 +104,11 @@ export class PrivacySettings extends PureComponent {
   }
 }
 
-const addEntryMutation = gql`mutation deleteAllMyEntries { deleteAllMyEntries }`;
+const addEntryMutation = gql`mutation deleteAllMyData { deleteAllMyData }`;
 
 const PrivacySettingsWithMutation = graphql(addEntryMutation, {
   props: ({ mutate }) => ({
-    deleteAllMyEntries: () => mutate()
+    deleteAllMyData: () => mutate()
   })
 })(PrivacySettings);
 

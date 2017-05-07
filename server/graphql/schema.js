@@ -10,7 +10,8 @@ const executableSchema = makeExecutableSchema({
   resolvers: {
     Date: require("./types/date"),
     User: {
-      entries: require("./relations/userEntries")
+      entries: require("./relations/userEntries"),
+      feeds: require("./relations/feeds")
     },
     UserEntry: {
       entry: require("./relations/userEntryEntry"),
@@ -24,7 +25,7 @@ const executableSchema = makeExecutableSchema({
       addUserEntry: require("./mutations/addUserEntry"),
       batchAddUserEntries: require("./mutations/batchAddUserEntries"),
       updateUserEntry: require("./mutations/updateUserEntry"),
-      deleteAllMyEntries: require("./mutations/deleteAllMyEntries")
+      deleteAllMyData: require("./mutations/deleteAllMyData")
     }
   }
 });

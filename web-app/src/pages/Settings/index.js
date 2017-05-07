@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import PrivacySettings from "./PrivacySettings";
 import PocketSettings from "./PocketSettings";
+import FeedbinSettings from "./FeedbinSettings";
 
 const Container = styled.div`
   display: flex;
@@ -10,7 +11,7 @@ const Container = styled.div`
   margin: 16px;
 
   > div, > section {
-    min-width: 600px;
+    width: 75%;
     max-width: 800px;
     margin-bottom: 16px;
   }
@@ -20,6 +21,7 @@ export const Settings = () => (
   <Container>
     <PrivacySettings />
     <PocketSettings />
+    <FeedbinSettings />
   </Container>
 );
 

@@ -3,6 +3,7 @@ const logger = require("../../services/logger");
 
 module.exports = async (_, { url }, { user }) => {
   try {
+    // TODO: delete subscriptions also
     await UserEntry.deleteAll(user.id);
     return true;
   } catch (error) {
