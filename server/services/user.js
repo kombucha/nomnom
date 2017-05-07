@@ -1,27 +1,26 @@
 const uuid = require("node-uuid");
 const jwt = require("jsonwebtoken");
-const N1qlQuery = require("couchbase").N1qlQuery;
-const db = require("./couchbase");
 const config = require("../config");
 const promisify = require("../utils/promisify");
-
-const DB_TYPE = "USER";
-const generateId = () => `${DB_TYPE}::${uuid.v4()}`;
+const db = require("./db");
 
 const jwtSign = promisify(jwt.sign);
 const jwtVerify = promisify(jwt.verify);
 
 async function createUser(profile) {
-  const id = generateId();
   const user = {
+    id: uuid.v4(),
     name: profile.name,
     email: profile.email,
     avatarUrl: profile.avatarUrl
   };
 
-  await db.insert(id, user);
+  await db.query(
+    `INSERT INTO "nomnom"."User"("id", "name", "email", "avatarUrl") VALUES ($1, $2, $3, $4)`,
+    [user.id, user.name, user.email, user.avatarUrl]
+  );
 
-  return Object.assign({ id }, user);
+  return user;
 }
 
 async function createToken(user) {
@@ -31,8 +30,8 @@ async function createToken(user) {
 }
 
 async function getById(id) {
-  const res = await db.get(String(id));
-  return Object.assign({ id }, res.value);
+  const res = await db.query(`SELECT * FROM "nomnom"."User" WHERE id = $1 LIMIT 1;`, [String(id)]);
+  return res.rows[0];
 }
 
 async function getFromToken(token) {
@@ -43,18 +42,8 @@ async function getFromToken(token) {
 }
 
 async function getByEmail(email) {
-  const idLike = `${DB_TYPE}::%`;
-  const query = N1qlQuery.fromString(
-    `
-    SELECT meta(t).id, t.*
-    FROM \`nomnom\` as t
-    WHERE meta(t).id LIKE $1
-    AND t.email = $2
-    `
-  );
-
-  const users = await db.query(query, [idLike, email]);
-  return users[0];
+  const res = await db.query(`SELECT * FROM "nomnom"."User" WHERE email = $1 LIMIT 1;`, [email]);
+  return res.rows[0];
 }
 
 async function login(profile) {

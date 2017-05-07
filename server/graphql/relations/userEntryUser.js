@@ -1,2 +1,1 @@
-module.exports = (userEntry, _, { loaders }) =>
-  loaders.genericLoader.load(userEntry.user);
+module.exports = (userEntry, _, { loaders }) => loaders.user.load(userEntry.UserId);

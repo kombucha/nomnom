@@ -1,10 +1,6 @@
 const uuid = require("node-uuid");
-const N1qlQuery = require("couchbase").N1qlQuery;
-const db = require("./couchbase");
+const db = require("./db");
 const readability = require("./readability");
-
-const DB_TYPE = "ENTRY";
-const generateId = () => `${DB_TYPE}::${uuid.v4()}`;
 
 // TODO: handle multiple types of entries (only generic "article" behavior now)
 async function createFromUrl(url) {
@@ -14,32 +10,46 @@ async function createFromUrl(url) {
     return entryFromDb;
   }
 
-  const id = generateId();
-  const baseEntry = Object.assign({
+  const entry = Object.assign({}, await readability(url), {
+    id: uuid.v4(),
     creationDate: Date.now(),
     url
   });
 
-  let entry = await readability(url);
-  entry = Object.assign(baseEntry, entry);
-  await db.insert(id, entry);
-  return Object.assign({ id }, entry);
+  await db.query(
+    `
+    INSERT INTO "nomnom"."Entry"("id", "url", "title", "originalContent",
+    "creationDate", "publicationDate", "author", "excerpt", "content", "imageUrl", "duration")
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+  `,
+    [
+      entry.id,
+      entry.url,
+      entry.title,
+      entry.originalContent,
+      new Date(entry.creationDate),
+      new Date(entry.publicationDate),
+      entry.author,
+      entry.excerpt,
+      entry.content,
+      entry.imageUrl,
+      entry.duration
+    ]
+  );
+
+  return entry;
 }
 
 async function getFromUrl(url) {
-  const idLike = `${DB_TYPE}::%`;
-  const query = N1qlQuery.fromString(
-    `
-    SELECT meta(t).id, t.*
-    FROM \`nomnom\` as t
-    WHERE meta(t).id LIKE $1
-    AND t.url = $2
-    `
+  const res = await db.query(
+    `SELECT *
+     FROM "nomnom"."Entry"
+     WHERE "url" = $1
+     LIMIT 1`,
+    [url]
   );
 
-  const entries = await db.query(query, [idLike, url]);
-
-  return entries[0];
+  return res.rows[0];
 }
 
 module.exports = {

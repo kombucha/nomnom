@@ -1,21 +1,22 @@
 const DataLoader = require("dataloader");
-const db = require("../services/couchbase");
+const db = require("../services/db");
 
-function mapToArray(map) {
-  return Object.keys(map).reduce(
-    (acc, id) => {
-      acc.push(Object.assign({ id }, map[id].value));
-      return acc;
-    },
-    []
-  );
-}
+const placeholders = count => Array(count).fill().map((_, idx) => `$${idx + 1}`);
 
-async function batchLoadFn(ids) {
-  const data = await db.getMulti(ids);
-  return mapToArray(data);
-}
+const tableLoader = tableName =>
+  async ids => {
+    const res = await db.query(
+      `
+    SELECT * FROM "nomnom"."${tableName}"
+    WHERE "id" IN (${placeholders(ids.length).join(", ")});`,
+      ids
+    );
+
+    return res.rows;
+  };
 
 module.exports = () => ({
-  genericLoader: new DataLoader(batchLoadFn)
+  userEntry: new DataLoader(tableLoader("UserEntry")),
+  entry: new DataLoader(tableLoader("Entry")),
+  user: new DataLoader(tableLoader("User"))
 });

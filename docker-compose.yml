@@ -2,18 +2,20 @@ version: "3"
 services:
   api:
     container_name: nomnom
-    build: .
+    build: ./server
     restart: always
     links:
       - db
     ports:
       - "4000:4000"
     environment:
-      - COUCHBASE_URL=couchbase://db
+      - PG_HOST=db
   db:
-    container_name: nomnom-couchbase
-    image: arungupta/couchbase
+    container_name: nomnom-postgres
+    build: ./db
     restart: always
     ports:
-      - "8091-8094:8091-8094"
-      - "11210:11210"
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=nomnom
+

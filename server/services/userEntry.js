@@ -1,12 +1,8 @@
 const uuid = require("node-uuid");
-const N1qlQuery = require("couchbase").N1qlQuery;
 
-const db = require("./couchbase");
+const db = require("./db");
 const entry = require("./entry");
 const logger = require("./logger");
-
-const DB_TYPE = "USER_ENTRY";
-const generateId = userId => `${DB_TYPE}::${userId}::${uuid.v4()}`;
 
 const USER_ENTRY_STATE = {
   NEW: "NEW",
@@ -17,77 +13,103 @@ const USER_ENTRY_STATE = {
 
 // TODO: source (rss, user etc)
 async function create(userId, userEntryParam) {
-  const id = generateId(userId);
   logger.debug(`Importing ${userEntryParam.url} for user ${userId}`);
 
   const newEntry = await entry.createFromUrl(userEntryParam.url);
   const userEntry = {
+    id: uuid.v4(),
     user: userId,
     entry: newEntry.id,
-    creationDate: userEntryParam.creationDate
-      ? new Date(userEntryParam.creationDate).getTime()
-      : Date.now(),
+    creationDate: userEntryParam.creationDate ? new Date(userEntryParam.creationDate) : new Date(),
     lastUpdateDate: null,
     progress: 0,
     status: userEntryParam.status || USER_ENTRY_STATE.LATER,
     tags: userEntryParam.tags || []
   };
-  await db.insert(id, userEntry);
 
-  return Object.assign({ id }, userEntry);
+  await db.query(
+    `INSERT INTO
+    "nomnom"."UserEntry"("id", "UserId", "EntryId", "creationDate", "lastUpdateDate", "progress", "status", "tags")
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+    [
+      userEntry.id,
+      userEntry.user,
+      userEntry.entry,
+      userEntry.creationDate,
+      userEntry.lastUpdateDate,
+      userEntry.progress,
+      userEntry.status,
+      userEntry.tags
+    ]
+  );
+
+  return userEntry;
 }
 
 // TODO: pagination ???
-function list(userId, options) {
-  const userEntriesIdLike = `USER_ENTRY::${userId}::%`;
-  const filters = ["meta(t).id LIKE $1"];
-  const filtersParams = [userEntriesIdLike];
+async function list(userId, options) {
+  const filters = [`"UserId" = $1`];
+  const filtersParams = [userId];
 
   if (options.status) {
-    filters.push("t.status = $2");
+    filters.push(`"status" = $2`);
     filtersParams.push(options.status);
   }
 
-  const query = N1qlQuery.fromString(
+  const res = await db.query(
     `
-    SELECT meta(t).id, t.*
-    FROM \`nomnom\` as t
+    SELECT * FROM "nomnom"."UserEntry"
     WHERE ${filters.join(" AND ")}
-    ORDER BY t.creationDate DESC
-    `
+     ORDER BY "creationDate" DESC
+  `,
+    filtersParams
   );
 
-  return db.query(query, filtersParams);
+  return res.rows;
 }
 
 const UPDATABLE_KEYS = ["status", "tags", "progress"];
-function update(userEntryId, updateValues) {
-  let mutationBuilder = db.mutateIn(userEntryId);
+async function update(userEntryId, updateValues) {
+  const updates = [];
+  const params = [userEntryId, new Date()];
+  UPDATABLE_KEYS.forEach(key => {
+    if (updateValues[key]) {
+      updates.push(`"${key}" = $${updates.length + 3}`);
+      params.push(updateValues[key]);
+    }
+  });
 
-  mutationBuilder = UPDATABLE_KEYS.reduce(
-    (mutationBuilder, key) => {
-      return updateValues[key] ? mutationBuilder.replace(key, updateValues[key]) : mutationBuilder;
-    },
-    mutationBuilder
-  );
+  try {
+    await db.query(
+      `UPDATE "nomnom"."UserEntry"
+       SET "lastUpdateDate" = $2,
+       ${updates.join(", ")}
+       WHERE "id" = $1;
+      `,
+      params
+    );
+  } catch (e) {
+    return false;
+  }
 
-  return mutationBuilder.execute();
+  return true;
 }
 
-function deleteAll(userId) {
-  const userEntriesIdLike = `USER_ENTRY::${userId}::%`;
-  const query = N1qlQuery.fromString(
-    `
-    DELETE FROM \`nomnom\` as t
-    WHERE meta(t).id LIKE $1
-    `
-  );
+async function deleteAll(userId) {
+  try {
+    await db.query(
+      `DELETE FROM "nomnom"."UserEntry"
+       WHERE "UserId" = $1`,
+      [userId]
+    );
+  } catch (e) {
+    return false;
+  }
 
-  return db.query(query, [userEntriesIdLike]);
+  return true;
 }
 
 module.exports = {
-  DB_TYPE,
   USER_ENTRY_STATE,
 
   create,
