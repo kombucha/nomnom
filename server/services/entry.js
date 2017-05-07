@@ -1,4 +1,5 @@
 const uuid = require("node-uuid");
+const logger = require("./logger");
 const db = require("./db");
 const readability = require("./readability");
 
@@ -7,6 +8,7 @@ async function createFromUrl(url) {
   const entryFromDb = await getFromUrl(url);
 
   if (entryFromDb) {
+    logger.info(`Hurray, an entry already exists for ${url}`);
     return entryFromDb;
   }
 

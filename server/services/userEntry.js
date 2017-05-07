@@ -15,6 +15,14 @@ const USER_ENTRY_STATE = {
 async function create(userId, userEntryParam) {
   logger.debug(`Importing ${userEntryParam.url} for user ${userId}`);
 
+  const existingEntry = await getFromUrl(userEntryParam.url);
+
+  if (existingEntry) {
+    // TODO: return an error ?
+    logger.info(`A user entry already existing for ${userEntryParam.url} for user ${userId}`);
+    return existingEntry;
+  }
+
   const newEntry = await entry.createFromUrl(userEntryParam.url);
   const userEntry = {
     id: uuid.v4(),
@@ -44,6 +52,17 @@ async function create(userId, userEntryParam) {
   );
 
   return userEntry;
+}
+
+async function getFromUrl(url) {
+  const res = await db.query(
+    `SELECT "UserEntry".*
+     FROM "nomnom"."UserEntry" "UserEntry" INNER JOIN "nomnom"."Entry" "Entry" ON ("UserEntry"."EntryId" = "Entry"."id")
+     WHERE "Entry"."url" = $1`,
+    [url]
+  );
+
+  return res.rows[0];
 }
 
 // TODO: pagination ???
