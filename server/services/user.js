@@ -1,11 +1,12 @@
 const uuid = require("node-uuid");
 const jwt = require("jsonwebtoken");
-const config = require("../config");
 const promisify = require("../utils/promisify");
 const db = require("./db");
 
 const jwtSign = promisify(jwt.sign);
 const jwtVerify = promisify(jwt.verify);
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_ALGORITHM = process.env.JWT_ALGORITHM;
 
 async function createUser(profile) {
   const user = {
@@ -24,8 +25,8 @@ async function createUser(profile) {
 }
 
 async function createToken(user) {
-  return jwtSign({ userId: user.id }, config.jwt.secret, {
-    algorithm: config.jwt.algorithm
+  return jwtSign({ userId: user.id }, JWT_SECRET, {
+    algorithm: JWT_ALGORITHM
   });
 }
 
@@ -35,8 +36,8 @@ async function getById(id) {
 }
 
 async function getFromToken(token) {
-  const payload = await jwtVerify(token, config.jwt.secret, {
-    algorithms: [config.jwt.algorithm]
+  const payload = await jwtVerify(token, JWT_SECRET, {
+    algorithms: [JWT_ALGORITHM]
   });
   return getById(payload.userId);
 }

@@ -4,7 +4,6 @@ const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 
-const config = require("./config");
 const authMiddleware = require("./middlewares/authMiddleware");
 const loadersMiddleware = require("./middlewares/loadersMiddleware");
 const graphqlMiddleware = require("./middlewares/graphlMiddleware");
@@ -15,7 +14,7 @@ const app = express();
 
 app.use(morgan("dev", { stream: logger.stream }));
 
-app.use("/img", express.static(config.imagesPath));
+app.use("/img", express.static(process.env.IMAGES_PATH));
 app.use("/login", loginRouter);
 app.use(
   "/graphql",
@@ -39,5 +38,6 @@ process.on("unhandledRejection", reason => {
   logger.error("unhandledRejection", reason);
 });
 
-app.listen(config.port);
-logger.info(`Running a GraphQL API server at http://localhost:${config.port}/graphql`);
+const port = parseInt(process.env.PORT, 10);
+app.listen(port);
+logger.info(`Running server at http://localhost:${port}`);

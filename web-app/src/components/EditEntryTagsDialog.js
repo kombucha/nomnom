@@ -21,7 +21,7 @@ export class EditEntryTagsDialog extends PureComponent {
   }
 
   componentWillReceiveProps(newProps) {
-    if (!newProps.data.loading) {
+    if (newProps.data && !newProps.data.loading) {
       this.setState({ newTags: newProps.data.userEntry.tags });
     }
   }
@@ -42,8 +42,10 @@ export class EditEntryTagsDialog extends PureComponent {
   }
 
   render() {
-    const { open, onRequestClose, data: { loading } } = this.props;
+    const { open, onRequestClose, data } = this.props;
     const { newTags, enableSave } = this.state;
+    const loading = !data || data.loading;
+
     const actions = [
       <FlatButton secondary onClick={onRequestClose}>Cancel</FlatButton>,
       <FlatButton primary disabled={!enableSave} onClick={this._handleSave}>Save</FlatButton>
@@ -82,6 +84,7 @@ const mutation = gql`mutation updateUserEntry($entryUpdateInput: EntryUpdateInpu
 }`;
 
 const withQuery = graphql(query, {
+  skip: props => !props.open,
   options: ({ userEntryId }) => ({
     variables: { userEntryId }
   })

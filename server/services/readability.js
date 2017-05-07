@@ -12,8 +12,6 @@ const cheerio = require("cheerio");
 const mime = require("mime-types");
 const got = require("got");
 
-const { imagesPath } = require("../config");
-
 const TOP_CANDIDATES = 5;
 const TITLE_META_NAMES = /og:title|title/i;
 const AUTHOR_META_NAMES = /author|article:author|twitter:creator/i;
@@ -309,7 +307,7 @@ async function cacheImage(imageUrl) {
         const imgHash = hash(imageUrl);
         const imgExtension = mime.extension(response.headers["content-type"]);
         const newImageName = `${imgHash}.${imgExtension}`;
-        const imagePath = path.resolve(imagesPath, newImageName);
+        const imagePath = path.resolve(process.env.IMAGES_PATH, newImageName);
         newImageUrl = url.resolve("/img/", newImageName);
         imgStream.pipe(fs.createWriteStream(imagePath));
       })

@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const bodyParser = require("body-parser");
 const google = require("googleapis");
-const config = require("../config");
+
 const promisify = require("../utils/promisify");
 const logger = require("../services/logger");
 const { login } = require("../services/user");
@@ -16,9 +16,9 @@ loginRouter.use(bodyParser.text());
  */
 loginRouter.post("/google", async (req, res) => {
   const oauth2Client = new google.auth.OAuth2(
-    config.google.clientId,
-    config.google.clientSecret,
-    config.google.redirectUrl
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    process.env.GOOGLE_REDIRECT_URL || ""
   );
   const plus = google.plus("v1").people;
   const loadTokens = promisify(oauth2Client.getToken, oauth2Client);
@@ -42,9 +42,7 @@ loginRouter.post("/google", async (req, res) => {
 });
 
 function simpleProfile(googleProfile) {
-  const email = googleProfile.emails.find(
-    email => email.type === "account"
-  ) || {
+  const email = googleProfile.emails.find(email => email.type === "account") || {
     value: ""
   };
 
