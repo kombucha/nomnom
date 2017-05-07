@@ -12,7 +12,15 @@ const tableLoader = tableName =>
       ids
     );
 
-    return res.rows;
+    const resultsById = res.rows.reduce(
+      (acc, row) => {
+        acc[row.id] = row;
+        return acc;
+      },
+      {}
+    );
+
+    return ids.map(id => resultsById[id] || null);
   };
 
 module.exports = () => ({
