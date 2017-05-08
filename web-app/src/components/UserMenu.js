@@ -20,6 +20,7 @@ export class UserMenu extends Component {
   constructor() {
     super();
     this._goToSettings = this._goToSettings.bind(this);
+    this._goToFeeds = this._goToFeeds.bind(this);
   }
 
   _logout() {
@@ -28,6 +29,10 @@ export class UserMenu extends Component {
 
   _goToSettings() {
     this.props.history.push("/settings");
+  }
+
+  _goToFeeds() {
+    this.props.history.push("/feeds");
   }
 
   render() {
@@ -47,8 +52,8 @@ export class UserMenu extends Component {
             <Avatar size="30px" src={data.me.avatarUrl} />
           </MenuButton>
         }>
+        <MenuItem onClick={this._goToFeeds}>Feeds</MenuItem>
         <MenuItem onClick={this._goToSettings}>Settings</MenuItem>
-        <MenuItem>Send feedback</MenuItem>
         <MenuItem onClick={this._logout}>Sign out</MenuItem>
       </MenuContainer>
     );

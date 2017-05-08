@@ -90,6 +90,8 @@ CREATE TABLE  "nomnom"."UserFeed" (
   "id" UUID NOT NULL,
   "UserId" UUID NOT NULL,
   "FeedId" UUID NOT NULL,
+  "creationDate" TIMESTAMP NULL,
+  "enabled" BOOLEAN  NOT NULL DEFAULT TRUE,
   PRIMARY KEY ("UserId", "FeedId"),
   UNIQUE("id"),
   CONSTRAINT "fk_UserFeed_User"

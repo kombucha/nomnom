@@ -8,6 +8,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import UserMenu from "./components/UserMenu";
 import Entries from "./pages/Entries";
 import Entry from "./pages/Entry";
+import Feeds from "./pages/Feeds";
 import Login from "./pages/Login";
 import Settings from "./pages/Settings";
 
@@ -28,6 +29,7 @@ class App extends Component {
           <Route path="/login" component={Login} />
           <PrivateRoute exact path="/" component={Entries} />
           <PrivateRoute path="/entries/:entryId" component={Entry} />
+          <PrivateRoute path="/feeds" component={Feeds} />
           <PrivateRoute path="/settings" component={Settings} />
         </PageContainer>
       </div>

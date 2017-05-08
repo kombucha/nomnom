@@ -1,9 +1,9 @@
-const feedService = require("../../services/feed");
+const UserFeed = require("../../services/userFeed");
 
 module.exports = (parentUser, _, { user }) => {
   if (parentUser.id !== user.id) {
     return [];
   }
-  // TODO
-  return [];
+
+  return UserFeed.list(parentUser.id);
 };

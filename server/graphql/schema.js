@@ -23,11 +23,15 @@ const executableSchema = makeExecutableSchema({
     Date: require("./types/date"),
     User: {
       entries: require("./relations/userEntries"),
-      feeds: require("./relations/feeds")
+      feeds: require("./relations/userFeeds")
     },
     UserEntry: {
       entry: require("./relations/userEntryEntry"),
       user: require("./relations/userEntryUser")
+    },
+    UserFeed: {
+      feed: require("./relations/userFeedFeed"),
+      user: require("./relations/userFeedUser")
     },
     Query: {
       me: checkRolesAny(["login"], require("./queries/me")),

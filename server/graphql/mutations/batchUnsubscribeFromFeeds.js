@@ -1,3 +1,3 @@
-const feedService = require("../../services/feed");
+const UserFeed = require("../../services/userFeed");
 
 module.exports = (_, { batchUnsubscribeFromFeedsInput }, { user }) => {};

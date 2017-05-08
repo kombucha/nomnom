@@ -26,5 +26,7 @@ const tableLoader = tableName =>
 module.exports = () => ({
   userEntry: new DataLoader(tableLoader("UserEntry")),
   entry: new DataLoader(tableLoader("Entry")),
-  user: new DataLoader(tableLoader("User"))
+  user: new DataLoader(tableLoader("User")),
+  userFeed: new DataLoader(tableLoader("UserFeed")),
+  feed: new DataLoader(tableLoader("Feed"))
 });

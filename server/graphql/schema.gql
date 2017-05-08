@@ -6,7 +6,7 @@ type User {
   name: String,
   avatarUrl: String,
   entries(status: UserEntryStatus = null): [UserEntry!]!
-  feeds: [Feed!]!
+  feeds: [UserFeed!]!
 }
 
 type Entry {
@@ -43,6 +43,14 @@ type Feed {
   id: ID!
   feedType: FeedType!
   uri: String!
+}
+
+type UserFeed {
+  id: ID!
+  feed: Feed!
+  user: User!
+  creationDate: Date!
+  enabled: Boolean!
 }
 
 enum FeedType {
