@@ -3,6 +3,7 @@ import styled from "styled-components";
 import PrivacySettings from "./PrivacySettings";
 import PocketSettings from "./PocketSettings";
 import FeedbinSettings from "./FeedbinSettings";
+import BookmarkletSettings from "./BookmarkletSettings";
 
 const Container = styled.div`
   display: flex;
@@ -19,9 +20,10 @@ const Container = styled.div`
 
 export const Settings = () => (
   <Container>
-    <PrivacySettings />
+    <BookmarkletSettings />
     <PocketSettings />
     <FeedbinSettings />
+    <PrivacySettings />
   </Container>
 );
 

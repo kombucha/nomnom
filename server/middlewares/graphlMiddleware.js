@@ -6,6 +6,7 @@ module.exports = () =>
     schema,
     context: {
       user: req.user,
+      roles: req.roles,
       loaders: req.loaders
     }
   }));

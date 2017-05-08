@@ -24,22 +24,21 @@ async function createUser(profile) {
   return user;
 }
 
-async function createToken(user) {
-  return jwtSign({ userId: user.id }, JWT_SECRET, {
+async function createToken(user, roles) {
+  return jwtSign({ userId: user.id, roles }, JWT_SECRET, {
     algorithm: JWT_ALGORITHM
+  });
+}
+
+async function getTokenPayload(token) {
+  return jwtVerify(token, JWT_SECRET, {
+    algorithms: [JWT_ALGORITHM]
   });
 }
 
 async function getById(id) {
   const res = await db.query(`SELECT * FROM "nomnom"."User" WHERE id = $1 LIMIT 1;`, [String(id)]);
   return res.rows[0];
-}
-
-async function getFromToken(token) {
-  const payload = await jwtVerify(token, JWT_SECRET, {
-    algorithms: [JWT_ALGORITHM]
-  });
-  return getById(payload.userId);
 }
 
 async function getByEmail(email) {
@@ -58,7 +57,7 @@ async function login(profile) {
     user = await createUser(profile);
   }
 
-  const token = await createToken(user);
+  const token = await createToken(user, ["login"]);
 
   return {
     user,
@@ -70,5 +69,7 @@ module.exports = {
   createUser,
   login,
   getById,
-  getFromToken
+
+  createToken,
+  getTokenPayload
 };

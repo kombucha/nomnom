@@ -71,6 +71,7 @@ input SubscribeToFeedInput {
 type Query {
   me: User
   userEntry(userEntryId: ID!): UserEntry!
+  bookmarkletToken: String!
 }
 
 type Mutation {

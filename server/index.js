@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 const authMiddleware = require("./middlewares/authMiddleware");
 const loadersMiddleware = require("./middlewares/loadersMiddleware");
@@ -18,6 +19,7 @@ app.use("/img", express.static(process.env.IMAGES_PATH));
 app.use("/login", loginRouter);
 app.use(
   "/graphql",
+  cors(),
   authMiddleware(),
   loadersMiddleware(),
   bodyParser.json({ limit: "2mb" }),
