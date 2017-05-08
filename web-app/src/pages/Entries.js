@@ -4,6 +4,7 @@ import styled from "styled-components";
 import queryString from "query-string";
 import ContentAdd from "react-icons/lib/md/add";
 
+import PageTitle from "../components/PageTitle";
 import { Menu, MenuItem } from "../components/Menu";
 import { List, ListItem } from "../components/List";
 import Card from "../components/Card";
@@ -122,6 +123,7 @@ export class Entries extends Component {
 
     return (
       <PageContainer>
+        <PageTitle value="Home" />
         {this._renderFilters()}
         {this._renderContent()}
         <AddEntryDialog open={showAddEntryDialog} onRequestClose={this.handleAddEntryDialogClose} />

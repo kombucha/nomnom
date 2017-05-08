@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import GoogleLogin from "react-google-login";
+
 import authenticationService from "../services/authentication";
+import PageTitle from "../components/PageTitle";
 import withAuth from "../components/withAuth";
 
 // See https://reacttraining.com/react-router/web/example/auth-workflow
@@ -24,6 +26,7 @@ class LoginPage extends Component {
     return authenticated
       ? <Redirect to={from} />
       : <div>
+          <PageTitle value="Login" />
           <GoogleLogin
             clientId={authenticationService.GOOGLE_CLIENT_ID}
             buttonText="Log in with Google"

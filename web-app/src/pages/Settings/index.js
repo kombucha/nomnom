@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+
+import PageTitle from "../../components/PageTitle";
 import PrivacySettings from "./PrivacySettings";
 import PocketSettings from "./PocketSettings";
 import FeedbinSettings from "./FeedbinSettings";
@@ -20,6 +22,7 @@ const Container = styled.div`
 
 export const Settings = () => (
   <Container>
+    <PageTitle value="Settings" />
     <BookmarkletSettings />
     <PocketSettings />
     <FeedbinSettings />

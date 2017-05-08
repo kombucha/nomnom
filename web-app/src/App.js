@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Route, Link } from "react-router-dom";
 import styled from "styled-components";
 
+import PageTitle from "./components/PageTitle";
 import AppBar from "./components/AppBar";
 import PrivateRoute from "./components/PrivateRoute";
 import UserMenu from "./components/UserMenu";
@@ -17,6 +18,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <PageTitle value="NomNom" />
         <AppBar
           fixed
           title={<UnstyledLink to="/">NomNom</UnstyledLink>}

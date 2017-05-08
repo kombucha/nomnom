@@ -3,6 +3,7 @@ import { gql, graphql, compose } from "react-apollo";
 import styled from "styled-components";
 
 import EditEntryTagsDialog from "../components/EditEntryTagsDialog";
+import PageTitle from "../components/PageTitle";
 import FlatButton from "../components/FlatButton";
 import { Card, CardTitle } from "../components/Card";
 
@@ -46,7 +47,12 @@ class Entry extends PureComponent {
   }
 
   renderLoading() {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <PageTitle value="Loading entry..." />
+        Loading...
+      </div>
+    );
   }
 
   archiveEntry() {
@@ -79,6 +85,7 @@ class Entry extends PureComponent {
 
     return (
       <EntryCard>
+        <PageTitle value={userEntry.entry.title} />
         <CardTitle>{userEntry.entry.title}</CardTitle>
 
         <div>
