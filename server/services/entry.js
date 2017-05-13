@@ -14,7 +14,7 @@ async function createFromUrl(url) {
 
   const entry = Object.assign({}, await readability(url), {
     id: uuid.v4(),
-    creationDate: Date.now(),
+    creationDate: new Date(),
     url
   });
 
@@ -29,7 +29,7 @@ async function createFromUrl(url) {
       entry.url,
       entry.title,
       entry.originalContent,
-      new Date(entry.creationDate),
+      entry.creationDate,
       new Date(entry.publicationDate),
       entry.author,
       entry.excerpt,

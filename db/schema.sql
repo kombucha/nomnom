@@ -3,13 +3,8 @@
 -- Model: New Model    Version: 1.0
 -- MySQL Workbench Forward Engineering
 
-
 -- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
-
--- -----------------------------------------------------
--- Schema mydb
+-- Schema nomnom
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS  "nomnom"  ;
 
@@ -50,10 +45,12 @@ CREATE TABLE "nomnom"."Entry" (
 CREATE TYPE "nomnom"."FeedType" AS ENUM ('RSS');
 CREATE TABLE "nomnom"."Feed" (
   "id" UUID NOT NULL,
-  "url" VARCHAR(200) NULL,
+  "uri" VARCHAR(200) NULL,
   "type" "nomnom"."FeedType" NULL,
+  "creationDate" TIMESTAMP NULL,
+  "lastFetchedDate" TIMESTAMP NULL,
   PRIMARY KEY ("id"),
-  UNIQUE("url"));
+  UNIQUE("uri"));
 
 
 -- -----------------------------------------------------
@@ -91,6 +88,7 @@ CREATE TABLE  "nomnom"."UserFeed" (
   "UserId" UUID NOT NULL,
   "FeedId" UUID NOT NULL,
   "creationDate" TIMESTAMP NULL,
+  "name" TEXT NOT NULL,
   "enabled" BOOLEAN  NOT NULL DEFAULT TRUE,
   PRIMARY KEY ("UserId", "FeedId"),
   UNIQUE("id"),

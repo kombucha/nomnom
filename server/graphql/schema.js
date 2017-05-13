@@ -42,6 +42,12 @@ const executableSchema = makeExecutableSchema({
       addUserEntry: checkRolesAny(["login", "bookmarklet"], require("./mutations/addUserEntry")),
       batchAddUserEntries: checkRolesAny(["login"], require("./mutations/batchAddUserEntries")),
       updateUserEntry: checkRolesAny(["login"], require("./mutations/updateUserEntry")),
+
+      updateUserFeed: checkRolesAny(["login"], require("./mutations/updateUserFeed")),
+      subscribeToFeed: checkRolesAny(["login"], require("./mutations/subscribeToFeed")),
+      unsubscribeFromFeed: checkRolesAny(["login"], require("./mutations/unsubscribeFromFeed")),
+      batchSubscribeToFeeds: checkRolesAny(["login"], require("./mutations/batchSubscribeToFeeds")),
+
       deleteAllMyData: checkRolesAny(["login"], require("./mutations/deleteAllMyData"))
     }
   }

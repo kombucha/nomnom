@@ -49,6 +49,7 @@ type UserFeed {
   id: ID!
   feed: Feed!
   user: User!
+  name: String!
   creationDate: Date!
   enabled: Boolean!
 }
@@ -73,11 +74,18 @@ input AddUserEntryInput {
 
 input SubscribeToFeedInput {
   uri: String!
+  name: String!
   type: FeedType!
 }
 
+input UpdateUserFeedInput {
+  id: ID!
+  name: String
+  enabled: Boolean
+}
+
 type Query {
-  me: User
+  me: User!
   userEntry(userEntryId: ID!): UserEntry!
   bookmarkletToken: String!
 }
@@ -87,8 +95,9 @@ type Mutation {
   batchAddUserEntries(batchAddUserEntriesInput: [AddUserEntryInput!]!): [UserEntry]!
   updateUserEntry(entryUpdateInput: EntryUpdateInput!): UserEntry!
 
-  subscribeToFeed(subscribeToFeedInput: SubscribeToFeedInput!): Feed!
-  batchSubscribeToFeeds(batchSubscribeToFeedsInput: [SubscribeToFeedInput!]!): [Feed]!
+  subscribeToFeed(subscribeToFeedInput: SubscribeToFeedInput!): UserFeed!
+  batchSubscribeToFeeds(batchSubscribeToFeedsInput: [SubscribeToFeedInput!]!): [UserFeed]!
+  updateUserFeed(updateUserFeedInput: UpdateUserFeedInput!): UserFeed!
   unsubscribeFromFeed(id: ID!): Boolean!
   batchUnsubscribeFromFeeds(ids: [ID!]!): [Boolean!]!
 
