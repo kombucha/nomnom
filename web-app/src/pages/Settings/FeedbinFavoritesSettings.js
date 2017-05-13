@@ -15,7 +15,7 @@ const DEFAULT_STATE = {
   importFiles: []
 };
 
-export class FeedbinSettings extends PureComponent {
+export class FeedbinFavoritesSettings extends PureComponent {
   constructor() {
     super();
     this.state = DEFAULT_STATE;
@@ -43,7 +43,7 @@ export class FeedbinSettings extends PureComponent {
 
     return (
       <Card>
-        <CardTitle>Import from feedbin</CardTitle>
+        <CardTitle>Import Feedbin favorites</CardTitle>
         <p>
           Go to the
           {" "}
@@ -68,11 +68,11 @@ const addEntryMutation = gql`mutation batchAddUserEntries($batchAddUserEntriesIn
   batchAddUserEntries(batchAddUserEntriesInput: $batchAddUserEntriesInput) { id }
 }`;
 
-export const FeedbinSettingsWithMutation = graphql(addEntryMutation, {
+export const FeedbinFavoritesSettingsWithMutation = graphql(addEntryMutation, {
   props: ({ mutate }) => ({
     batchAddUserEntries: batchAddUserEntriesInput =>
       mutate({ variables: { batchAddUserEntriesInput } })
   })
-})(FeedbinSettings);
+})(FeedbinFavoritesSettings);
 
-export default FeedbinSettingsWithMutation;
+export default FeedbinFavoritesSettingsWithMutation;

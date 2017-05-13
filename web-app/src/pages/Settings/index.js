@@ -4,7 +4,8 @@ import styled from "styled-components";
 import PageTitle from "../../components/PageTitle";
 import PrivacySettings from "./PrivacySettings";
 import PocketSettings from "./PocketSettings";
-import FeedbinSettings from "./FeedbinSettings";
+import FeedbinFavoritesSettings from "./FeedbinFavoritesSettings";
+import FeedbinSubscriptionsSettings from "./FeedbinSubscriptionsSettings";
 import YoutubeSettings from "./YoutubeSettings";
 import BookmarkletSettings from "./BookmarkletSettings";
 
@@ -26,7 +27,8 @@ export const Settings = () => (
     <PageTitle value="Settings" />
     <BookmarkletSettings />
     <PocketSettings />
-    <FeedbinSettings />
+    <FeedbinFavoritesSettings />
+    <FeedbinSubscriptionsSettings />
     <YoutubeSettings />
     <PrivacySettings />
   </Container>

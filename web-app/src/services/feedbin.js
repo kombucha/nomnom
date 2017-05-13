@@ -1,6 +1,6 @@
 import { readFileAsText } from "./utils";
 
-function importFavorites(favoritesFile) {
+export function importFavorites(favoritesFile) {
   return readFileAsText(favoritesFile)
     .then(fileContent => JSON.parse(fileContent))
     .then(favoritesJson => {
@@ -12,6 +12,20 @@ function importFavorites(favoritesFile) {
     });
 }
 
+export function importSubscriptions(subscriptionsFile) {
+  return readFileAsText(subscriptionsFile).then(fileContent => {
+    const parser = new DOMParser();
+    const opmlDoc = parser.parseFromString(fileContent, "text/xml");
+
+    return Array.from(opmlDoc.querySelectorAll("outline[xmlUrl]")).map(node => ({
+      name: node.attributes.title.value,
+      uri: node.attributes.xmlUrl.value,
+      type: "RSS"
+    }));
+  });
+}
+
 export default {
-  importFavorites
+  importFavorites,
+  importSubscriptions
 };
