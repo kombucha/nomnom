@@ -5,6 +5,7 @@ import queryString from "query-string";
 import ContentAdd from "react-icons/lib/md/add";
 
 import PageTitle from "../components/PageTitle";
+import DelayedComponent from "../components/DelayedComponent";
 import { Menu, MenuItem } from "../components/Menu";
 import { List, ListItem } from "../components/List";
 import Card from "../components/Card";
@@ -67,14 +68,16 @@ export class Entries extends Component {
 
   _renderPlaceholderList() {
     return (
-      <List>
-        {Array(10).fill().map((_, idx) => (
-          <ListItem key={idx}>
-            <UserEntryItemPlaceholder />
-          </ListItem>
-        ))}
+      <DelayedComponent delay={100}>
+        <List>
+          {Array(10).fill().map((_, idx) => (
+            <ListItem key={idx}>
+              <UserEntryItemPlaceholder />
+            </ListItem>
+          ))}
 
-      </List>
+        </List>
+      </DelayedComponent>
     );
   }
 
