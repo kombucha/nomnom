@@ -7,7 +7,8 @@ import ContentAdd from "react-icons/lib/md/add";
 import PageTitle from "../components/PageTitle";
 import DelayedComponent from "../components/DelayedComponent";
 import { Menu, MenuItem } from "../components/Menu";
-import { List, ListItem } from "../components/List";
+import { AutoSizer, List } from "react-virtualized";
+// import { List, ListItem } from "../components/List";
 import Card from "../components/Card";
 import AddEntryDialog from "../components/AddEntryDialog";
 import FloatingActionButton from "../components/FloatingActionButton";
@@ -67,7 +68,8 @@ export class Entries extends Component {
   }
 
   _renderPlaceholderList() {
-    return (
+    return null;
+    /*return (
       <DelayedComponent delay={100}>
         <List>
           {Array(10).fill().map((_, idx) => (
@@ -78,13 +80,30 @@ export class Entries extends Component {
 
         </List>
       </DelayedComponent>
-    );
+    );*/
   }
 
   _renderList() {
     const userEntries = this.props.data.me.entries.map(asDisplayedUserEntry);
 
     return (
+      <AutoSizer disableHeight>
+        {({ width }) => (
+          <List
+            width={width}
+            height={800}
+            rowCount={userEntries.length}
+            rowHeight={72}
+            rowRenderer={({ key, style, index }) => (
+              <div key={key} style={style}>
+                <UserEntryItem userEntry={userEntries[index]} />
+              </div>
+            )}
+          />
+        )}
+      </AutoSizer>
+    );
+    /*return (
       <List>
         {userEntries.map(userEntry => (
           <ListItem key={userEntry.id}>
@@ -92,7 +111,7 @@ export class Entries extends Component {
           </ListItem>
         ))}
       </List>
-    );
+    );*/
   }
 
   _renderFilters() {

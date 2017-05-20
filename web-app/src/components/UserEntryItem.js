@@ -9,6 +9,7 @@ const UserEntryLink = styled(Link)`
   padding: 16px 16px;
   text-decoration: none;
   color: inherit;
+  transition: background-color ${props => props.theme.transitionConfig};
 
   &:hover {
     background-color: rgba(0, 0, 0, 0.098);

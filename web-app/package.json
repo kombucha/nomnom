@@ -12,6 +12,7 @@
     "react-google-login": "git://github.com/kombucha/react-google-login.git#update-to-latest-react",
     "react-icons": "^2.2.5",
     "react-router-dom": "4.1.1",
+    "react-virtualized": "^9.7.6",
     "styled-components": "2.0.0-17"
   },
   "devDependencies": {
