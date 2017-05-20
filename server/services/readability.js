@@ -384,6 +384,7 @@ function fixRelativeUrls(baseUrl, $html) {
     } else {
       $link.attr("href", toAbsoluteUrl(baseUrl, href));
       $link.attr("target", "_blank");
+      $link.attr("ref", "noopener noreferrer");
     }
   });
 
