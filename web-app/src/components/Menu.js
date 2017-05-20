@@ -17,6 +17,8 @@ export const MenuItem = styled(ListItem)`
   white-space: nowrap;
   transition: background ${props => props.theme.transitionConfig};
 
+  user-select: none;
+
   &:hover {
     background: rgba(0, 0, 0, 0.098);
   }
