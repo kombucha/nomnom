@@ -9,6 +9,7 @@ const authMiddleware = require("./middlewares/authMiddleware");
 const loadersMiddleware = require("./middlewares/loadersMiddleware");
 const graphqlMiddleware = require("./middlewares/graphlMiddleware");
 const loginRouter = require("./routes/login");
+const jobsRouter = require("./routes/jobs");
 const logger = require("./services/logger");
 
 const app = express();
@@ -16,7 +17,10 @@ const app = express();
 app.use(morgan("dev", { stream: logger.stream }));
 
 app.use("/img", express.static(process.env.IMAGES_PATH));
+
 app.use("/login", loginRouter);
+app.use("/jobs", jobsRouter);
+
 app.use(
   "/graphql",
   cors(),

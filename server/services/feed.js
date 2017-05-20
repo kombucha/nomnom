@@ -7,6 +7,11 @@ const FEED_TYPES = {
   RSS: "RSS"
 };
 
+async function getAll() {
+  const res = await db.query(`SELECT * FROM "nomnom"."Feed"`);
+  return res.rows;
+}
+
 // TODO: transactions ?
 async function createFromUri(uri) {
   logger.info(`Creating feed ${uri}`);
@@ -48,4 +53,4 @@ async function getFromUri(uri) {
   return res.rows[0];
 }
 
-module.exports = { createFromUri };
+module.exports = { getAll, createFromUri };

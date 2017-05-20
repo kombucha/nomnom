@@ -7,8 +7,8 @@ const tableLoader = tableName =>
   async ids => {
     const res = await db.query(
       `
-    SELECT * FROM "nomnom"."${tableName}"
-    WHERE "id" IN (${placeholders(ids.length).join(", ")});`,
+      SELECT * FROM "nomnom"."${tableName}"
+      WHERE "id" IN (${placeholders(ids.length).join(", ")});`,
       ids
     );
 

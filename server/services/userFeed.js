@@ -48,4 +48,18 @@ async function list(userId) {
   return res.rows;
 }
 
-module.exports = { create, list };
+async function listUsersForFeed(feedId) {
+  const res = await db.query(
+    `SELECT "User".*
+     FROM "nomnom"."User" "User"
+      INNER JOIN "nomnom"."UserFeed" "UserFeed"
+      ON ("User"."id" = "UserFeed"."UserId")
+     WHERE "UserFeed"."FeedId" = $1
+     LIMIT 1`,
+    [feedId]
+  );
+
+  return res.rows;
+}
+
+module.exports = { create, list, listUsersForFeed };
