@@ -49,7 +49,8 @@ export class YoutubeSettings extends PureComponent {
           {" "}
           <a
             href="https://www.youtube.com/subscription_manager#opml-export-container"
-            target="_blank">
+            target="_blank"
+            rel="noopener noreferrer">
             Export settings
           </a>
           {" "}

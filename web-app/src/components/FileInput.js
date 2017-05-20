@@ -68,7 +68,7 @@ export class FileInput extends Component {
   _renderValue(value) {
     return (
       <ul>
-        {value.map(file => <li key={name}>{file.name}</li>)}
+        {value.map((file, idx) => <li key={idx}>{file.name}</li>)}
       </ul>
     );
   }

@@ -8,6 +8,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import theme from "./theme";
 import App from "./App";
 import authService from "./services/authentication";
+import registerServiceWorker from "./registerServiceWorker";
 import "./index.css";
 
 const networkInterface = createBatchingNetworkInterface({
@@ -39,3 +40,5 @@ ReactDOM.render(
   </ApolloProvider>,
   document.getElementById("root")
 );
+
+registerServiceWorker();

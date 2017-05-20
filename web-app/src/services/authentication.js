@@ -1,5 +1,4 @@
-const GOOGLE_CLIENT_ID =
-  "388702499328-ld8l7lj9kggb3nfs53aoq7k651udla6u.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = "388702499328-ld8l7lj9kggb3nfs53aoq7k651udla6u.apps.googleusercontent.com";
 const TOKEN_STORAGE_KEY = "token";
 
 function login(googleAuthorizationCode) {

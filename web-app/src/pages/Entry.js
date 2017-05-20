@@ -91,7 +91,8 @@ class Entry extends PureComponent {
         <div>
           <div>
             <span> By {userEntry.entry.author}, </span>
-            <a target="_blank" href={userEntry.entry.url}>{domain}</a> <br />
+            <a target="_blank" rel="noopener noreferrer" href={userEntry.entry.url}>{domain}</a>
+            <br />
             <span>
               {publicationDate}
             </span>

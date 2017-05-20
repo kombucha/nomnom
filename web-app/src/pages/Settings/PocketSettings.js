@@ -46,7 +46,9 @@ export class PocketSettings extends PureComponent {
         <p>
           Go to the
           {" "}
-          <a href="https://getpocket.com/export" target="_blank">Export settings</a>
+          <a href="https://getpocket.com/export" rel="noopener noreferrer" target="_blank">
+            Export settings
+          </a>
           {" "}
           of your Pocket account and click on "Export HTML file".
         </p>

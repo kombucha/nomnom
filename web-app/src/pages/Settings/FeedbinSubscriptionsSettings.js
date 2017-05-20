@@ -46,8 +46,12 @@ export class FeedbinSubscriptionsSettingsWithMutation extends PureComponent {
         <CardTitle>Import Feedbin Subscriptions</CardTitle>
         <p>
           Go to the
-          {" "}
-          <a href="https://feedbin.com/settings/import_export" target="_blank">Export settings</a>
+          <a
+            href="https://feedbin.com/settings/import_export"
+            rel="noopener noreferrer"
+            target="_blank">
+            Export settings
+          </a>
           {" "}
           of your Feedbin account and click on "Download".
         </p>

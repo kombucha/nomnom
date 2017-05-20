@@ -12,7 +12,7 @@ function bookmarkletFn() {
     query: "mutation addUserEntry($addUserEntryInput: AddUserEntryInput!) {addUserEntry(addUserEntryInput: $addUserEntryInput) {id} }",
     variables: {
       addUserEntryInput: {
-        url: location.href,
+        url: window.location.href,
         status: "LATER"
       }
     }
