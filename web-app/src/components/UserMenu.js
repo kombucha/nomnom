@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { gql, graphql } from "react-apollo";
 import styled from "styled-components";
+import { ellipsis } from "polished";
 
-import { truncate } from "../style-utils";
 import authService from "../services/authentication";
 import withAuth from "./withAuth";
 import { MenuContainer, MenuItem } from "./Menu";
@@ -12,7 +12,7 @@ import Avatar from "./Avatar";
 
 const MenuButton = styled(FlatButton)`color: white;`;
 const UserName = styled.span`
-  ${truncate("160px")}
+  ${ellipsis("160px")}
   padding-right: 8px;
 `;
 

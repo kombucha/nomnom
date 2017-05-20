@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { lighten } from "polished";
 
 const height = "36px";
 const textColor = props => {
@@ -20,11 +21,6 @@ const backgroundColor = props => {
   }
 };
 
-const fadeColor = props =>
-  (props.primary || props.secondary ? "rgba(255, 255, 255, 0.2)" : "rgba(153, 153, 153, 0.2)");
-
-const asGradient = color => `linear-gradient(${color}, ${color})`;
-
 const StyledButton = styled.button`
   min-width: 88px;
   height: ${height};
@@ -41,7 +37,7 @@ const StyledButton = styled.button`
   box-shadow: ${props => props.theme.shadow};
 
   color: ${textColor};
-  background: ${props => asGradient(backgroundColor(props))};
+  background: ${props => backgroundColor(props)};
 
   line-height: ${height};
   font-weight: 500;
@@ -52,7 +48,7 @@ const StyledButton = styled.button`
   transition: background ${props => props.theme.transitionConfig};
 
   &:hover {
-    background: ${props => `${asGradient(fadeColor(props))}, ${asGradient(backgroundColor(props))}`};
+    background: ${props => lighten(0.1, backgroundColor(props))};
   }
 
   &[disabled] {

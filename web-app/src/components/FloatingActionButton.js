@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { lighten } from "polished";
 
 const textColor = props => {
   if (props.primary || props.secondary) {
@@ -17,11 +18,6 @@ const backgroundColor = props => {
     return "rgba(0,0,0,0)";
   }
 };
-
-const fadeColor = props =>
-  props.primary || props.secondary ? "rgba(255, 255, 255, 0.2)" : "rgba(153, 153, 153, 0.2)";
-
-const asGradient = color => `linear-gradient(${color}, ${color})`;
 
 const fixedStyles = `
   position: fixed;
@@ -47,13 +43,13 @@ export const FloatingActionButton = styled.button`
   font-size: 24px;
 
   color: ${textColor};
-  background: ${props => asGradient(backgroundColor(props))};
+  background: ${props => backgroundColor(props)};
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
   transition: all ${props => props.theme.transitionConfig};
 
   &:hover {
-    background: ${props => `${asGradient(fadeColor(props))}, ${asGradient(backgroundColor(props))}`};
+    background: ${props => lighten(0.1, backgroundColor(props))};
   }
 
   &[disabled] {
