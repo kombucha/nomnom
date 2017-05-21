@@ -30,11 +30,9 @@ export class PocketSettings extends PureComponent {
   _handleImport() {
     // Can be quite long !
     this.setState({ importing: true }, () => {
-      importPocket(this.state.importFiles[0])
-        .then(this.props.batchAddUserEntries)
-        .then(() => {
-          this.setState({ importing: false });
-        });
+      importPocket(this.state.importFiles[0]).then(this.props.batchAddUserEntries).then(() => {
+        this.setState({ importing: false });
+      });
     });
   }
 
@@ -48,11 +46,7 @@ export class PocketSettings extends PureComponent {
         <p>
           Go to the
           {" "}
-          <a
-            href="https://getpocket.com/export"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
+          <a href="https://getpocket.com/export" rel="noopener noreferrer" target="_blank">
             Export settings
           </a>
           {" "}
@@ -64,11 +58,7 @@ export class PocketSettings extends PureComponent {
         <FileInput onChange={this._handleFileChange} value={importFiles} />
         {" "}
         <br />
-        <RaisedButton
-          primary
-          disabled={!enableImport}
-          onClick={this._handleImport}
-        >
+        <RaisedButton primary disabled={!enableImport} onClick={this._handleImport}>
           {importing ? "Importing..." : "Import"}
         </RaisedButton>
       </Card>

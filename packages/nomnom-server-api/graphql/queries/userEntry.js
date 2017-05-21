@@ -1,2 +1,1 @@
-module.exports = (_, { userEntryId }, { loaders }) =>
-  loaders.userEntry.load(userEntryId);
+module.exports = (_, { userEntryId }, { loaders }) => loaders.userEntry.load(userEntryId);

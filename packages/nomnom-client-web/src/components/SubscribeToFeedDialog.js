@@ -43,8 +43,7 @@ export class SubscribeToFeedDialog extends PureComponent {
       <FlatButton
         primary
         disabled={disableSubscribe}
-        onClick={() => this.handleSubscribeToFeed(this.state.feedUri)}
-      >
+        onClick={() => this.handleSubscribeToFeed(this.state.feedUri)}>
         Subscribe
       </FlatButton>
     ];
@@ -54,8 +53,7 @@ export class SubscribeToFeedDialog extends PureComponent {
         title="Subscribe to feed"
         open={open}
         actions={actions}
-        onRequestClose={onRequestClose}
-      >
+        onRequestClose={onRequestClose}>
         <TextField
           hintText="Name"
           value={feedName}
@@ -87,8 +85,7 @@ const subscribeToFeedMutation = gql`mutation subscribeToFeed($subscribeToFeedInp
 
 const SubscribeToFeedDialogWithMutation = graphql(subscribeToFeedMutation, {
   props: ({ mutate }) => ({
-    subscribeToFeed: subscribeToFeedInput =>
-      mutate({ variables: { subscribeToFeedInput } })
+    subscribeToFeed: subscribeToFeedInput => mutate({ variables: { subscribeToFeedInput } })
   })
 })(SubscribeToFeedDialog);
 

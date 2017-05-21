@@ -37,18 +37,12 @@ async function getTokenPayload(token) {
 }
 
 async function getById(id) {
-  const res = await db.query(
-    `SELECT * FROM "nomnom"."User" WHERE id = $1 LIMIT 1;`,
-    [String(id)]
-  );
+  const res = await db.query(`SELECT * FROM "nomnom"."User" WHERE id = $1 LIMIT 1;`, [String(id)]);
   return res.rows[0];
 }
 
 async function getByEmail(email) {
-  const res = await db.query(
-    `SELECT * FROM "nomnom"."User" WHERE email = $1 LIMIT 1;`,
-    [email]
-  );
+  const res = await db.query(`SELECT * FROM "nomnom"."User" WHERE email = $1 LIMIT 1;`, [email]);
   return res.rows[0];
 }
 

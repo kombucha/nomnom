@@ -50,8 +50,7 @@ const asDisplayedUserEntry = userEntry => ({
   tags: userEntry.tags
 });
 
-const statusFromLocation = location =>
-  queryString.parse(location.search).status;
+const statusFromLocation = location => queryString.parse(location.search).status;
 
 export class Entries extends Component {
   constructor() {
@@ -142,8 +141,7 @@ export class Entries extends Component {
   }
 
   _renderFilters() {
-    const statusFilter =
-      statusFromLocation(this.props.location) || DEFAULT_STATUS_FILTER;
+    const statusFilter = statusFromLocation(this.props.location) || DEFAULT_STATUS_FILTER;
 
     return (
       <FilterContainer>
@@ -176,16 +174,9 @@ export class Entries extends Component {
         <PageTitle value="Home" />
         {this._renderFilters()}
         {this._renderContent()}
-        <AddEntryDialog
-          open={showAddEntryDialog}
-          onRequestClose={this.handleAddEntryDialogClose}
-        />
+        <AddEntryDialog open={showAddEntryDialog} onRequestClose={this.handleAddEntryDialogClose} />
 
-        <FloatingActionButton
-          secondary
-          fixed
-          onClick={() => this.toggleAddEntryDialog(true)}
-        >
+        <FloatingActionButton secondary fixed onClick={() => this.toggleAddEntryDialog(true)}>
           <ContentAdd className="icon" />
         </FloatingActionButton>
       </PageContainer>

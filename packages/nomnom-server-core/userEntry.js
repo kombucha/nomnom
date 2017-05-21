@@ -19,9 +19,7 @@ async function create(userId, userEntryParam) {
 
   if (existingEntry) {
     // TODO: return an error ?
-    logger.info(
-      `A user entry already existing for ${userEntryParam.url} for user ${userId}`
-    );
+    logger.info(`A user entry already existing for ${userEntryParam.url} for user ${userId}`);
     return existingEntry;
   }
 
@@ -30,9 +28,7 @@ async function create(userId, userEntryParam) {
     id: uuid.v4(),
     user: userId,
     entry: newEntry.id,
-    creationDate: userEntryParam.creationDate
-      ? new Date(userEntryParam.creationDate)
-      : new Date(),
+    creationDate: userEntryParam.creationDate ? new Date(userEntryParam.creationDate) : new Date(),
     lastUpdateDate: null,
     progress: 0,
     status: userEntryParam.status || USER_ENTRY_STATE.LATER,

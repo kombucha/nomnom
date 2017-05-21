@@ -60,8 +60,6 @@ export const BookmarkletSettings = ({ data }) => (
 
 const bookmarkletQuery = gql`query {bookmarkletToken}`;
 
-export const BookmarkletSettingsWithQuery = graphql(bookmarkletQuery)(
-  BookmarkletSettings
-);
+export const BookmarkletSettingsWithQuery = graphql(bookmarkletQuery)(BookmarkletSettings);
 
 export default BookmarkletSettingsWithQuery;

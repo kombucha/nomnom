@@ -1,8 +1,7 @@
 const DataLoader = require("dataloader");
 const db = require("nomnom-server-core/db");
 
-const placeholders = count =>
-  Array(count).fill().map((_, idx) => `$${idx + 1}`);
+const placeholders = count => Array(count).fill().map((_, idx) => `$${idx + 1}`);
 
 const tableLoader = tableName => async ids => {
   const res = await db.query(

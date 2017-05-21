@@ -1,2 +1,1 @@
-module.exports = (userFeed, _, { loaders }) =>
-  loaders.feed.load(userFeed.FeedId);
+module.exports = (userFeed, _, { loaders }) => loaders.feed.load(userFeed.FeedId);

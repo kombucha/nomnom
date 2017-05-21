@@ -39,25 +39,14 @@ class AddEntryDialog extends PureComponent {
       <FlatButton
         primary
         disabled={!entryUrl}
-        onClick={() => this.handleAddEntry(this.state.entryUrl)}
-      >
+        onClick={() => this.handleAddEntry(this.state.entryUrl)}>
         Add
       </FlatButton>
     ];
 
     return (
-      <Dialog
-        title="Add entry"
-        open={open}
-        actions={actions}
-        onRequestClose={onRequestClose}
-      >
-        <TextField
-          hintText="Enter url"
-          value={entryUrl}
-          onChange={this.handleChange}
-          autoFocus
-        />
+      <Dialog title="Add entry" open={open} actions={actions} onRequestClose={onRequestClose}>
+        <TextField hintText="Enter url" value={entryUrl} onChange={this.handleChange} autoFocus />
       </Dialog>
     );
   }
@@ -78,8 +67,7 @@ const addEntryMutation = gql`mutation addUserEntry($addUserEntryInput: AddUserEn
 
 const AddEntryDialogWithMutation = graphql(addEntryMutation, {
   props: ({ mutate }) => ({
-    addUserEntry: addUserEntryInput =>
-      mutate({ variables: { addUserEntryInput } })
+    addUserEntry: addUserEntryInput => mutate({ variables: { addUserEntryInput } })
   })
 })(AddEntryDialog);
 

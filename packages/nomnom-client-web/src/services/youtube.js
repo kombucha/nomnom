@@ -5,9 +5,7 @@ export function importYoutubeSubscriptions(file) {
     const parser = new DOMParser();
     const opmlDoc = parser.parseFromString(fileContent, "text/xml");
 
-    return Array.from(
-      opmlDoc.querySelectorAll("outline[xmlUrl]")
-    ).map(node => ({
+    return Array.from(opmlDoc.querySelectorAll("outline[xmlUrl]")).map(node => ({
       name: node.attributes.title.value,
       uri: node.attributes.xmlUrl.value,
       type: "RSS"

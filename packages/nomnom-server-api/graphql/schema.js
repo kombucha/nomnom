@@ -35,46 +35,19 @@ const executableSchema = makeExecutableSchema({
     Query: {
       me: checkRolesAny(["login"], require("./queries/me")),
       userEntry: checkRolesAny(["login"], require("./queries/userEntry")),
-      bookmarkletToken: checkRolesAny(
-        ["login"],
-        require("./queries/bookmarkletToken")
-      )
+      bookmarkletToken: checkRolesAny(["login"], require("./queries/bookmarkletToken"))
     },
     Mutation: {
-      addUserEntry: checkRolesAny(
-        ["login", "bookmarklet"],
-        require("./mutations/addUserEntry")
-      ),
-      batchAddUserEntries: checkRolesAny(
-        ["login"],
-        require("./mutations/batchAddUserEntries")
-      ),
-      updateUserEntry: checkRolesAny(
-        ["login"],
-        require("./mutations/updateUserEntry")
-      ),
+      addUserEntry: checkRolesAny(["login", "bookmarklet"], require("./mutations/addUserEntry")),
+      batchAddUserEntries: checkRolesAny(["login"], require("./mutations/batchAddUserEntries")),
+      updateUserEntry: checkRolesAny(["login"], require("./mutations/updateUserEntry")),
 
-      updateUserFeed: checkRolesAny(
-        ["login"],
-        require("./mutations/updateUserFeed")
-      ),
-      subscribeToFeed: checkRolesAny(
-        ["login"],
-        require("./mutations/subscribeToFeed")
-      ),
-      unsubscribeFromFeed: checkRolesAny(
-        ["login"],
-        require("./mutations/unsubscribeFromFeed")
-      ),
-      batchSubscribeToFeeds: checkRolesAny(
-        ["login"],
-        require("./mutations/batchSubscribeToFeeds")
-      ),
+      updateUserFeed: checkRolesAny(["login"], require("./mutations/updateUserFeed")),
+      subscribeToFeed: checkRolesAny(["login"], require("./mutations/subscribeToFeed")),
+      unsubscribeFromFeed: checkRolesAny(["login"], require("./mutations/unsubscribeFromFeed")),
+      batchSubscribeToFeeds: checkRolesAny(["login"], require("./mutations/batchSubscribeToFeeds")),
 
-      deleteAllMyData: checkRolesAny(
-        ["login"],
-        require("./mutations/deleteAllMyData")
-      )
+      deleteAllMyData: checkRolesAny(["login"], require("./mutations/deleteAllMyData"))
     }
   }
 });

@@ -29,10 +29,7 @@ class App extends Component {
             <Route path="/login" component={Login} />
             <PrivateRoute exact path="/" component={Entries} />
             <PrivateRoute path="/entries/:entryId" component={Entry} />
-            <PrivateRoute
-              path="/feeds"
-              component={asyncComponent(() => import("./pages/Feeds"))}
-            />
+            <PrivateRoute path="/feeds" component={asyncComponent(() => import("./pages/Feeds"))} />
             <PrivateRoute
               path="/settings"
               component={asyncComponent(() => import("./pages/Settings"))}

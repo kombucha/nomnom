@@ -59,8 +59,7 @@ export class Dialog extends Component {
     return (
       <DialogContainer
         onClick={this._handleDismiss}
-        innerRef={ref => (this._dialogContainer = ref)}
-      >
+        innerRef={ref => (this._dialogContainer = ref)}>
         <DialogCard>
           {dialogTitle}
           {children}

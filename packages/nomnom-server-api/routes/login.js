@@ -42,9 +42,7 @@ loginRouter.post("/google", async (req, res) => {
 });
 
 function simpleProfile(googleProfile) {
-  const email = googleProfile.emails.find(
-    email => email.type === "account"
-  ) || {
+  const email = googleProfile.emails.find(email => email.type === "account") || {
     value: ""
   };
 

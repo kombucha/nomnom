@@ -31,12 +31,9 @@ export class FeedbinFavoritesSettings extends PureComponent {
     // Can be quite long !
     this.setState({ importing: true }, () => {
       const favoritesFile = this.state.importFiles[0];
-      feedbin
-        .importFavorites(favoritesFile)
-        .then(this.props.batchAddUserEntries)
-        .then(() => {
-          this.setState({ importing: false });
-        });
+      feedbin.importFavorites(favoritesFile).then(this.props.batchAddUserEntries).then(() => {
+        this.setState({ importing: false });
+      });
     });
   }
 
@@ -53,8 +50,7 @@ export class FeedbinFavoritesSettings extends PureComponent {
           <a
             href="https://feedbin.com/settings/import_export"
             rel="noopener noreferrer"
-            target="_blank"
-          >
+            target="_blank">
             Export settings
           </a>
           {" "}
@@ -67,11 +63,7 @@ export class FeedbinFavoritesSettings extends PureComponent {
         <FileInput onChange={this._handleFileChange} value={importFiles} />
         {" "}
         <br />
-        <RaisedButton
-          primary
-          disabled={!enableImport}
-          onClick={this._handleImport}
-        >
+        <RaisedButton primary disabled={!enableImport} onClick={this._handleImport}>
           {importing ? "Importing..." : "Import"}
         </RaisedButton>
       </Card>

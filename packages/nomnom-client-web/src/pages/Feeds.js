@@ -36,25 +36,15 @@ export class Feeds extends Component {
         <PageTitle value="Feeds" />
         <Card>
           <List>
-            {data.me &&
-              data.me.feeds.map(feed => (
-                <ListItem key={feed.id}>{feed.name}</ListItem>
-              ))}
+            {data.me && data.me.feeds.map(feed => <ListItem key={feed.id}>{feed.name}</ListItem>)}
           </List>
         </Card>
 
-        <FloatingActionButton
-          primary
-          fixed
-          onClick={() => this.toggleAddFeedDialog(true)}
-        >
+        <FloatingActionButton primary fixed onClick={() => this.toggleAddFeedDialog(true)}>
           <ContentAdd className="icon" />
         </FloatingActionButton>
 
-        <SubscribeToFeedDialog
-          open={showAddFeedDialog}
-          onRequestClose={this.handleDialogClose}
-        />
+        <SubscribeToFeedDialog open={showAddFeedDialog} onRequestClose={this.handleDialogClose} />
       </div>
     );
   }

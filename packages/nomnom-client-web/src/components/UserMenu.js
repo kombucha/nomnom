@@ -51,8 +51,7 @@ export class UserMenu extends Component {
             <UserName>{data.me.name}</UserName>
             <Avatar size="30px" src={data.me.avatarUrl} />
           </MenuButton>
-        }
-      >
+        }>
         <MenuItem onClick={this._goToFeeds}>Feeds</MenuItem>
         <MenuItem onClick={this._goToSettings}>Settings</MenuItem>
         <MenuItem onClick={this._logout}>Sign out</MenuItem>

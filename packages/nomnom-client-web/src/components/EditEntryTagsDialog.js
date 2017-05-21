@@ -54,12 +54,7 @@ export class EditEntryTagsDialog extends PureComponent {
     ];
 
     return (
-      <Dialog
-        title="Edit tags entry"
-        open={open}
-        actions={actions}
-        onRequestClose={onRequestClose}
-      >
+      <Dialog title="Edit tags entry" open={open} actions={actions} onRequestClose={onRequestClose}>
         <ChipInput
           hintText="Enter new tags"
           value={newTags}
@@ -98,8 +93,7 @@ const withQuery = graphql(query, {
 });
 const withMutation = graphql(mutation, {
   props: ({ mutate }) => ({
-    updateUserEntryTags: entryUpdateInput =>
-      mutate({ variables: { entryUpdateInput } })
+    updateUserEntryTags: entryUpdateInput => mutate({ variables: { entryUpdateInput } })
   })
 });
 

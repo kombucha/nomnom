@@ -8,9 +8,7 @@ const storyBookStyle = {
 };
 
 storiesOf("Card", module)
-  .addWithInfo("basic", () => (
-    <Card style={storyBookStyle}>Wow, amazing card !</Card>
-  ))
+  .addWithInfo("basic", () => <Card style={storyBookStyle}>Wow, amazing card !</Card>)
   .addWithInfo("with a title", () => (
     <Card style={storyBookStyle}>
       <CardTitle>The card title</CardTitle>

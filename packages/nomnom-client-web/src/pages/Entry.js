@@ -91,11 +91,7 @@ class Entry extends PureComponent {
         <div>
           <div>
             <span> By {userEntry.entry.author}, </span>
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href={userEntry.entry.url}
-            >
+            <a target="_blank" rel="noopener noreferrer" href={userEntry.entry.url}>
               {domain}
             </a>
             <br />
@@ -157,8 +153,7 @@ const withQuery = graphql(query, {
 });
 const withMutation = graphql(mutation, {
   props: ({ mutate }) => ({
-    updateUserEntry: entryUpdateInput =>
-      mutate({ variables: { entryUpdateInput } })
+    updateUserEntry: entryUpdateInput => mutate({ variables: { entryUpdateInput } })
   })
 });
 

@@ -42,10 +42,7 @@ export class ChipInput extends PureComponent {
     return (
       <div>
         {values.map(chipValue => (
-          <Chip
-            key={chipValue}
-            onRequestDelete={() => this._handleDeleteValue(chipValue)}
-          >
+          <Chip key={chipValue} onRequestDelete={() => this._handleDeleteValue(chipValue)}>
             {chipValue}
           </Chip>
         ))}
@@ -57,8 +54,7 @@ export class ChipInput extends PureComponent {
           autoFocus
           onChange={this._handleTextChange}
           onKeyDown={ev => {
-            if (ev.keyCode === ENTER_KEY_CODE)
-              this._handleAddValue(this.state.textValue);
+            if (ev.keyCode === ENTER_KEY_CODE) this._handleAddValue(this.state.textValue);
           }}
         />
       </div>

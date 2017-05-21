@@ -7,8 +7,6 @@ const AvatarImg = styled.img`
   border-radius: 50%;
 `;
 
-export const Avatar = ({ src, size = "40px" }) => (
-  <AvatarImg src={src} size={size} />
-);
+export const Avatar = ({ src, size = "40px" }) => <AvatarImg src={src} size={size} />;
 
 export default Avatar;

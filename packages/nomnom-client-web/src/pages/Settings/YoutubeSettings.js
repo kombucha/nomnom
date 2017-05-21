@@ -31,11 +31,9 @@ export class YoutubeSettings extends PureComponent {
     // Can be quite long !
     this.setState({ importing: true }, () => {
       const importedFile = this.state.importFiles[0];
-      importYoutubeSubscriptions(importedFile)
-        .then(this.props.batchSubscribeToFeeds)
-        .then(() => {
-          this.setState({ importing: false });
-        });
+      importYoutubeSubscriptions(importedFile).then(this.props.batchSubscribeToFeeds).then(() => {
+        this.setState({ importing: false });
+      });
     });
   }
 
@@ -52,8 +50,7 @@ export class YoutubeSettings extends PureComponent {
           <a
             href="https://www.youtube.com/subscription_manager#opml-export-container"
             target="_blank"
-            rel="noopener noreferrer"
-          >
+            rel="noopener noreferrer">
             Export settings
           </a>
           {" "}
@@ -65,11 +62,7 @@ export class YoutubeSettings extends PureComponent {
         <FileInput onChange={this._handleFileChange} value={importFiles} />
         {" "}
         <br />
-        <RaisedButton
-          primary
-          disabled={!enableImport}
-          onClick={this._handleImport}
-        >
+        <RaisedButton primary disabled={!enableImport} onClick={this._handleImport}>
           {importing ? "Importing..." : "Import"}
         </RaisedButton>
       </Card>

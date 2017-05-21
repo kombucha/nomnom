@@ -31,11 +31,9 @@ export class FeedbinSubscriptionsSettingsWithMutation extends PureComponent {
     // Can be quite long !
     this.setState({ importing: true }, () => {
       const importedFile = this.state.importFiles[0];
-      importSubscriptions(importedFile)
-        .then(this.props.batchSubscribeToFeeds)
-        .then(() => {
-          this.setState({ importing: false });
-        });
+      importSubscriptions(importedFile).then(this.props.batchSubscribeToFeeds).then(() => {
+        this.setState({ importing: false });
+      });
     });
   }
 
@@ -51,8 +49,7 @@ export class FeedbinSubscriptionsSettingsWithMutation extends PureComponent {
           <a
             href="https://feedbin.com/settings/import_export"
             rel="noopener noreferrer"
-            target="_blank"
-          >
+            target="_blank">
             Export settings
           </a>
           {" "}
@@ -65,11 +62,7 @@ export class FeedbinSubscriptionsSettingsWithMutation extends PureComponent {
         <FileInput onChange={this._handleFileChange} value={importFiles} />
         {" "}
         <br />
-        <RaisedButton
-          primary
-          disabled={!enableImport}
-          onClick={this._handleImport}
-        >
+        <RaisedButton primary disabled={!enableImport} onClick={this._handleImport}>
           {importing ? "Importing..." : "Import"}
         </RaisedButton>
       </Card>
@@ -81,14 +74,11 @@ const addEntryMutation = gql`mutation batchSubscribeToFeeds($batchSubscribeToFee
   batchSubscribeToFeeds(batchSubscribeToFeedsInput: $batchSubscribeToFeedsInput) { id }
 }`;
 
-export const FeedbinSubscriptionsSettingsWithMutationWithMutation = graphql(
-  addEntryMutation,
-  {
-    props: ({ mutate }) => ({
-      batchSubscribeToFeeds: batchSubscribeToFeedsInput =>
-        mutate({ variables: { batchSubscribeToFeedsInput } })
-    })
-  }
-)(FeedbinSubscriptionsSettingsWithMutation);
+export const FeedbinSubscriptionsSettingsWithMutationWithMutation = graphql(addEntryMutation, {
+  props: ({ mutate }) => ({
+    batchSubscribeToFeeds: batchSubscribeToFeedsInput =>
+      mutate({ variables: { batchSubscribeToFeedsInput } })
+  })
+})(FeedbinSubscriptionsSettingsWithMutation);
 
 export default FeedbinSubscriptionsSettingsWithMutationWithMutation;

@@ -17,8 +17,7 @@ storiesOf("Dialog", module)
       actions={[
         <FlatButton secondary onClick={action("cancel")}>Cancel</FlatButton>,
         <FlatButton onClick={action("ok")}>Ok</FlatButton>
-      ]}
-    >
+      ]}>
       Hello, this is a dialog with actions !
     </Dialog>
   ));

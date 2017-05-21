@@ -45,19 +45,14 @@ export class PrivacySettings extends PureComponent {
   render() {
     const { confirmationText, deleting } = this.state;
     const showConfirmDelete = () => this.setState({ showConfirmDelete: true });
-    const handleDismissDialog = () =>
-      deleting ? null : this._handleConfirmDelete(false);
+    const handleDismissDialog = () => (deleting ? null : this._handleConfirmDelete(false));
     const updateConfirmationText = ev =>
       this.setState({
         confirmationText: ev.target.value
       });
 
     const actions = [
-      <FlatButton
-        secondary
-        disabled={deleting}
-        onClick={() => this._handleConfirmDelete(false)}
-      >
+      <FlatButton secondary disabled={deleting} onClick={() => this._handleConfirmDelete(false)}>
         Cancel
       </FlatButton>,
       deleting
@@ -68,8 +63,7 @@ export class PrivacySettings extends PureComponent {
         : <FlatButton
             primary
             disabled={confirmationText !== CONFIRMATION_TEXT}
-            onClick={() => this._handleConfirmDelete(true)}
-          >
+            onClick={() => this._handleConfirmDelete(true)}>
             Delete
           </FlatButton>
     ];
@@ -90,8 +84,7 @@ export class PrivacySettings extends PureComponent {
           actions={actions}
           modal={false}
           open={this.state.showConfirmDelete}
-          onRequestClose={handleDismissDialog}
-        >
+          onRequestClose={handleDismissDialog}>
           <p>
             Are you sure you want to delete all your content (entries, feeds) ?
           </p>

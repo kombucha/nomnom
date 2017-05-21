@@ -10,10 +10,7 @@ module.exports = (_, { batchSubscribeToFeedsInput }, { user }) =>
         const userFeed = await UserFeed.create(user.id, subscribeToFeedInput);
         return userFeed;
       } catch (error) {
-        logger.error(
-          `Failed to add user entry for url ${subscribeToFeedInput.uri}`,
-          error
-        );
+        logger.error(`Failed to add user entry for url ${subscribeToFeedInput.uri}`, error);
         return null;
       }
     },
