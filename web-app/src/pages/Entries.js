@@ -3,12 +3,16 @@ import { gql, graphql } from "react-apollo";
 import styled from "styled-components";
 import queryString from "query-string";
 import ContentAdd from "react-icons/lib/md/add";
+// Results in smaller bundler size
+import VirtualizedList from "react-virtualized/dist/commonjs/List";
+import WindowScroller from "react-virtualized/dist/commonjs/WindowScroller";
+import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer";
 
 import PageTitle from "../components/PageTitle";
 import DelayedComponent from "../components/DelayedComponent";
 import { Card } from "../components/Card";
 import { Menu, MenuItem } from "../components/Menu";
-import { WindowScroller, AutoSizer, List as VirtualizedList } from "react-virtualized";
+
 import AddEntryDialog from "../components/AddEntryDialog";
 import { List, ListItem } from "../components/List";
 import FloatingActionButton from "../components/FloatingActionButton";
@@ -28,6 +32,15 @@ const PageContainer = styled.div`
 `;
 const MainContainer = styled.main`flex: 1;`;
 const FilterContainer = styled.section`margin-right: 32px;`;
+const EmptyListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: ${props => props.theme.disabledColor};
+`;
+const EmptyListSmiley = styled.span`
+  font-size: 10em;
+`;
 
 const asDisplayedUserEntry = userEntry => ({
   id: userEntry.id,
@@ -86,6 +99,15 @@ export class Entries extends Component {
     );
   }
 
+  _renderNoContent() {
+    return (
+      <EmptyListContainer>
+        <EmptyListSmiley>:(</EmptyListSmiley>
+        <h2>No content to display</h2>
+      </EmptyListContainer>
+    );
+  }
+
   _renderList() {
     const userEntries = this.props.data.me.entries.map(asDisplayedUserEntry);
 
@@ -102,6 +124,7 @@ export class Entries extends Component {
                 scrollTop={scrollTop}
                 rowCount={userEntries.length}
                 rowHeight={USER_ENTRY_ITEM_HEIGHT}
+                noRowsRenderer={this._renderNoContent}
                 rowRenderer={({ key, style, index, isScrolling }) => (
                   <div key={key} style={style}>
                     {isScrolling
