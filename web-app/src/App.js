@@ -4,14 +4,14 @@ import styled from "styled-components";
 
 import asyncComponent from "./components/asyncComponent";
 import PageTitle from "./components/PageTitle";
-import AppBar from "./components/AppBar";
+import { AppBar, APP_BAR_HEIGHT } from "./components/AppBar";
 import PrivateRoute from "./components/PrivateRoute";
 import UserMenu from "./components/UserMenu";
 import Entries from "./pages/Entries";
 import Entry from "./pages/Entry";
 import Login from "./pages/Login";
 
-const PageContainer = styled.div`padding-top: 64px; height: 100%;`;
+const PageContainer = styled.div`padding-top: ${APP_BAR_HEIGHT}`;
 const UnstyledLink = styled(Link)`text-decoration: none; color: inherit;`;
 
 class App extends Component {

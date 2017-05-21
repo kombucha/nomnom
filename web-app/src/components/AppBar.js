@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 
+export const APP_BAR_HEIGHT = "64px";
+
 const AppBarContainer = styled.div`
   position: ${props => (props.fixed ? "fixed" : "static")};
-  height: 64px;
+  height: ${APP_BAR_HEIGHT};
   width: 100%;
   padding: 0px 24px;
   z-index: 1000;

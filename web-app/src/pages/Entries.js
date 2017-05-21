@@ -6,8 +6,9 @@ import ContentAdd from "react-icons/lib/md/add";
 
 import PageTitle from "../components/PageTitle";
 import DelayedComponent from "../components/DelayedComponent";
+import { Card } from "../components/Card";
 import { Menu, MenuItem } from "../components/Menu";
-import { AutoSizer, List as VirtualizedList } from "react-virtualized";
+import { WindowScroller, AutoSizer, List as VirtualizedList } from "react-virtualized";
 import AddEntryDialog from "../components/AddEntryDialog";
 import { List, ListItem } from "../components/List";
 import FloatingActionButton from "../components/FloatingActionButton";
@@ -20,13 +21,12 @@ import {
 const DEFAULT_STATUS_FILTER = "NEW";
 
 const PageContainer = styled.div`
-  height: 100%;
   display: flex;
   flex-direction: row;
   justify-content: center;
   padding: 16px;
 `;
-const MainContainer = styled.main`flex: 1; height: 100%;`;
+const MainContainer = styled.main`flex: 1;`;
 const FilterContainer = styled.section`margin-right: 32px;`;
 
 const asDisplayedUserEntry = userEntry => ({
@@ -90,23 +90,30 @@ export class Entries extends Component {
     const userEntries = this.props.data.me.entries.map(asDisplayedUserEntry);
 
     return (
-      <AutoSizer>
-        {({ height, width }) => (
-          <VirtualizedList
-            width={width}
-            height={height}
-            rowCount={userEntries.length}
-            rowHeight={USER_ENTRY_ITEM_HEIGHT}
-            rowRenderer={({ key, style, index, isScrolling }) => (
-              <div key={key} style={style}>
-                {isScrolling
-                  ? <UserEntryItemPlaceholder />
-                  : <UserEntryItem userEntry={userEntries[index]} />}
-              </div>
+      <WindowScroller>
+        {({ height, isScrolling, scrollTop }) => (
+          <AutoSizer disableHeight>
+            {({ width }) => (
+              <VirtualizedList
+                height={height}
+                width={width}
+                autoHeight
+                isScrolling={isScrolling}
+                scrollTop={scrollTop}
+                rowCount={userEntries.length}
+                rowHeight={USER_ENTRY_ITEM_HEIGHT}
+                rowRenderer={({ key, style, index, isScrolling }) => (
+                  <div key={key} style={style}>
+                    {isScrolling
+                      ? <UserEntryItemPlaceholder />
+                      : <UserEntryItem userEntry={userEntries[index]} />}
+                  </div>
+                )}
+              />
             )}
-          />
+          </AutoSizer>
         )}
-      </AutoSizer>
+      </WindowScroller>
     );
   }
 
@@ -129,7 +136,9 @@ export class Entries extends Component {
     const { data } = this.props;
     return (
       <MainContainer>
-        {data.loading ? this._renderPlaceholderList() : this._renderList()}
+        <Card>
+          {data.loading ? this._renderPlaceholderList() : this._renderList()}
+        </Card>
       </MainContainer>
     );
   }

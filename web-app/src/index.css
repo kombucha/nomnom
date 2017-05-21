@@ -5,13 +5,6 @@ body {
   font-family: Roboto, sans-serif;
 }
 
-html,
-body,
-#root,
-#app {
-  height: 100%;
-}
-
 * {
   box-sizing: border-box;
 }
