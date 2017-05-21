@@ -47,6 +47,8 @@ const renderSecondaryText = userEntry => {
   return <UserEntrySubtitle>{userEntry.domain}{tags}</UserEntrySubtitle>;
 };
 
+export const USER_ENTRY_ITEM_HEIGHT = 72;
+
 export const UserEntryItem = ({ userEntry }) => (
   <UserEntryLink key={userEntry.id} to={`/entries/${userEntry.id}`}>
     <Avatar src={userEntry.imageUrl} />
@@ -77,8 +79,8 @@ const FakeAvatar = styled(PlaceHolderElement)`
   border-radius: 50%;
 `;
 const placeholderStyles = {
-  title: { width: "80%" },
-  subtitle: { width: "50%" }
+  title: { width: "50%" },
+  subtitle: { width: "30%" }
 };
 
 export const UserEntryItemPlaceholder = () => (

@@ -7,22 +7,26 @@ import ContentAdd from "react-icons/lib/md/add";
 import PageTitle from "../components/PageTitle";
 import DelayedComponent from "../components/DelayedComponent";
 import { Menu, MenuItem } from "../components/Menu";
-import { AutoSizer, List } from "react-virtualized";
-// import { List, ListItem } from "../components/List";
-import Card from "../components/Card";
+import { AutoSizer, List as VirtualizedList } from "react-virtualized";
 import AddEntryDialog from "../components/AddEntryDialog";
+import { List, ListItem } from "../components/List";
 import FloatingActionButton from "../components/FloatingActionButton";
-import { UserEntryItem, UserEntryItemPlaceholder } from "../components/UserEntryItem";
+import {
+  UserEntryItem,
+  UserEntryItemPlaceholder,
+  USER_ENTRY_ITEM_HEIGHT
+} from "../components/UserEntryItem";
 
 const DEFAULT_STATUS_FILTER = "NEW";
 
 const PageContainer = styled.div`
+  height: 100%;
   display: flex;
   flex-direction: row;
   justify-content: center;
   padding: 16px;
 `;
-const MainContainer = styled.main`flex: 1;`;
+const MainContainer = styled.main`flex: 1; height: 100%;`;
 const FilterContainer = styled.section`margin-right: 32px;`;
 
 const asDisplayedUserEntry = userEntry => ({
@@ -68,11 +72,10 @@ export class Entries extends Component {
   }
 
   _renderPlaceholderList() {
-    return null;
-    /*return (
+    return (
       <DelayedComponent delay={100}>
         <List>
-          {Array(10).fill().map((_, idx) => (
+          {Array(20).fill().map((_, idx) => (
             <ListItem key={idx}>
               <UserEntryItemPlaceholder />
             </ListItem>
@@ -80,38 +83,31 @@ export class Entries extends Component {
 
         </List>
       </DelayedComponent>
-    );*/
+    );
   }
 
   _renderList() {
     const userEntries = this.props.data.me.entries.map(asDisplayedUserEntry);
 
     return (
-      <AutoSizer disableHeight>
-        {({ width }) => (
-          <List
+      <AutoSizer>
+        {({ height, width }) => (
+          <VirtualizedList
             width={width}
-            height={800}
+            height={height}
             rowCount={userEntries.length}
-            rowHeight={72}
-            rowRenderer={({ key, style, index }) => (
+            rowHeight={USER_ENTRY_ITEM_HEIGHT}
+            rowRenderer={({ key, style, index, isScrolling }) => (
               <div key={key} style={style}>
-                <UserEntryItem userEntry={userEntries[index]} />
+                {isScrolling
+                  ? <UserEntryItemPlaceholder />
+                  : <UserEntryItem userEntry={userEntries[index]} />}
               </div>
             )}
           />
         )}
       </AutoSizer>
     );
-    /*return (
-      <List>
-        {userEntries.map(userEntry => (
-          <ListItem key={userEntry.id}>
-            <UserEntryItem userEntry={userEntry} />
-          </ListItem>
-        ))}
-      </List>
-    );*/
   }
 
   _renderFilters() {
@@ -133,9 +129,7 @@ export class Entries extends Component {
     const { data } = this.props;
     return (
       <MainContainer>
-        <Card fullBleed>
-          {data.loading ? this._renderPlaceholderList() : this._renderList()}
-        </Card>
+        {data.loading ? this._renderPlaceholderList() : this._renderList()}
       </MainContainer>
     );
   }
