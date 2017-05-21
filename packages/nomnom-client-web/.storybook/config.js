@@ -1,5 +1,5 @@
 import React from "react";
-import { configure, setAddon, addDecorator } from "@kadira/storybook";
+import { configure, setAddon, addDecorator } from "@storybook/react";
 import infoAddon from "@kadira/react-storybook-addon-info";
 import { ThemeProvider } from "styled-components";
 

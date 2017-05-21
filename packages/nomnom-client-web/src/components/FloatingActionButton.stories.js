@@ -1,5 +1,5 @@
 import React from "react";
-import { storiesOf, action } from "@kadira/storybook";
+import { storiesOf, action } from "@storybook/react";
 import FloatingActionButton from "../components/FloatingActionButton";
 import ContentAdd from "react-icons/lib/md/add";
 
