@@ -1,0 +1,11 @@
+{
+  "name": "nomnom-server-jobs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "express": "4.15.3",
+    "nomnom-server-core": "^1.0.0"
+  }
+}

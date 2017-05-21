@@ -2,7 +2,7 @@ version: "3"
 services:
   api:
     container_name: nomnom
-    build: ./server
+    build: ./packages/nomnom-server-api
     restart: always
     links:
       - db
