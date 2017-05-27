@@ -79,7 +79,7 @@ async function list(userId, options) {
     `
     SELECT * FROM "nomnom"."UserEntry"
     WHERE ${filters.join(" AND ")}
-     ORDER BY "creationDate" DESC
+    ORDER BY "creationDate" DESC
   `,
     filtersParams
   );
@@ -89,24 +89,42 @@ async function list(userId, options) {
 
 const UPDATABLE_KEYS = ["status", "tags", "progress"];
 async function update(userEntryId, updateValues) {
+  const success = await batchUpdate([userEntryId], updateValues);
+  return success;
+}
+
+async function batchUpdate(userEntryIds, updateValues) {
   const updates = [];
-  const params = [userEntryId, new Date()];
+  const params = [new Date(), ...userEntryIds];
+  const varOffset = params.length + 1;
   UPDATABLE_KEYS.forEach(key => {
     if (updateValues[key]) {
-      updates.push(`"${key}" = $${updates.length + 3}`);
+      updates.push(`"${key}" = $${updates.length + varOffset}`);
       params.push(updateValues[key]);
     }
   });
 
   try {
-    await db.query(
-      `UPDATE "nomnom"."UserEntry"
-       SET "lastUpdateDate" = $2,
+    if (userEntryIds.length === 1) {
+      await db.query(
+        `UPDATE "nomnom"."UserEntry"
+       SET "lastUpdateDate" = $1,
        ${updates.join(", ")}
-       WHERE "id" = $1;
+       WHERE "id" = $2;
       `,
-      params
-    );
+        params
+      );
+    } else {
+      const idsPlaceholders = userEntryIds.map((_, idx) => `$${idx + 2}`);
+      await db.query(
+        `UPDATE "nomnom"."UserEntry"
+       SET "lastUpdateDate" = $1,
+       ${updates.join(", ")}
+       WHERE "id" IN (${idsPlaceholders.join(",")});
+      `,
+        params
+      );
+    }
   } catch (e) {
     return false;
   }
@@ -134,5 +152,6 @@ module.exports = {
   create,
   list,
   update,
+  batchUpdate,
   deleteAll
 };

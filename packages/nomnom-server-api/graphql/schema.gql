@@ -65,6 +65,11 @@ input EntryUpdateInput {
   tags: [String!]
 }
 
+input BatchUpdateUserEntriesInput {
+  ids: [ID!]
+  status: UserEntryStatus
+}
+
 input AddUserEntryInput {
   url: String!
   creationDate: Date
@@ -94,6 +99,7 @@ type Mutation {
   addUserEntry(addUserEntryInput: AddUserEntryInput!): UserEntry!
   batchAddUserEntries(batchAddUserEntriesInput: [AddUserEntryInput!]!): [UserEntry]!
   updateUserEntry(entryUpdateInput: EntryUpdateInput!): UserEntry!
+  batchUpdateUserEntries(batchUpdateUserEntriesInput: BatchUpdateUserEntriesInput!): [UserEntry]!
 
   subscribeToFeed(subscribeToFeedInput: SubscribeToFeedInput!): UserFeed!
   batchSubscribeToFeeds(batchSubscribeToFeedsInput: [SubscribeToFeedInput!]!): [UserFeed]!
