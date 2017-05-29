@@ -89,8 +89,8 @@ async function list(userId, options) {
 
 const UPDATABLE_KEYS = ["status", "tags", "progress"];
 async function update(userEntryId, updateValues) {
-  const success = await batchUpdate([userEntryId], updateValues);
-  return success;
+  const userEntries = await batchUpdate([userEntryId], updateValues);
+  return userEntries[0];
 }
 
 async function batchUpdate(userEntryIds, updateValues) {
@@ -104,32 +104,36 @@ async function batchUpdate(userEntryIds, updateValues) {
     }
   });
 
+  let results;
   try {
     if (userEntryIds.length === 1) {
-      await db.query(
+      results = await db.query(
         `UPDATE "nomnom"."UserEntry"
        SET "lastUpdateDate" = $1,
        ${updates.join(", ")}
-       WHERE "id" = $2;
+       WHERE "id" = $2
+       RETURNING "nomnom"."UserEntry".*;
       `,
         params
       );
     } else {
       const idsPlaceholders = userEntryIds.map((_, idx) => `$${idx + 2}`);
-      await db.query(
+      results = await db.query(
         `UPDATE "nomnom"."UserEntry"
        SET "lastUpdateDate" = $1,
        ${updates.join(", ")}
-       WHERE "id" IN (${idsPlaceholders.join(",")});
+       WHERE "id" IN (${idsPlaceholders.join(",")})
+       RETURNING "nomnom"."UserEntry".*;
       `,
         params
       );
     }
   } catch (e) {
-    return false;
+    logger.error(e);
+    return null;
   }
 
-  return true;
+  return results.rows;
 }
 
 async function deleteAll(userId) {
