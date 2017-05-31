@@ -21,7 +21,7 @@ const executableSchema = makeExecutableSchema({
   resolvers: {
     Date: require("./types/date"),
     User: {
-      entries: require("./relations/userEntries"),
+      entries: require("./relations/userEntriesConnection"),
       feeds: require("./relations/userFeeds")
     },
     UserEntry: {

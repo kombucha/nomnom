@@ -65,14 +65,18 @@ async function getFromUrl(url) {
   return res.rows[0];
 }
 
-// TODO: pagination ???
 async function list(userId, options) {
   const filters = [`"UserId" = $1`];
-  const filtersParams = [userId];
+  const filtersParams = [userId, options.limit];
 
   if (options.status) {
-    filters.push(`"status" = $2`);
+    filters.push(`"status" = $3`);
     filtersParams.push(options.status);
+  }
+
+  if (options.beforeCreationDate) {
+    filters.push(`"creationDate" < $4`);
+    filtersParams.push(options.beforeCreationDate);
   }
 
   const res = await db.query(
@@ -80,6 +84,7 @@ async function list(userId, options) {
     SELECT * FROM "nomnom"."UserEntry"
     WHERE ${filters.join(" AND ")}
     ORDER BY "creationDate" DESC
+    LIMIT $2
   `,
     filtersParams
   );

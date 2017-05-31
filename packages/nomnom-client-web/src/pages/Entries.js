@@ -74,7 +74,7 @@ export class Entries extends Component {
   _handleAddEntryDialogClose(newEntryCreated) {
     // TODO: investigate, weird race condition with refetch which causes the component not to rerender
     if (newEntryCreated) {
-      this.props.data.refetch();
+      this.props.refetch();
     }
 
     this._toggleAddEntryDialog(false);
@@ -132,12 +132,10 @@ export class Entries extends Component {
     return statuses.map(status => <FlatButton onClick={onClick(status)}>{status}</FlatButton>);
   }
 
-  _renderMultiSelecBar() {
+  _renderMultiSelecBar(entries) {
     const { selectedRows } = this.state;
-    const { data } = this.props;
-    const selectedEntries = data.me
-      ? data.me.entries.filter(entry => !!selectedRows[entry.id])
-      : [];
+
+    const selectedEntries = entries ? entries.filter(entry => !!selectedRows[entry.id]) : [];
     const actions = this._getActions(selectedEntries);
 
     return selectedEntries.length > 0
@@ -228,27 +226,24 @@ export class Entries extends Component {
     );
   }
 
-  _renderContent() {
-    const { data } = this.props;
-    return (
-      <MainContainer>
-        <Card fullBleed>
-          {data.loading ? this._renderPlaceholderList() : this._renderList(data.me.entries)}
-        </Card>
-      </MainContainer>
-    );
-  }
-
   render() {
     const { showAddEntryDialog } = this.state;
+    const { loading, entries } = this.props;
+
+    window.fetchMore = this.props.fetchMore;
 
     return (
       <PageContainer>
         <PageTitle value="Home" />
 
-        {this._renderMultiSelecBar()}
+        {this._renderMultiSelecBar(entries)}
         {this._renderFilters()}
-        {this._renderContent()}
+
+        <MainContainer>
+          <Card fullBleed>
+            {loading ? this._renderPlaceholderList() : this._renderList(entries)}
+          </Card>
+        </MainContainer>
 
         <AddEntryDialog
           open={showAddEntryDialog}
@@ -263,9 +258,12 @@ export class Entries extends Component {
   }
 }
 
-const query = gql`query($status: UserEntryStatus) {
+const query = gql`query($status: UserEntryStatus, $afterCursor: String) {
   me {
-    entries(status: $status) {id status tags entry {title imageUrl url}}
+    entries(status: $status, first: 20, after: $afterCursor) {
+      edges { node {id status tags entry {title imageUrl url}}, cursor }
+      pageInfo { hasNextPage }
+    }
   }
 }`;
 const mutation = gql`mutation batchUpdateUserEntries($batchUpdateUserEntriesInput: BatchUpdateUserEntriesInput!) {
@@ -274,10 +272,43 @@ const mutation = gql`mutation batchUpdateUserEntries($batchUpdateUserEntriesInpu
 
 const withQuery = graphql(query, {
   options: props => ({
-    variables: {
-      status: statusFromLocation(props.location) || DEFAULT_STATUS_FILTER
-    }
-  })
+    variables: { status: statusFromLocation(props.location) || DEFAULT_STATUS_FILTER }
+  }),
+  props({ data }) {
+    const endCursor = data.me && data.me.entries.edges.length > 0
+      ? data.me.entries.edges[data.me.entries.edges.length - 1].cursor
+      : null;
+    const entries = data.me ? data.me.entries.edges.map(edge => edge.node) : [];
+    const hasMore = data.me ? data.me.entries.pageInfo.hasNextPage : false;
+
+    return {
+      entries,
+      hasMore,
+      loading: data.loading,
+      refetch: () => data.refetch(),
+      fetchMore: () => {
+        return data.fetchMore({
+          variables: { afterCursor: endCursor },
+          updateQuery: (previousResult, { fetchMoreResult }) => {
+            if (!fetchMoreResult) {
+              return previousResult;
+            }
+
+            return {
+              me: {
+                ...previousResult.me,
+                entries: {
+                  ...previousResult.me.entries,
+                  edges: [...previousResult.me.entries.edges, ...fetchMoreResult.me.entries.edges],
+                  pageInfo: fetchMoreResult.me.entries.pageInfo
+                }
+              }
+            };
+          }
+        });
+      }
+    };
+  }
 });
 
 const withMutation = graphql(mutation, {
@@ -286,11 +317,11 @@ const withMutation = graphql(mutation, {
       mutate({
         variables: { batchUpdateUserEntriesInput },
         update: (proxy, data) => {
-          try {
-            const entriesList = proxy.readQuery({ query, variables: { status: "LATER" } });
-          } catch (e) {
-            console.warn("Other list doesnt exist yet so cool");
-          }
+          // try {
+          //   const entriesList = proxy.readQuery({ query, variables: { status: "LATER" } });
+          // } catch (e) {
+          //   console.warn("Other list doesnt exist yet so cool");
+          // }
         }
       })
   })

@@ -1,12 +1,43 @@
 scalar Date
 
+type PageInfo {
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
 type User {
   id: ID!
-  email: String!,
-  name: String,
-  avatarUrl: String,
-  entries(status: UserEntryStatus = null): [UserEntry!]!
+  email: String!
+  name: String
+  avatarUrl: String
+  entries(status: UserEntryStatus = null, first: Int, after: String): UserEntriesConnection!
   feeds: [UserFeed!]!
+}
+
+# User entries
+type UserEntriesConnection {
+    edges: [UserEntryEdge]!
+    pageInfo: PageInfo
+}
+
+type UserEntryEdge {
+  cursor: String!
+  node: UserEntry
+}
+
+type UserEntry {
+  id: ID!
+  user: User!
+  entry: Entry!
+  creationDate: Date!
+  lastUpdateDate: Date
+  progress: Int
+  status: UserEntryStatus!
+  tags: [String!]!
+}
+
+enum UserEntryStatus {
+  NEW LATER FAVORITE ARCHIVED
 }
 
 type Entry {
@@ -24,21 +55,7 @@ type Entry {
   duration: Int
 }
 
-enum UserEntryStatus {
-  NEW LATER FAVORITE ARCHIVED
-}
-
-type UserEntry {
-  id: ID!
-  user: User!
-  entry: Entry!
-  creationDate: Date!
-  lastUpdateDate: Date
-  progress: Int
-  status: UserEntryStatus!
-  tags: [String!]!
-}
-
+# Feeds
 type Feed {
   id: ID!
   feedType: FeedType!
