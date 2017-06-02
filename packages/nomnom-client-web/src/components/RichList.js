@@ -76,7 +76,7 @@ const RichListItemContainer = styled.div`
 const RichListItemActionsContainer = styled.div`
   position: absolute;
   top: 0;
-  right: 0;
+  right: ${CELL_SPACING}px;
   height: 100%;
 
   display: flex;

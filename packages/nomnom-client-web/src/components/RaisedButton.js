@@ -47,7 +47,7 @@ const StyledButton = styled.button`
 
   transition: background ${props => props.theme.transitionConfig};
 
-  &:hover {
+  &:hover, &:focus {
     background: ${props => lighten(0.1, backgroundColor(props))};
   }
 

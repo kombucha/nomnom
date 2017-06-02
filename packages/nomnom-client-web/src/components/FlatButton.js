@@ -35,7 +35,7 @@ const StyledButton = styled.button`
 
   transition: background-color ${props => props.theme.transitionConfig};
 
-  &:hover {
+  &:hover, &:focus {
     background-color: rgba(153, 153, 153, 0.2);
   }
 

@@ -54,6 +54,7 @@ const asDisplayedUserEntry = userEntry => ({
   id: userEntry.id,
   title: userEntry.entry.title,
   imageUrl: userEntry.entry.imageUrl || "http://placekitten.com/g/200/200",
+  url: userEntry.entry.url,
   domain: new URL(userEntry.entry.url).hostname,
   status: userEntry.status,
   tags: userEntry.tags
@@ -180,6 +181,19 @@ export class Entries extends Component {
     const tagsCount = userEntry.tags.length;
     const tags = tagsCount > 0 ? ` | ${userEntry.tags.join(", ")}` : "";
     const isSelected = !!this.state.selectedRows[userEntry.id];
+    const actions = selectMode
+      ? null
+      : [
+          ...this._getActions([userEntry]),
+          <a
+            href={userEntry.url}
+            target="__blank"
+            onClick={ev => {
+              ev.stopPropagation();
+            }}>
+            <FlatButton>View original</FlatButton>
+          </a>
+        ];
 
     return (
       <div key={key} style={style}>
@@ -189,7 +203,7 @@ export class Entries extends Component {
               imageUrl={userEntry.imageUrl}
               title={userEntry.title}
               subtitle={`${userEntry.domain}${tags}`}
-              actions={selectMode ? null : this._getActions([userEntry])}
+              actions={actions}
               onClick={(ev, requestingSelection) =>
                 this._handleRowClicked(userEntry, requestingSelection)}
               selected={isSelected}
