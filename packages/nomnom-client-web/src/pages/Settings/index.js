@@ -22,7 +22,7 @@ const Container = styled.div`
   }
 `;
 
-export const Settings = () => (
+export const Settings = () =>
   <Container>
     <PageTitle value="Settings" />
     <BookmarkletSettings />
@@ -31,7 +31,6 @@ export const Settings = () => (
     <FeedbinSubscriptionsSettings />
     <YoutubeSettings />
     <PrivacySettings />
-  </Container>
-);
+  </Container>;
 
 export default Settings;

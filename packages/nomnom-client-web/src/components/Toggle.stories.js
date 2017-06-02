@@ -23,10 +23,10 @@ ToggleWrapper.displayName = "Toggle";
 ToggleWrapper.propTypes = Toggle.propTypes;
 ToggleWrapper.defaultProps = Toggle.defaultProps;
 
-storiesOf("Toggle", module).addWithInfo("basic toggle", () => (
+storiesOf("Toggle", module).addWithInfo("basic toggle", () =>
   <div>
     <ToggleWrapper onChange={action("onChange")} />
     <ToggleWrapper onChange={action("onChange")} value={true} />
     <ToggleWrapper onChange={action("onChange")} disabled />
   </div>
-));
+);

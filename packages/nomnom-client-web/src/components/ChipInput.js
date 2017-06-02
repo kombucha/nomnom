@@ -41,11 +41,11 @@ export class ChipInput extends PureComponent {
 
     return (
       <div>
-        {values.map(chipValue => (
+        {values.map(chipValue =>
           <Chip key={chipValue} onRequestDelete={() => this._handleDeleteValue(chipValue)}>
             {chipValue}
           </Chip>
-        ))}
+        )}
 
         <TextField
           hintText={hintText}

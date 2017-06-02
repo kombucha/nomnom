@@ -4,7 +4,7 @@ import FloatingActionButton from "../components/FloatingActionButton";
 import ContentAdd from "react-icons/lib/md/add";
 
 storiesOf("Floating Action Button", module)
-  .addWithInfo("with text", () => (
+  .addWithInfo("with text", () =>
     <div>
       <FloatingActionButton onClick={action("clicked")}>
         <ContentAdd className="icon" />
@@ -16,15 +16,15 @@ storiesOf("Floating Action Button", module)
         +
       </FloatingActionButton>
     </div>
-  ))
-  .addWithInfo("with some emoji", () => (
+  )
+  .addWithInfo("with some emoji", () =>
     <FloatingActionButton onClick={action("clicked")}>👍</FloatingActionButton>
-  ))
-  .addWithInfo("fixed", () => (
+  )
+  .addWithInfo("fixed", () =>
     <div>
       Look down !
       <FloatingActionButton onClick={action("clicked")} fixed>
         😀
       </FloatingActionButton>
     </div>
-  ));
+  );

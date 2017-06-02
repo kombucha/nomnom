@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import withAuth from "./withAuth";
 
-const PrivateRoute = ({ component: Component, authenticated, ...rest }) => (
+const PrivateRoute = ({ component: Component, authenticated, ...rest }) =>
   <Route
     {...rest}
     render={props =>
@@ -14,7 +14,6 @@ const PrivateRoute = ({ component: Component, authenticated, ...rest }) => (
               state: { from: props.location }
             }}
           />}
-  />
-);
+  />;
 
 export default withAuth(PrivateRoute);

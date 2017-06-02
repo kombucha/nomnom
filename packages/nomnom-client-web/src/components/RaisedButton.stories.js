@@ -3,7 +3,7 @@ import { storiesOf, action } from "@storybook/react";
 import RaisedButton from "../components/RaisedButton";
 
 storiesOf("Raised Button", module)
-  .addWithInfo("with text", () => (
+  .addWithInfo("with text", () =>
     <div>
       <RaisedButton onClick={action("clicked")}>Hello Button</RaisedButton>
       <RaisedButton primary onClick={action("clicked")}>
@@ -13,7 +13,7 @@ storiesOf("Raised Button", module)
         Hello Button
       </RaisedButton>
     </div>
-  ))
-  .addWithInfo("with some emoji", () => (
+  )
+  .addWithInfo("with some emoji", () =>
     <RaisedButton onClick={action("clicked")}>😀 😎 👍 💯</RaisedButton>
-  ));
+  );

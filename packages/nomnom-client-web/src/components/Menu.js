@@ -24,7 +24,7 @@ export const MenuItem = styled(ListItem)`
   }
 `;
 
-export const Menu = ({ children, value, onChange, ...rest }) => (
+export const Menu = ({ children, value, onChange, ...rest }) =>
   <Card fullBleed {...rest}>
     <List>
       {React.Children.map(children, menuItem => {
@@ -41,8 +41,7 @@ export const Menu = ({ children, value, onChange, ...rest }) => (
         return React.cloneElement(menuItem, newProps);
       })}
     </List>
-  </Card>
-);
+  </Card>;
 
 Menu.propTypes = {
   children: PropTypes.arrayOf(

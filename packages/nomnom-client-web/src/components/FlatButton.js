@@ -46,10 +46,9 @@ const StyledButton = styled.button`
 `;
 const ChildrenWrapper = styled.div`display: flex; align-items: center; justify-content: center;`;
 
-export const FlatButton = ({ children, ...rest }) => (
+export const FlatButton = ({ children, ...rest }) =>
   <StyledButton {...rest}>
     <ChildrenWrapper>{children}</ChildrenWrapper>
-  </StyledButton>
-);
+  </StyledButton>;
 
 export default FlatButton;

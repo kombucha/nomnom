@@ -4,8 +4,8 @@ import Chip from "../components/Chip";
 
 storiesOf("Chip", module)
   .addWithInfo("Simple chip", () => <Chip onClick={action("clicked")}>Hello</Chip>)
-  .addWithInfo("Deletable Chip", () => (
+  .addWithInfo("Deletable Chip", () =>
     <Chip onClick={action("clicked")} onRequestDelete={action("delete me")}>
       Hello
     </Chip>
-  ));
+  );

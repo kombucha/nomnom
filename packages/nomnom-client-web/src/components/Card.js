@@ -11,11 +11,10 @@ const CardWrapper = styled.section`
   overflow: hidden;
 `;
 
-export const Card = ({ children, ...rest }) => (
+export const Card = ({ children, ...rest }) =>
   <CardWrapper {...rest}>
     {children}
-  </CardWrapper>
-);
+  </CardWrapper>;
 
 Card.propTypes = {
   fullBleed: PropTypes.bool

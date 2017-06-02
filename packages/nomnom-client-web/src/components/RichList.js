@@ -46,15 +46,14 @@ const ListItemSubtitle = styled.span`
   white-space: nowrap;
 `;
 
-export const ListItem = ({ imageUrl, title, subtitle }) => (
+export const ListItem = ({ imageUrl, title, subtitle }) =>
   <ListItemContainer>
     <Avatar src={imageUrl} size={`${IMAGE_SIZE}px`} />
     <ListItemTextContainer>
       <ListItemTitle>{title}</ListItemTitle>
       <ListItemSubtitle>{subtitle}</ListItemSubtitle>
     </ListItemTextContainer>
-  </ListItemContainer>
-);
+  </ListItemContainer>;
 
 ListItem.propTypes = {
   imageUrl: PropTypes.string.isRequired,
@@ -192,14 +191,13 @@ const placeholderStyles = {
   subtitle: { width: "30%" }
 };
 
-export const ListItemPlaceholder = () => (
+export const ListItemPlaceholder = () =>
   <ListItemPlaceholderContainer>
     <FakeAvatar />
     <ListItemTextContainer>
       <PlaceHolderElement style={placeholderStyles.title} />
       <PlaceHolderElement style={placeholderStyles.subtitle} />
     </ListItemTextContainer>
-  </ListItemPlaceholderContainer>
-);
+  </ListItemPlaceholderContainer>;
 
 export default ListItem;

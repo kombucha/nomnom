@@ -4,12 +4,12 @@ import FlatButton from "../components/FlatButton";
 import Dialog from "../components/Dialog";
 
 storiesOf("Dialog", module)
-  .addWithInfo("Basic Dialog", () => (
+  .addWithInfo("Basic Dialog", () =>
     <Dialog open title="Dialog title" onRequestClose={action("onRequestClose")}>
       Hello, this is a dialog !
     </Dialog>
-  ))
-  .addWithInfo("with some actions", () => (
+  )
+  .addWithInfo("with some actions", () =>
     <Dialog
       open
       title="Dialog title"
@@ -20,4 +20,4 @@ storiesOf("Dialog", module)
       ]}>
       Hello, this is a dialog with actions !
     </Dialog>
-  ));
+  );

@@ -51,7 +51,7 @@ const StyledDeleteIcon = styled(DeleteIcon)`
   }
 `;
 
-export const Chip = ({ children, onClick, onRequestDelete }) => (
+export const Chip = ({ children, onClick, onRequestDelete }) =>
   <ChipWrapper onClick={onClick}>
     <ChipContent>
       <ChipText>{React.Children.toArray(children)}</ChipText>
@@ -66,8 +66,7 @@ export const Chip = ({ children, onClick, onRequestDelete }) => (
           />
         : null}
     </ChipContent>
-  </ChipWrapper>
-);
+  </ChipWrapper>;
 
 Chip.propTypes = {
   onClick: PropTypes.func,

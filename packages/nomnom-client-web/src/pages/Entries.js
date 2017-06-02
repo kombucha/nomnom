@@ -205,9 +205,9 @@ export class Entries extends Component {
 
     return (
       <WindowScroller>
-        {({ height, isScrolling, scrollTop }) => (
+        {({ height, isScrolling, scrollTop }) =>
           <AutoSizer disableHeight>
-            {({ width }) => (
+            {({ width }) =>
               <StyledVirtualizedList
                 height={height}
                 width={width}
@@ -220,10 +220,8 @@ export class Entries extends Component {
                 onRowsRendered={this._handleListScrolling}
                 rowRenderer={params =>
                   this._renderRow(userEntries[params.index], selectMode, params)}
-              />
-            )}
-          </AutoSizer>
-        )}
+              />}
+          </AutoSizer>}
       </WindowScroller>
     );
   }

@@ -9,7 +9,8 @@ function bookmarkletFn() {
 
   const payload = {
     operationName: "addUserEntry",
-    query: "mutation addUserEntry($addUserEntryInput: AddUserEntryInput!) {addUserEntry(addUserEntryInput: $addUserEntryInput) {id} }",
+    query:
+      "mutation addUserEntry($addUserEntryInput: AddUserEntryInput!) {addUserEntry(addUserEntryInput: $addUserEntryInput) {id} }",
     variables: {
       addUserEntryInput: {
         url: window.location.href,
@@ -49,14 +50,13 @@ const createBookmarklet = token => {
 };
 
 // TODO: an extension ! CSP will prevent this from working on a lot of sites...
-export const BookmarkletSettings = ({ data }) => (
+export const BookmarkletSettings = ({ data }) =>
   <Card>
     <CardTitle> Bookmarklet </CardTitle>
     <p> Drag and drop the following link to your bookmark bar </p>
     {data.bookmarkletToken &&
       <a href={createBookmarklet(data.bookmarkletToken)}> Add to nomnom </a>}
-  </Card>
-);
+  </Card>;
 
 const bookmarkletQuery = gql`query {bookmarkletToken}`;
 

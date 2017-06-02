@@ -23,10 +23,10 @@ ChipInputWrapper.displayName = "ChipInput";
 ChipInputWrapper.propTypes = ChipInput.propTypes;
 ChipInputWrapper.defaultProps = ChipInput.defaultProps;
 
-storiesOf("Chip input", module).addWithInfo("Deletable Chip", () => (
+storiesOf("Chip input", module).addWithInfo("Deletable Chip", () =>
   <ChipInputWrapper
     hintText="Type some more values"
     value={["hello", "world"]}
     onChange={action("onChange")}
   />
-));
+);
