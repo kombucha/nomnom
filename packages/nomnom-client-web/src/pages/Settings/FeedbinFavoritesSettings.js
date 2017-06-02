@@ -1,9 +1,9 @@
 import React, { PureComponent } from "react";
-import { gql, graphql } from "react-apollo";
 
 import { Card, CardTitle } from "../../components/Card";
 import FileInput from "../../components/FileInput";
 import RaisedButton from "../../components/RaisedButton";
+import batchAddUserEntriesContainer from "../../graphql/mutations/batchAddUserEntries";
 
 import feedbin from "../../services/feedbin";
 
@@ -71,15 +71,4 @@ export class FeedbinFavoritesSettings extends PureComponent {
   }
 }
 
-const addEntryMutation = gql`mutation batchAddUserEntries($batchAddUserEntriesInput: [AddUserEntryInput!]!) {
-  batchAddUserEntries(batchAddUserEntriesInput: $batchAddUserEntriesInput) { id }
-}`;
-
-export const FeedbinFavoritesSettingsWithMutation = graphql(addEntryMutation, {
-  props: ({ mutate }) => ({
-    batchAddUserEntries: batchAddUserEntriesInput =>
-      mutate({ variables: { batchAddUserEntriesInput } })
-  })
-})(FeedbinFavoritesSettings);
-
-export default FeedbinFavoritesSettingsWithMutation;
+export default batchAddUserEntriesContainer(FeedbinFavoritesSettings);

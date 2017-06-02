@@ -1,9 +1,9 @@
 import React, { PureComponent } from "react";
-import { gql, graphql } from "react-apollo";
 
 import { Card, CardTitle } from "../../components/Card";
 import FileInput from "../../components/FileInput";
 import RaisedButton from "../../components/RaisedButton";
+import batchAddUserEntriesContainer from "../../graphql/mutations/batchAddUserEntries";
 
 import importPocket from "../../services/pocket";
 
@@ -66,15 +66,4 @@ export class PocketSettings extends PureComponent {
   }
 }
 
-const addEntryMutation = gql`mutation batchAddUserEntries($batchAddUserEntriesInput: [AddUserEntryInput!]!) {
-  batchAddUserEntries(batchAddUserEntriesInput: $batchAddUserEntriesInput) { id }
-}`;
-
-export const PocketSettingsWithMutation = graphql(addEntryMutation, {
-  props: ({ mutate }) => ({
-    batchAddUserEntries: batchAddUserEntriesInput =>
-      mutate({ variables: { batchAddUserEntriesInput } })
-  })
-})(PocketSettings);
-
-export default PocketSettingsWithMutation;
+export default batchAddUserEntriesContainer(PocketSettings);

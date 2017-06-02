@@ -1,11 +1,14 @@
 import React, { PureComponent } from "react";
-import { gql, graphql, compose } from "react-apollo";
+import PropTypes from "prop-types";
+import { compose } from "recompose";
 import styled from "styled-components";
 
 import EditEntryTagsDialog from "../components/EditEntryTagsDialog";
 import PageTitle from "../components/PageTitle";
 import FlatButton from "../components/FlatButton";
 import { Card, CardTitle } from "../components/Card";
+import userEntryContainer from "../graphql/queries/userEntry";
+import updateUserEntryContainer from "../graphql/mutations/updateUserEntry";
 
 const Container = styled.div`
   display: flex;
@@ -35,7 +38,7 @@ const Article = styled.article`
   }
 `;
 
-class Entry extends PureComponent {
+export class Entry extends PureComponent {
   constructor() {
     super();
     this.state = {
@@ -56,12 +59,12 @@ class Entry extends PureComponent {
   }
 
   archiveEntry() {
-    const { id } = this.props.data.userEntry;
+    const { id } = this.props.userEntry;
     this.props.updateUserEntry({ id, status: "ARCHIVED" });
   }
 
   favoriteEntry() {
-    const { id } = this.props.data.userEntry;
+    const { id } = this.props.userEntry;
     this.props.updateUserEntry({ id, status: "FAVORITE" });
   }
 
@@ -69,8 +72,7 @@ class Entry extends PureComponent {
     this.setState({ editingTags: true });
   }
 
-  renderEntry() {
-    const { userEntry } = this.props.data;
+  renderEntry(userEntry) {
     const { editingTags } = this.state;
     const htmlContent = {
       __html: userEntry.entry.content
@@ -126,37 +128,19 @@ class Entry extends PureComponent {
     );
   }
   render() {
-    const { data } = this.props;
+    const { userEntry, loading } = this.props;
     return (
       <Container>
-        {data.loading ? this.renderLoading() : this.renderEntry()}
+        {loading ? this.renderLoading() : this.renderEntry(userEntry)}
       </Container>
     );
   }
 }
 
-const query = gql`query userEntry($userEntryId: ID!) {
-  userEntry(userEntryId: $userEntryId) {id status entry { url title content author publicationDate }}
-}`;
-// TODO: Update store
-// http://dev.apollodata.com/react/cache-updates.html
-const mutation = gql`mutation updateUserEntry($entryUpdateInput: EntryUpdateInput!) {
-  updateUserEntry(entryUpdateInput: $entryUpdateInput) {id progress status tags lastUpdateDate}
-}`;
+Entry.propTypes = {
+  userEntry: PropTypes.object,
+  loading: PropTypes.bool.isRequired,
+  updateUserEntry: PropTypes.func.isRequired
+};
 
-const withQuery = graphql(query, {
-  options: props => ({
-    variables: {
-      userEntryId: props.match.params.entryId
-    }
-  })
-});
-const withMutation = graphql(mutation, {
-  props: ({ mutate }) => ({
-    updateUserEntry: entryUpdateInput => mutate({ variables: { entryUpdateInput } })
-  })
-});
-
-const WrappedEntry = compose(withQuery, withMutation)(Entry);
-
-export default WrappedEntry;
+export default compose(userEntryContainer, updateUserEntryContainer)(Entry);

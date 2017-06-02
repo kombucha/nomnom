@@ -1,10 +1,10 @@
 import React, { PureComponent } from "react";
-import { gql, graphql } from "react-apollo";
 import PropTypes from "prop-types";
 
 import Dialog from "./Dialog";
 import FlatButton from "./FlatButton";
 import TextField from "./TextField";
+import subscribeToFeedContainer from "../graphql/mutations/subscribeToFeed";
 
 const DEFAULT_STATE = {
   feedName: "",
@@ -72,21 +72,12 @@ export class SubscribeToFeedDialog extends PureComponent {
 
 SubscribeToFeedDialog.propTypes = {
   open: PropTypes.bool.isRequired,
-  onRequestClose: PropTypes.func.isRequired
+  onRequestClose: PropTypes.func.isRequired,
+  subscribeToFeed: PropTypes.func.isRequired
 };
 
 SubscribeToFeedDialog.defaultProps = {
   open: false
 };
 
-const subscribeToFeedMutation = gql`mutation subscribeToFeed($subscribeToFeedInput: SubscribeToFeedInput!) {
-  subscribeToFeed(subscribeToFeedInput: $subscribeToFeedInput) { id }
-}`;
-
-const SubscribeToFeedDialogWithMutation = graphql(subscribeToFeedMutation, {
-  props: ({ mutate }) => ({
-    subscribeToFeed: subscribeToFeedInput => mutate({ variables: { subscribeToFeedInput } })
-  })
-})(SubscribeToFeedDialog);
-
-export default SubscribeToFeedDialogWithMutation;
+export default subscribeToFeedContainer(subscribeToFeedContainer);

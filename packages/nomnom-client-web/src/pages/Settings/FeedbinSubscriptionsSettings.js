@@ -1,9 +1,9 @@
 import React, { PureComponent } from "react";
-import { gql, graphql } from "react-apollo";
 
 import { Card, CardTitle } from "../../components/Card";
 import FileInput from "../../components/FileInput";
 import RaisedButton from "../../components/RaisedButton";
+import batchSubscribeToFeedsContainer from "../../graphql/mutations/batchSubscribeToFeeds";
 
 import { importSubscriptions } from "../../services/feedbin";
 
@@ -15,7 +15,7 @@ const DEFAULT_STATE = {
   importFiles: []
 };
 
-export class FeedbinSubscriptionsSettingsWithMutation extends PureComponent {
+export class FeedbinSubscriptionsSettings extends PureComponent {
   constructor() {
     super();
     this.state = DEFAULT_STATE;
@@ -70,15 +70,4 @@ export class FeedbinSubscriptionsSettingsWithMutation extends PureComponent {
   }
 }
 
-const addEntryMutation = gql`mutation batchSubscribeToFeeds($batchSubscribeToFeedsInput: [SubscribeToFeedInput!]!) {
-  batchSubscribeToFeeds(batchSubscribeToFeedsInput: $batchSubscribeToFeedsInput) { id }
-}`;
-
-export const FeedbinSubscriptionsSettingsWithMutationWithMutation = graphql(addEntryMutation, {
-  props: ({ mutate }) => ({
-    batchSubscribeToFeeds: batchSubscribeToFeedsInput =>
-      mutate({ variables: { batchSubscribeToFeedsInput } })
-  })
-})(FeedbinSubscriptionsSettingsWithMutation);
-
-export default FeedbinSubscriptionsSettingsWithMutationWithMutation;
+export default batchSubscribeToFeedsContainer(FeedbinSubscriptionsSettings);

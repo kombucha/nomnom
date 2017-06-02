@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import { lighten } from "polished";
 import { mapProps, compose } from "recompose";
@@ -265,6 +266,20 @@ export class Entries extends Component {
     );
   }
 }
+
+Entries.propTypes = {
+  status: PropTypes.string.isRequired, // TODO: enum
+  entries: PropTypes.array.isRequired,
+  hasMore: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired,
+
+  refetch: PropTypes.func.isRequired,
+  fetchMore: PropTypes.func.isRequired,
+  batchUpdateUserEntries: PropTypes.func.isRequired,
+
+  location: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
+};
 
 const statusPropContainer = mapProps(({ location, history }) => ({
   status: statusFromLocation(location) || DEFAULT_STATUS_FILTER,

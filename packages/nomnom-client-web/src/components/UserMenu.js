@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
+import { compose } from "recompose";
 import { gql, graphql } from "react-apollo";
 import styled from "styled-components";
 import { ellipsis } from "polished";
@@ -63,6 +64,5 @@ export class UserMenu extends Component {
 const withGraphql = graphql(gql`query { me { name avatarUrl } }`, {
   skip: props => !props.authenticated
 });
-const UserMenuWithEverything = withRouter(withAuth(withGraphql(UserMenu)));
 
-export default UserMenuWithEverything;
+export default compose(withRouter, withAuth, withGraphql)(UserMenu);

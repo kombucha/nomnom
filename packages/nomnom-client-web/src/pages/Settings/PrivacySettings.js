@@ -1,13 +1,13 @@
 import React, { PureComponent } from "react";
 import ActionDelete from "react-icons/lib/md/delete";
 import styled from "styled-components";
-import { gql, graphql } from "react-apollo";
 
 import Dialog from "../../components/Dialog";
 import TextField from "../../components/TextField";
 import FlatButton from "../../components/FlatButton";
 import RaisedButton from "../../components/RaisedButton";
 import { Card, CardTitle } from "../../components/Card";
+import deleteAllMyDataContainer from "../../graphql/mutations/deleteAllMyData";
 
 const CONFIRMATION_TEXT = "Ya, I'm sure";
 const ConfirmationText = styled.b`user-select: none;`;
@@ -106,12 +106,4 @@ export class PrivacySettings extends PureComponent {
   }
 }
 
-const addEntryMutation = gql`mutation deleteAllMyData { deleteAllMyData }`;
-
-const PrivacySettingsWithMutation = graphql(addEntryMutation, {
-  props: ({ mutate }) => ({
-    deleteAllMyData: () => mutate()
-  })
-})(PrivacySettings);
-
-export default PrivacySettingsWithMutation;
+export default deleteAllMyDataContainer(PrivacySettings);

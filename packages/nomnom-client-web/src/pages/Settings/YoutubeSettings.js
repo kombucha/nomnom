@@ -1,10 +1,9 @@
 import React, { PureComponent } from "react";
-import { gql, graphql } from "react-apollo";
 
 import { Card, CardTitle } from "../../components/Card";
 import FileInput from "../../components/FileInput";
 import RaisedButton from "../../components/RaisedButton";
-
+import batchSubscribeToFeedsContainer from "../../graphql/mutations/batchSubscribeToFeeds";
 import importYoutubeSubscriptions from "../../services/youtube";
 
 const DEFAULT_STATE = {
@@ -70,15 +69,4 @@ export class YoutubeSettings extends PureComponent {
   }
 }
 
-const addEntryMutation = gql`mutation batchSubscribeToFeeds($batchSubscribeToFeedsInput: [SubscribeToFeedInput!]!) {
-  batchSubscribeToFeeds(batchSubscribeToFeedsInput: $batchSubscribeToFeedsInput) { id }
-}`;
-
-export const YoutubeSettingsWithMutation = graphql(addEntryMutation, {
-  props: ({ mutate }) => ({
-    batchSubscribeToFeeds: batchSubscribeToFeedsInput =>
-      mutate({ variables: { batchSubscribeToFeedsInput } })
-  })
-})(YoutubeSettings);
-
-export default YoutubeSettingsWithMutation;
+export default batchSubscribeToFeedsContainer(YoutubeSettings);

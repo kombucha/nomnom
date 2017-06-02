@@ -1,10 +1,10 @@
 import React, { PureComponent } from "react";
-import { gql, graphql } from "react-apollo";
 import PropTypes from "prop-types";
 
 import Dialog from "./Dialog";
 import FlatButton from "./FlatButton";
 import TextField from "./TextField";
+import addUserEntryMutation from "../graphql/mutations/addUserEntry";
 
 class AddEntryDialog extends PureComponent {
   constructor() {
@@ -54,21 +54,12 @@ class AddEntryDialog extends PureComponent {
 
 AddEntryDialog.propTypes = {
   open: PropTypes.bool.isRequired,
-  onRequestClose: PropTypes.func.isRequired
+  onRequestClose: PropTypes.func.isRequired,
+  addUserEntry: PropTypes.func.isRequired
 };
 
 AddEntryDialog.defaultProps = {
   open: false
 };
 
-const addEntryMutation = gql`mutation addUserEntry($addUserEntryInput: AddUserEntryInput!) {
-  addUserEntry(addUserEntryInput: $addUserEntryInput) {id}
-}`;
-
-const AddEntryDialogWithMutation = graphql(addEntryMutation, {
-  props: ({ mutate }) => ({
-    addUserEntry: addUserEntryInput => mutate({ variables: { addUserEntryInput } })
-  })
-})(AddEntryDialog);
-
-export default AddEntryDialogWithMutation;
+export default addUserEntryMutation(AddEntryDialog);

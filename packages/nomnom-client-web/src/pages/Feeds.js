@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { gql, graphql } from "react-apollo";
 import styled from "styled-components";
 import ContentAdd from "react-icons/lib/md/add";
 
@@ -9,6 +8,7 @@ import Toggle from "../components/Toggle";
 import { Card } from "../components/Card";
 import { List, ListItem } from "../components/List";
 import SubscribeToFeedDialog from "../components/SubscribeToFeedDialog";
+import feedsContainer from "../graphql/queries/feeds";
 
 const PageContainer = styled.div`padding: 16px;`;
 
@@ -99,12 +99,4 @@ export class Feeds extends Component {
   }
 }
 
-const query = gql`query {
-  me {
-    feeds {id name enabled feed {uri}}
-  }
-}`;
-
-const FeedsWithData = graphql(query)(Feeds);
-
-export default FeedsWithData;
+export default feedsContainer(Feeds);

@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import Dialog from "./Dialog";
 import ChipInput from "./ChipInput";
 import FlatButton from "./FlatButton";
+import updateUserEntryContainer from "../graphql/mutations/updateUserEntry";
 
 const DEFAULT_STATE = {
   newTags: [],
@@ -81,20 +82,11 @@ EditEntryTagsDialog.defaultProps = {
 const query = gql`query userEntry($userEntryId: ID!) {
   userEntry(userEntryId: $userEntryId) { id tags }
 }`;
-const mutation = gql`mutation updateUserEntry($entryUpdateInput: EntryUpdateInput!) {
-  updateUserEntry(entryUpdateInput: $entryUpdateInput) {id tags lastUpdateDate}
-}`;
-
 const withQuery = graphql(query, {
   skip: props => !props.open,
   options: ({ userEntryId }) => ({
     variables: { userEntryId }
   })
 });
-const withMutation = graphql(mutation, {
-  props: ({ mutate }) => ({
-    updateUserEntryTags: entryUpdateInput => mutate({ variables: { entryUpdateInput } })
-  })
-});
 
-export default compose(withQuery, withMutation)(EditEntryTagsDialog);
+export default compose(withQuery, updateUserEntryContainer)(EditEntryTagsDialog);
