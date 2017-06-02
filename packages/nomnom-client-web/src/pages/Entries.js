@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { gql, graphql, compose } from "react-apollo";
 import styled from "styled-components";
 import { lighten } from "polished";
+import { mapProps, compose } from "recompose";
 import queryString from "query-string";
 import ContentAdd from "react-icons/lib/md/add";
 import VirtualizedList from "react-virtualized/dist/commonjs/List";
@@ -17,6 +17,9 @@ import { Menu, MenuItem } from "../components/Menu";
 import FlatButton from "../components/FlatButton";
 import FloatingActionButton from "../components/FloatingActionButton";
 import AddEntryDialog from "../components/AddEntryDialog";
+
+import userEntriesContainer from "../graphql/queries/userEntries";
+import batchUpdateUserEntriesContainer from "../graphql/mutations/batchUpdateUserEntries";
 
 const DEFAULT_STATUS_FILTER = "NEW";
 
@@ -69,6 +72,7 @@ export class Entries extends Component {
     this._handleStatusFilterChange = this._handleStatusFilterChange.bind(this);
     this._handleExitSelectionMode = this._handleExitSelectionMode.bind(this);
     this._handleRowClicked = this._handleRowClicked.bind(this);
+    this._handleListScrolling = this._handleListScrolling.bind(this);
   }
 
   _handleAddEntryDialogClose(newEntryCreated) {
@@ -81,12 +85,13 @@ export class Entries extends Component {
   }
 
   _handleStatusFilterChange(newStatus) {
-    const queryParams = queryString.parse(this.props.location.search);
+    const { location, history } = this.props;
+    const queryParams = queryString.parse(location.search);
     const newQueryParams = Object.assign({}, queryParams, {
       status: newStatus
     });
 
-    this.props.history.push({
+    history.push({
       search: "?" + queryString.stringify(newQueryParams)
     });
   }
@@ -130,6 +135,16 @@ export class Entries extends Component {
         .then(() => this._handleExitSelectionMode());
     };
     return statuses.map(status => <FlatButton onClick={onClick(status)}>{status}</FlatButton>);
+  }
+
+  _handleListScrolling({ overscanStopIndex }) {
+    const { entries, hasMore, loading, fetchMore } = this.props;
+    const hasReachedEnd = overscanStopIndex === entries.length - 1;
+    const shouldLoadMore = hasReachedEnd && hasMore && !loading;
+
+    if (shouldLoadMore) {
+      fetchMore();
+    }
   }
 
   _renderMultiSelecBar(entries) {
@@ -201,6 +216,7 @@ export class Entries extends Component {
                 rowCount={userEntries.length}
                 rowHeight={LIST_ITEM_HEIGHT}
                 noRowsRenderer={noContent}
+                onRowsRendered={this._handleListScrolling}
                 rowRenderer={params =>
                   this._renderRow(userEntries[params.index], selectMode, params)}
               />
@@ -211,120 +227,51 @@ export class Entries extends Component {
     );
   }
 
-  _renderFilters() {
-    const statusFilter = statusFromLocation(this.props.location) || DEFAULT_STATUS_FILTER;
-
-    return (
-      <FilterContainer>
-        <Menu value={statusFilter} onChange={this._handleStatusFilterChange}>
-          <MenuItem value="NEW">New</MenuItem>
-          <MenuItem value="LATER">Later</MenuItem>
-          <MenuItem value="FAVORITE">Favorites</MenuItem>
-          <MenuItem value="ARCHIVED">Archived</MenuItem>
-        </Menu>
-      </FilterContainer>
-    );
-  }
-
   render() {
     const { showAddEntryDialog } = this.state;
-    const { loading, entries } = this.props;
-
-    window.fetchMore = this.props.fetchMore;
+    const { loading, entries, status } = this.props;
+    const isFirstLoad = loading && entries.length === 0;
 
     return (
       <PageContainer>
         <PageTitle value="Home" />
 
         {this._renderMultiSelecBar(entries)}
-        {this._renderFilters()}
+
+        <FilterContainer>
+          <Menu value={status} onChange={this._handleStatusFilterChange}>
+            <MenuItem value="NEW">New</MenuItem>
+            <MenuItem value="LATER">Later</MenuItem>
+            <MenuItem value="FAVORITE">Favorites</MenuItem>
+            <MenuItem value="ARCHIVED">Archived</MenuItem>
+          </Menu>
+        </FilterContainer>
 
         <MainContainer>
           <Card fullBleed>
-            {loading ? this._renderPlaceholderList() : this._renderList(entries)}
+            {isFirstLoad ? this._renderPlaceholderList() : this._renderList(entries)}
           </Card>
         </MainContainer>
+
+        <FloatingActionButton secondary fixed onClick={() => this._toggleAddEntryDialog(true)}>
+          <ContentAdd className="icon" />
+        </FloatingActionButton>
 
         <AddEntryDialog
           open={showAddEntryDialog}
           onRequestClose={this._handleAddEntryDialogClose}
         />
-
-        <FloatingActionButton secondary fixed onClick={() => this._toggleAddEntryDialog(true)}>
-          <ContentAdd className="icon" />
-        </FloatingActionButton>
       </PageContainer>
     );
   }
 }
 
-const query = gql`query($status: UserEntryStatus, $afterCursor: String) {
-  me {
-    entries(status: $status, first: 20, after: $afterCursor) {
-      edges { node {id status tags entry {title imageUrl url}}, cursor }
-      pageInfo { hasNextPage }
-    }
-  }
-}`;
-const mutation = gql`mutation batchUpdateUserEntries($batchUpdateUserEntriesInput: BatchUpdateUserEntriesInput!) {
-  batchUpdateUserEntries(batchUpdateUserEntriesInput: $batchUpdateUserEntriesInput) {id status lastUpdateDate}
-}`;
+const statusPropContainer = mapProps(({ location, history }) => ({
+  status: statusFromLocation(location) || DEFAULT_STATUS_FILTER,
+  location,
+  history
+}));
 
-const withQuery = graphql(query, {
-  options: props => ({
-    variables: { status: statusFromLocation(props.location) || DEFAULT_STATUS_FILTER }
-  }),
-  props({ data }) {
-    const endCursor = data.me && data.me.entries.edges.length > 0
-      ? data.me.entries.edges[data.me.entries.edges.length - 1].cursor
-      : null;
-    const entries = data.me ? data.me.entries.edges.map(edge => edge.node) : [];
-    const hasMore = data.me ? data.me.entries.pageInfo.hasNextPage : false;
-
-    return {
-      entries,
-      hasMore,
-      loading: data.loading,
-      refetch: () => data.refetch(),
-      fetchMore: () => {
-        return data.fetchMore({
-          variables: { afterCursor: endCursor },
-          updateQuery: (previousResult, { fetchMoreResult }) => {
-            if (!fetchMoreResult) {
-              return previousResult;
-            }
-
-            return {
-              me: {
-                ...previousResult.me,
-                entries: {
-                  ...previousResult.me.entries,
-                  edges: [...previousResult.me.entries.edges, ...fetchMoreResult.me.entries.edges],
-                  pageInfo: fetchMoreResult.me.entries.pageInfo
-                }
-              }
-            };
-          }
-        });
-      }
-    };
-  }
-});
-
-const withMutation = graphql(mutation, {
-  props: ({ mutate }) => ({
-    batchUpdateUserEntries: batchUpdateUserEntriesInput =>
-      mutate({
-        variables: { batchUpdateUserEntriesInput },
-        update: (proxy, data) => {
-          // try {
-          //   const entriesList = proxy.readQuery({ query, variables: { status: "LATER" } });
-          // } catch (e) {
-          //   console.warn("Other list doesnt exist yet so cool");
-          // }
-        }
-      })
-  })
-});
-
-export default compose(withMutation, withQuery)(Entries);
+export default compose(statusPropContainer, batchUpdateUserEntriesContainer, userEntriesContainer)(
+  Entries
+);
