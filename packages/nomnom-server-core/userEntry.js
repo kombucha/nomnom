@@ -26,8 +26,8 @@ async function create(userId, userEntryParam) {
   const newEntry = await entry.createFromUrl(userEntryParam.url);
   const userEntry = {
     id: uuid.v4(),
-    user: userId,
-    entry: newEntry.id,
+    UserId: userId,
+    EntryId: newEntry.id,
     creationDate: userEntryParam.creationDate ? new Date(userEntryParam.creationDate) : new Date(),
     lastUpdateDate: null,
     progress: 0,
@@ -41,8 +41,8 @@ async function create(userId, userEntryParam) {
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
     [
       userEntry.id,
-      userEntry.user,
-      userEntry.entry,
+      userEntry.UserId,
+      userEntry.EntryId,
       userEntry.creationDate,
       userEntry.lastUpdateDate,
       userEntry.progress,

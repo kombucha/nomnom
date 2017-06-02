@@ -1,13 +1,16 @@
 import { gql, graphql } from "react-apollo";
+import { UserEntryListFragment } from "../fragments/userEntry";
 
 export const query = gql`query($status: UserEntryStatus, $afterCursor: String) {
   me {
     entries(status: $status, first: 20, after: $afterCursor) {
-      edges { node {id status tags entry {title imageUrl url}}, cursor }
+      edges { node {...UserEntryListFragment}, cursor }
       pageInfo { hasNextPage }
     }
   }
-}`;
+}
+${UserEntryListFragment}
+`;
 
 export const withQuery = graphql(query, {
   options: ({ status }) => ({

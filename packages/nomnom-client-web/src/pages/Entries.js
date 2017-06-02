@@ -78,9 +78,9 @@ export class Entries extends Component {
 
   _handleAddEntryDialogClose(newEntryCreated) {
     // TODO: investigate, weird race condition with refetch which causes the component not to rerender
-    if (newEntryCreated) {
-      this.props.refetch();
-    }
+    // if (newEntryCreated) {
+    //   this.props.refetch();
+    // }
 
     this._toggleAddEntryDialog(false);
   }

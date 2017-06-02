@@ -1,8 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { ThemeProvider } from "styled-components";
-import { ApolloClient, ApolloProvider } from "react-apollo";
-import { createBatchingNetworkInterface } from "apollo-client"; // Transitive dep, so I dunno...
+import { ApolloClient, ApolloProvider, createBatchingNetworkInterface } from "react-apollo";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import theme from "./theme";
