@@ -82,7 +82,6 @@ export class Entries extends Component {
     // if (newEntryCreated) {
     //   this.props.refetch();
     // }
-
     this._toggleAddEntryDialog(false);
   }
 

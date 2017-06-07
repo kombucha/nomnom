@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { CSSTransitionGroup } from "react-transition-group";
 
 import { Card, CardTitle } from "./Card";
 
+const TRANSITION_TIME = 450; // how to get this from theme ? (apart from importing it...)
 const DialogContainer = styled.div`
   position: fixed;
   top: 0px;
@@ -17,11 +19,29 @@ const DialogContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &.animate-enter {
+    opacity: 0.01;
+  }
+
+  &.animate-enter.animate-enter-active {
+    opacity: 1;
+    transition: opacity ${props => props.theme.transitionConfig};
+  }
 `;
 
 const DialogCard = styled(Card)`
- width: 75%;
- max-width: 768px;
+  width: 75%;
+  max-width: 768px;
+
+  .animate-enter & {
+    transform: translateY(-200px);
+  }
+
+  .animate-enter.animate-enter-active & {
+    transform: translateY(0);
+    transition: transform ${props => props.theme.transitionConfig};
+  }
 `;
 
 const DialogActions = styled.div`
@@ -30,7 +50,6 @@ const DialogActions = styled.div`
   margin-top: 16px;
 `;
 
-// TODO: animations
 export class Dialog extends Component {
   constructor() {
     super();
@@ -46,26 +65,29 @@ export class Dialog extends Component {
 
   render() {
     const { open, title, actions, children } = this.props;
-
-    if (!open) {
-      return null;
-    }
-
     const dialogTitle = title ? <CardTitle>{title}</CardTitle> : null;
     const dialogActions = actions && React.Children.count(actions) > 0
       ? <DialogActions>{React.Children.toArray(actions)}</DialogActions>
       : null;
 
     return (
-      <DialogContainer
-        onClick={this._handleDismiss}
-        innerRef={ref => (this._dialogContainer = ref)}>
-        <DialogCard>
-          {dialogTitle}
-          {children}
-          {dialogActions}
-        </DialogCard>
-      </DialogContainer>
+      <CSSTransitionGroup
+        transitionName="animate"
+        transitionEnterTimeout={TRANSITION_TIME}
+        transitionLeave={false}
+        component="div">
+        {open
+          ? <DialogContainer
+              onClick={this._handleDismiss}
+              innerRef={ref => (this._dialogContainer = ref)}>
+              <DialogCard>
+                {dialogTitle}
+                {children}
+                {dialogActions}
+              </DialogCard>
+            </DialogContainer>
+          : null}
+      </CSSTransitionGroup>
     );
   }
 }

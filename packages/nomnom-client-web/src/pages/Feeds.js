@@ -36,11 +36,10 @@ const FeedInfo = styled.div`
   flex: 1;
 `;
 
-export class Feeds extends Component {
-  constructor() {
-    super();
+export class FeedsPage extends Component {
+  constructor(props) {
+    super(props);
     this.state = { showAddFeedDialog: false };
-
     this._handleDialogClose = this._handleDialogClose.bind(this);
   }
 
@@ -67,7 +66,6 @@ export class Feeds extends Component {
           {userFeed.name}
           <FeedInfoSubtitle>{userFeed.feed.uri}</FeedInfoSubtitle>
         </FeedInfo>
-        {" "}
         <Toggle
           value={userFeed.enabled}
           onChange={checked => this._handleFeedToggleChange(userFeed, checked)}
@@ -99,4 +97,4 @@ export class Feeds extends Component {
   }
 }
 
-export default feedsContainer(Feeds);
+export default feedsContainer(FeedsPage);

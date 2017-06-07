@@ -80,4 +80,4 @@ SubscribeToFeedDialog.defaultProps = {
   open: false
 };
 
-export default subscribeToFeedContainer(subscribeToFeedContainer);
+export default subscribeToFeedContainer(SubscribeToFeedDialog);
