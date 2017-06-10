@@ -21,7 +21,7 @@ function updateInQueue(component, title) {
 
 function onQueueUpdate() {
   const last = titleQueue[titleQueue.length - 1];
-  document.title = last.title;
+  document.title = last.title + " | NomNom";
 }
 
 export class PageTitle extends Component {

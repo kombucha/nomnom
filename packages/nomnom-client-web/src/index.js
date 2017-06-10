@@ -1,36 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { ThemeProvider } from "styled-components";
-import { ApolloClient, ApolloProvider, createBatchingNetworkInterface } from "react-apollo";
+import { ApolloProvider } from "react-apollo";
 import { BrowserRouter as Router } from "react-router-dom";
 
-import theme from "./theme";
-import App from "./App";
-import authService from "./services/authentication";
 import registerServiceWorker from "./registerServiceWorker";
+import theme from "./theme";
+import createApolloClient from "./createApolloClient";
+import App from "./App";
 import "./index.css";
 
-const networkInterface = createBatchingNetworkInterface({
-  uri: "http://localhost:3000/graphql",
-  batchInterval: 10
-});
-const authMiddleware = {
-  applyBatchMiddleware(req, next) {
-    if (!req.options.headers) {
-      req.options.headers = {};
-    }
-
-    req.options.headers.authorization = authService.isAuthenticated()
-      ? `Bearer ${authService.getToken()}`
-      : null;
-    next();
-  }
-};
-networkInterface.use([authMiddleware]);
-const client = new ApolloClient({ networkInterface, queryDeduplication: true });
+const apolloClient = createApolloClient();
 
 ReactDOM.render(
-  <ApolloProvider client={client}>
+  <ApolloProvider client={apolloClient}>
     <ThemeProvider theme={theme}>
       <Router>
         <App />

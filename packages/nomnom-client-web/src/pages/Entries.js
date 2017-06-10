@@ -196,18 +196,16 @@ export class Entries extends Component {
 
     return (
       <div key={key} style={style}>
-        {isScrolling
-          ? <ListItemPlaceholder />
-          : <RichListItem
-              imageUrl={userEntry.imageUrl}
-              title={userEntry.title}
-              subtitle={`${userEntry.domain}${tags}`}
-              actions={actions}
-              onClick={(ev, requestingSelection) =>
-                this._handleRowClicked(userEntry, requestingSelection)}
-              selected={isSelected}
-              selectMode={selectMode}
-            />}
+        <RichListItem
+          imageUrl={userEntry.imageUrl}
+          title={userEntry.title}
+          subtitle={`${userEntry.domain}${tags}`}
+          actions={actions}
+          onClick={(ev, requestingSelection) =>
+            this._handleRowClicked(userEntry, requestingSelection)}
+          selected={isSelected}
+          selectMode={selectMode}
+        />
       </div>
     );
   }

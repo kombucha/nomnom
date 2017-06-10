@@ -29,10 +29,10 @@ export class EditEntryTagsDialog extends PureComponent {
 
   _handleSave() {
     const { newTags } = this.state;
-    const { userEntryId, updateUserEntryTags, onRequestClose } = this.props;
+    const { userEntryId, updateUserEntry, onRequestClose } = this.props;
 
     const updateParams = { id: userEntryId, tags: newTags };
-    updateUserEntryTags(updateParams).then(() => {
+    updateUserEntry(updateParams).then(() => {
       this.setState(DEFAULT_STATE);
       onRequestClose(true);
     });
