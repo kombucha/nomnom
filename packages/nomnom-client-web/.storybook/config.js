@@ -1,6 +1,6 @@
 import React from "react";
 import { configure, setAddon, addDecorator } from "@storybook/react";
-import infoAddon from "@kadira/react-storybook-addon-info";
+import infoAddon from "@storybook/addon-info";
 import { ThemeProvider } from "styled-components";
 
 import theme from "../src/theme";
@@ -12,11 +12,11 @@ function loadStories() {
   req.keys().forEach(filename => req(filename));
 }
 
-addDecorator(story => (
+addDecorator(story =>
   <ThemeProvider theme={theme}>
     {story()}
   </ThemeProvider>
-));
+);
 
 setAddon(infoAddon);
 

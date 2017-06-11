@@ -10,12 +10,11 @@
     "cookie": "0.3.1",
     "date-fns": "1.28.5",
     "get-stream": "3.0.0",
-    "got": "^6.7.1",
+    "got": "7.0.0",
     "jsonwebtoken": "7.4.1",
     "mime-types": "2.1.15",
     "node-uuid": "1.4.8",
-    "pg": "^6.1.5",
-    "readability": "git+https://github.com/mozilla/readability.git",
+    "pg": "6.2.4",
     "winston": "2.3.1"
   }
 }
