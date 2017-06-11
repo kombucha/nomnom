@@ -1,11 +1,12 @@
-FROM node:boron
+FROM alpine:3.5
 
-# Create app directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+RUN apk update && apk add libstdc++ libgcc
 
-# Bundle app source
-COPY . /usr/src/app
-RUN npm install --production
+RUN mkdir /images
+ADD build/nomnom-api /
 
-CMD [ "npm", "start" ]
+# Env stuff
+ADD .env /
+ENV IMAGES_PATH /images
+
+CMD ["/nomnom-api"]

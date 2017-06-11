@@ -5,8 +5,9 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "start": "node index.js",
-    "dev": "API_PORT=4001 nodemon index.js"
+    "start": "API_PORT=4001 nodemon index.js",
+    "build": "pkg -t node8-alpine-x64 ./index.js -o build/nomnom-api",
+    "clean": "rm -fr build/"
   },
   "author": "Vincent Lemeunier",
   "license": "ISC",
@@ -23,5 +24,8 @@
     "graphql-tools": "0.10.1",
     "morgan": "1.8.1",
     "nomnom-server-core": "^1.0.0"
+  },
+  "devDependencies": {
+    "pkg": "4.0.0"
   }
 }
