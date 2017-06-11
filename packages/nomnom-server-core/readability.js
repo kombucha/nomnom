@@ -74,7 +74,8 @@ async function readability(url) {
 function load(url) {
   const baseOptions = {
     headers: {
-      "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36"
+      "User-Agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36"
     }
   };
   return new Promise((resolve, reject) => {
@@ -348,8 +349,8 @@ function getPublicationDate($html) {
 function getMetaValue($html, metaNameRegex) {
   const meta = $html("meta").get().find(meta => {
     const $meta = cheerio(meta);
-    const name = $meta.attr("name") || $meta.attr("property") || "";
-    return name.match(metaNameRegex);
+    const name = $meta.attr("name") || $meta.attr("property") || $meta.attr("itemprop") || null;
+    return name ? name.match(metaNameRegex) : false;
   });
 
   return meta ? cheerio(meta).attr("content") : null;
