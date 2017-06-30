@@ -2,11 +2,12 @@ import React, { PureComponent } from "react";
 import ActionDelete from "react-icons/lib/md/delete";
 import styled from "styled-components";
 
-import Dialog from "../../components/Dialog";
-import TextField from "../../components/TextField";
-import FlatButton from "../../components/FlatButton";
-import RaisedButton from "../../components/RaisedButton";
-import { Card, CardTitle } from "../../components/Card";
+import { Card, CardTitle } from "nomnom-components/lib/Card";
+import Dialog from "nomnom-components/lib/Dialog";
+import TextField from "nomnom-components/lib/TextField";
+import FlatButton from "nomnom-components/lib/FlatButton";
+import RaisedButton from "nomnom-components/lib/RaisedButton";
+
 import deleteAllMyDataContainer from "../../graphql/mutations/deleteAllMyData";
 
 const CONFIRMATION_TEXT = "Ya, I'm sure";
@@ -77,7 +78,6 @@ export class PrivacySettings extends PureComponent {
             <ActionDelete className="icon" />
             <span>Clear all my content</span>
           </RaisedButton>
-
         </Card>
         <Dialog
           title="Clearing content"
@@ -85,9 +85,7 @@ export class PrivacySettings extends PureComponent {
           modal={false}
           open={this.state.showConfirmDelete}
           onRequestClose={handleDismissDialog}>
-          <p>
-            Are you sure you want to delete all your content (entries, feeds) ?
-          </p>
+          <p>Are you sure you want to delete all your content (entries, feeds) ?</p>
           <p>
             Type "
             <ConfirmationText>{CONFIRMATION_TEXT}</ConfirmationText>

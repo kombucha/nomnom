@@ -7,15 +7,12 @@ import { ellipsis } from "polished";
 
 import authService from "../services/authentication";
 import withAuth from "./withAuth";
-import { MenuContainer, MenuItem } from "./Menu";
-import FlatButton from "./FlatButton";
-import Avatar from "./Avatar";
+import { MenuContainer, MenuItem } from "nomnom-components/lib/Menu";
+import FlatButton from "nomnom-components/lib/FlatButton";
+import Avatar from "nomnom-components/lib/Avatar";
 
 const MenuButton = styled(FlatButton)`color: white;`;
-const UserName = styled.span`
-  ${ellipsis("160px")}
-  padding-right: 8px;
-`;
+const UserName = styled.span`${ellipsis("160px")} padding-right: 8px;`;
 
 export class UserMenu extends Component {
   constructor() {
@@ -49,7 +46,9 @@ export class UserMenu extends Component {
         alignRight
         target={
           <MenuButton>
-            <UserName>{data.me.name}</UserName>
+            <UserName>
+              {data.me.name}
+            </UserName>
             <Avatar size="30px" src={data.me.avatarUrl} />
           </MenuButton>
         }>
@@ -61,8 +60,18 @@ export class UserMenu extends Component {
   }
 }
 
-const withGraphql = graphql(gql`query { me { name avatarUrl } }`, {
-  skip: props => !props.authenticated
-});
+const withGraphql = graphql(
+  gql`
+    query {
+      me {
+        name
+        avatarUrl
+      }
+    }
+  `,
+  {
+    skip: props => !props.authenticated
+  }
+);
 
 export default compose(withRouter, withAuth, withGraphql)(UserMenu);

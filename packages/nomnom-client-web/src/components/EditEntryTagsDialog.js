@@ -2,9 +2,9 @@ import React, { PureComponent } from "react";
 import { gql, graphql, compose } from "react-apollo";
 import PropTypes from "prop-types";
 
-import Dialog from "./Dialog";
-import ChipInput from "./ChipInput";
-import FlatButton from "./FlatButton";
+import Dialog from "nomnom-components/lib/Dialog";
+import ChipInput from "nomnom-components/lib/ChipInput";
+import FlatButton from "nomnom-components/lib/FlatButton";
 import updateUserEntryContainer from "../graphql/mutations/updateUserEntry";
 
 const DEFAULT_STATE = {
@@ -48,7 +48,9 @@ export class EditEntryTagsDialog extends PureComponent {
     const loading = !data || data.loading;
 
     const actions = [
-      <FlatButton secondary onClick={onRequestClose}>Cancel</FlatButton>,
+      <FlatButton secondary onClick={onRequestClose}>
+        Cancel
+      </FlatButton>,
       <FlatButton primary disabled={!enableSave} onClick={this._handleSave}>
         Save
       </FlatButton>
@@ -79,9 +81,14 @@ EditEntryTagsDialog.defaultProps = {
 
 // TODO: read doc about fragment so that queries are merged...
 // http://dev.apollodata.com/core/fragments.html
-const query = gql`query userEntry($userEntryId: ID!) {
-  userEntry(userEntryId: $userEntryId) { id tags }
-}`;
+const query = gql`
+  query userEntry($userEntryId: ID!) {
+    userEntry(userEntryId: $userEntryId) {
+      id
+      tags
+    }
+  }
+`;
 const withQuery = graphql(query, {
   skip: props => !props.open,
   options: ({ userEntryId }) => ({

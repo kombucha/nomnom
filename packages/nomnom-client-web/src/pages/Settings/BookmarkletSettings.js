@@ -1,7 +1,7 @@
 import React from "react";
 import { gql, graphql } from "react-apollo";
 
-import { Card, CardTitle } from "../../components/Card";
+import { Card, CardTitle } from "nomnom-components/lib/Card";
 
 function bookmarkletFn() {
   const TOKEN = "%TOKEN%";
@@ -58,7 +58,11 @@ export const BookmarkletSettings = ({ data }) =>
       <a href={createBookmarklet(data.bookmarkletToken)}> Add to nomnom </a>}
   </Card>;
 
-const bookmarkletQuery = gql`query {bookmarkletToken}`;
+const bookmarkletQuery = gql`
+  query {
+    bookmarkletToken
+  }
+`;
 
 export const BookmarkletSettingsWithQuery = graphql(bookmarkletQuery)(BookmarkletSettings);
 

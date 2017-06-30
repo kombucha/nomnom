@@ -1,6 +1,6 @@
 import React from "react";
 import { storiesOf, action } from "@storybook/react";
-import Chip from "../components/Chip";
+import Chip from "./index.js";
 
 storiesOf("Chip", module)
   .addWithInfo("Simple chip", () => <Chip onClick={action("clicked")}>Hello</Chip>)

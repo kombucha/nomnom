@@ -47,7 +47,8 @@ const StyledButton = styled.button`
 
   transition: background ${props => props.theme.transitionConfig};
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background: ${props => lighten(0.1, backgroundColor(props))};
   }
 
@@ -58,11 +59,17 @@ const StyledButton = styled.button`
     pointer-events: none;
   }
 `;
-const ChildrenWrapper = styled.div`display: flex; align-items: center; justify-content: center;`;
+const ChildrenWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 export const RaisedButton = ({ children, ...rest }) =>
   <StyledButton {...rest}>
-    <ChildrenWrapper>{children}</ChildrenWrapper>
+    <ChildrenWrapper>
+      {children}
+    </ChildrenWrapper>
   </StyledButton>;
 
 export default RaisedButton;

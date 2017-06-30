@@ -1,8 +1,8 @@
 import React, { PureComponent } from "react";
 
-import { Card, CardTitle } from "../../components/Card";
+import { Card, CardTitle } from "nomnom-components/lib/Card";
+import RaisedButton from "nomnom-components/lib/RaisedButton";
 import FileInput from "../../components/FileInput";
-import RaisedButton from "../../components/RaisedButton";
 import batchSubscribeToFeedsContainer from "../../graphql/mutations/batchSubscribeToFeeds";
 import importYoutubeSubscriptions from "../../services/youtube";
 
@@ -44,23 +44,17 @@ export class YoutubeSettings extends PureComponent {
       <Card>
         <CardTitle>Import Youtube Subscriptions</CardTitle>
         <p>
-          Go to the
-          {" "}
+          Go to the{" "}
           <a
             href="https://www.youtube.com/subscription_manager#opml-export-container"
             target="_blank"
             rel="noopener noreferrer">
             Export settings
-          </a>
-          {" "}
+          </a>{" "}
           of your Youtube account and click on "Export subscriptions".
         </p>
-        <p>
-          Just drag and drop that file in the zone below
-        </p>
-        <FileInput onChange={this._handleFileChange} value={importFiles} />
-        {" "}
-        <br />
+        <p>Just drag and drop that file in the zone below</p>
+        <FileInput onChange={this._handleFileChange} value={importFiles} /> <br />
         <RaisedButton primary disabled={!enableImport} onClick={this._handleImport}>
           {importing ? "Importing..." : "Import"}
         </RaisedButton>

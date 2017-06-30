@@ -26,7 +26,9 @@ const AppTitle = styled.span`
 
 export const AppBar = ({ title, rightElement, fixed }) =>
   <AppBarContainer fixed={fixed}>
-    <AppTitle>{title}</AppTitle>
+    <AppTitle>
+      {title}
+    </AppTitle>
     {rightElement}
   </AppBarContainer>;
 

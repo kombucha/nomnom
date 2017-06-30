@@ -54,7 +54,9 @@ const StyledDeleteIcon = styled(DeleteIcon)`
 export const Chip = ({ children, onClick, onRequestDelete }) =>
   <ChipWrapper onClick={onClick}>
     <ChipContent>
-      <ChipText>{React.Children.toArray(children)}</ChipText>
+      <ChipText>
+        {React.Children.toArray(children)}
+      </ChipText>
       {onRequestDelete
         ? <StyledDeleteIcon
             className="icon"

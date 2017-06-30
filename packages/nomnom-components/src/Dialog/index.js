@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { CSSTransitionGroup } from "react-transition-group";
 
-import { Card, CardTitle } from "./Card";
+import { Card, CardTitle } from "../Card";
 
 const TRANSITION_TIME = 450; // how to get this from theme ? (apart from importing it...)
 const DialogContainer = styled.div`
@@ -65,10 +65,17 @@ export class Dialog extends Component {
 
   render() {
     const { open, title, actions, children } = this.props;
-    const dialogTitle = title ? <CardTitle>{title}</CardTitle> : null;
-    const dialogActions = actions && React.Children.count(actions) > 0
-      ? <DialogActions>{React.Children.toArray(actions)}</DialogActions>
+    const dialogTitle = title
+      ? <CardTitle>
+          {title}
+        </CardTitle>
       : null;
+    const dialogActions =
+      actions && React.Children.count(actions) > 0
+        ? <DialogActions>
+            {React.Children.toArray(actions)}
+          </DialogActions>
+        : null;
 
     return (
       <CSSTransitionGroup

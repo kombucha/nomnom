@@ -28,8 +28,7 @@ const fixedStyles = `
 
 const size = "56px";
 export const FloatingActionButton = styled.button`
-  ${props => (props.fixed ? fixedStyles : "")}
-  width: ${size};
+  ${props => (props.fixed ? fixedStyles : "")} width: ${size};
   height: ${size};
 
   outline: none;

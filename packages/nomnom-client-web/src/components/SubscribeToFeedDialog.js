@@ -1,9 +1,9 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 
-import Dialog from "./Dialog";
-import FlatButton from "./FlatButton";
-import TextField from "./TextField";
+import Dialog from "nomnom-components/lib/Dialog";
+import FlatButton from "nomnom-components/lib/FlatButton";
+import TextField from "nomnom-components/lib/TextField";
 import subscribeToFeedContainer from "../graphql/mutations/subscribeToFeed";
 
 const DEFAULT_STATE = {
@@ -39,7 +39,9 @@ export class SubscribeToFeedDialog extends PureComponent {
     const disableSubscribe = !feedUri || !feedName;
 
     const actions = [
-      <FlatButton secondary onClick={onRequestClose}>Cancel</FlatButton>,
+      <FlatButton secondary onClick={onRequestClose}>
+        Cancel
+      </FlatButton>,
       <FlatButton
         primary
         disabled={disableSubscribe}

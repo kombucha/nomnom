@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { storiesOf, action } from "@storybook/react";
-import Toggle from "../components/Toggle";
+import Toggle from "./index.js";
 
 class ToggleWrapper extends Component {
   constructor(props) {

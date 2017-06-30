@@ -1,8 +1,8 @@
 import React, { PureComponent } from "react";
 
-import { Card, CardTitle } from "../../components/Card";
+import { Card, CardTitle } from "nomnom-components/lib/Card";
+import RaisedButton from "nomnom-components/lib/RaisedButton";
 import FileInput from "../../components/FileInput";
-import RaisedButton from "../../components/RaisedButton";
 import batchAddUserEntriesContainer from "../../graphql/mutations/batchAddUserEntries";
 
 import importPocket from "../../services/pocket";
@@ -44,20 +44,14 @@ export class PocketSettings extends PureComponent {
       <Card>
         <CardTitle>Import from pocket</CardTitle>
         <p>
-          Go to the
-          {" "}
+          Go to the{" "}
           <a href="https://getpocket.com/export" rel="noopener noreferrer" target="_blank">
             Export settings
-          </a>
-          {" "}
+          </a>{" "}
           of your Pocket account and click on "Export HTML file".
         </p>
-        <p>
-          Then drag and drop that file in the zone below
-        </p>
-        <FileInput onChange={this._handleFileChange} value={importFiles} />
-        {" "}
-        <br />
+        <p>Then drag and drop that file in the zone below</p>
+        <FileInput onChange={this._handleFileChange} value={importFiles} /> <br />
         <RaisedButton primary disabled={!enableImport} onClick={this._handleImport}>
           {importing ? "Importing..." : "Import"}
         </RaisedButton>

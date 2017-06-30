@@ -30,8 +30,14 @@ async function processFeed(feed) {
   logger.info(`Processing feed ${feed.uri}`);
 
   try {
-    const entries = await getFeedEntries(feed);
     const users = await userFeedService.listUsersForFeed(feed.id);
+
+    if (users.length === 0) {
+      logger.info(`Skip feed because no one cares about it :(`);
+      return;
+    }
+
+    const entries = await getFeedEntries(feed);
     await Promise.each(users, user => createForUser(user.id, entries));
   } catch (error) {
     logger.error(`Failed to process feed ${feed.uri}`, error);

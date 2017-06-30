@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import { compose } from "recompose";
 import styled from "styled-components";
 
+import FlatButton from "nomnom-components/lib/FlatButton";
+import { Card, CardTitle } from "nomnom-components/lib/Card";
 import EditEntryTagsDialog from "../components/EditEntryTagsDialog";
 import PageTitle from "../components/PageTitle";
-import FlatButton from "../components/FlatButton";
-import { Card, CardTitle } from "../components/Card";
 import userEntryContainer from "../graphql/queries/userEntry";
 import updateUserEntryContainer from "../graphql/mutations/updateUserEntry";
 
@@ -88,11 +88,15 @@ export class Entry extends PureComponent {
     return (
       <EntryCard>
         <PageTitle value={userEntry.entry.title} />
-        <CardTitle>{userEntry.entry.title}</CardTitle>
+        <CardTitle>
+          {userEntry.entry.title}
+        </CardTitle>
 
         <div>
           <div>
-            <span> By {userEntry.entry.author}, </span>
+            <span>
+              {" "}By {userEntry.entry.author},{" "}
+            </span>
             <a target="_blank" rel="noopener noreferrer" href={userEntry.entry.url}>
               {domain}
             </a>

@@ -4,11 +4,12 @@ import { ThemeProvider } from "styled-components";
 import { ApolloProvider } from "react-apollo";
 import { BrowserRouter as Router } from "react-router-dom";
 
+import theme from "nomnom-components/lib/theme";
+import "nomnom-components/lib/styles";
+
 import registerServiceWorker from "./registerServiceWorker";
-import theme from "./theme";
 import createApolloClient from "./createApolloClient";
 import App from "./App";
-import "./index.css";
 
 const apolloClient = createApolloClient();
 

@@ -1,8 +1,9 @@
 import React, { PureComponent } from "react";
 
-import { Card, CardTitle } from "../../components/Card";
+import { Card, CardTitle } from "nomnom-components/lib/Card";
+import RaisedButton from "nomnom-components/lib/RaisedButton";
+
 import FileInput from "../../components/FileInput";
-import RaisedButton from "../../components/RaisedButton";
 import batchSubscribeToFeedsContainer from "../../graphql/mutations/batchSubscribeToFeeds";
 
 import { importSubscriptions } from "../../services/feedbin";
@@ -51,17 +52,12 @@ export class FeedbinSubscriptionsSettings extends PureComponent {
             rel="noopener noreferrer"
             target="_blank">
             Export settings
-          </a>
-          {" "}
+          </a>{" "}
           of your Feedbin account and click on "Download".
         </p>
         <p>You will receive an email with the exported file.</p>
-        <p>
-          Just drag and drop that file in the zone below
-        </p>
-        <FileInput onChange={this._handleFileChange} value={importFiles} />
-        {" "}
-        <br />
+        <p>Just drag and drop that file in the zone below</p>
+        <FileInput onChange={this._handleFileChange} value={importFiles} /> <br />
         <RaisedButton primary disabled={!enableImport} onClick={this._handleImport}>
           {importing ? "Importing..." : "Import"}
         </RaisedButton>

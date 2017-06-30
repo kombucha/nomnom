@@ -18,9 +18,10 @@ export const withQuery = graphql(query, {
     notifyOnNetworkStatusChange: true
   }),
   props({ data }) {
-    const endCursor = data.me && data.me.entries.edges.length > 0
-      ? data.me.entries.edges[data.me.entries.edges.length - 1].cursor
-      : null;
+    const endCursor =
+      data.me && data.me.entries.edges.length > 0
+        ? data.me.entries.edges[data.me.entries.edges.length - 1].cursor
+        : null;
     const entries = data.me ? data.me.entries.edges.map(edge => edge.node) : [];
     const hasMore = data.me ? data.me.entries.pageInfo.hasNextPage : false;
 

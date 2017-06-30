@@ -15,7 +15,8 @@ const Container = styled.div`
   align-items: center;
   margin: 16px;
 
-  > div, > section {
+  > div,
+  > section {
     width: 75%;
     max-width: 800px;
     margin-bottom: 16px;

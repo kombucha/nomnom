@@ -1,8 +1,8 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 
-import Chip from "./Chip";
-import TextField from "./TextField";
+import Chip from "../Chip";
+import TextField from "../TextField";
 
 const ENTER_KEY_CODE = 13;
 

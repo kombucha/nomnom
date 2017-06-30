@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-import Card from "./Card";
-import { List, ListItem } from "./List";
+import Card from "../Card";
+import { List, ListItem } from "../List";
 
 export const MenuItem = styled(ListItem)`
   cursor: pointer;
@@ -64,9 +64,7 @@ const Overlay = styled.div`
   width: 100%;
   height: 100%;
 `;
-const Container = styled.div`
-  position: relative;
-`;
+const Container = styled.div`position: relative;`;
 const WrappedMenu = styled(Menu)`
   position: absolute;
   top: 100%;

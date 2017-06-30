@@ -7,9 +7,7 @@ const EmptyListContainer = styled.div`
   align-items: center;
   color: ${props => props.theme.disabledColor};
 `;
-const EmptyListSmiley = styled.span`
-  font-size: 10em;
-`;
+const EmptyListSmiley = styled.span`font-size: 10em;`;
 
 export const EmptyPlaceholder = () =>
   <EmptyListContainer>

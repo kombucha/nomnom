@@ -2,16 +2,18 @@
   "private": true,
   "scripts": {
     "format": "prettier --print-width=100 --write --jsx-bracket-same-line=true 'packages/*/*.js' 'packages/*/!(node_modules)/**/*.js'",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "bootstrap": "lerna bootstrap --hoist"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
-    "eslint": "^3.19.0",
-    "husky": "^0.13.3",
-    "lerna": "^2.0.0-rc.4",
-    "lint-staged": "^3.4.2",
+    "eslint": "3.19.0",
+    "husky": "0.14.1",
+    "lerna": "2.0.0-rc.5",
+    "lint-staged": "4.0.0",
     "nodemon": "1.11.0",
-    "prettier": "1.4.0"
+    "npm": "4.6.1",
+    "prettier": "1.5.2"
   },
   "lint-staged": {
     "*.js": [

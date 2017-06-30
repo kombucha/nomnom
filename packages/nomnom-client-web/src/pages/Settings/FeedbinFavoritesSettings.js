@@ -1,8 +1,9 @@
 import React, { PureComponent } from "react";
 
-import { Card, CardTitle } from "../../components/Card";
+import { Card, CardTitle } from "nomnom-components/lib/Card";
+import RaisedButton from "nomnom-components/lib/RaisedButton";
+
 import FileInput from "../../components/FileInput";
-import RaisedButton from "../../components/RaisedButton";
 import batchAddUserEntriesContainer from "../../graphql/mutations/batchAddUserEntries";
 
 import feedbin from "../../services/feedbin";
@@ -45,24 +46,18 @@ export class FeedbinFavoritesSettings extends PureComponent {
       <Card>
         <CardTitle>Import Feedbin favorites</CardTitle>
         <p>
-          Go to the
-          {" "}
+          Go to the{" "}
           <a
             href="https://feedbin.com/settings/import_export"
             rel="noopener noreferrer"
             target="_blank">
             Export settings
-          </a>
-          {" "}
+          </a>{" "}
           of your Feedbin account and click on "Export starred articles".
         </p>
         <p>You will receive an email with the exported file.</p>
-        <p>
-          Just drag and drop that file in the zone below
-        </p>
-        <FileInput onChange={this._handleFileChange} value={importFiles} />
-        {" "}
-        <br />
+        <p>Just drag and drop that file in the zone below</p>
+        <FileInput onChange={this._handleFileChange} value={importFiles} /> <br />
         <RaisedButton primary disabled={!enableImport} onClick={this._handleImport}>
           {importing ? "Importing..." : "Import"}
         </RaisedButton>

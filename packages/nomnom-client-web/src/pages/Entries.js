@@ -9,15 +9,16 @@ import VirtualizedList from "react-virtualized/dist/commonjs/List";
 import WindowScroller from "react-virtualized/dist/commonjs/WindowScroller";
 import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer";
 
+import { Card } from "nomnom-components/lib/Card";
+import { Menu, MenuItem } from "nomnom-components/lib/Menu";
+import FlatButton from "nomnom-components/lib/FlatButton";
+import FloatingActionButton from "nomnom-components/lib/FloatingActionButton";
+
 import PageTitle from "../components/PageTitle";
-import DelayedComponent from "../components/DelayedComponent";
 import { LIST_ITEM_HEIGHT, RichListItem, ListItemPlaceholder } from "../components/RichList";
-import EmptyPlaceholder from "../components/EmptyPlaceholder";
-import { Card } from "../components/Card";
-import { Menu, MenuItem } from "../components/Menu";
-import FlatButton from "../components/FlatButton";
-import FloatingActionButton from "../components/FloatingActionButton";
+import DelayedComponent from "../components/DelayedComponent";
 import AddEntryDialog from "../components/AddEntryDialog";
+import EmptyPlaceholder from "../components/EmptyPlaceholder";
 
 import userEntriesContainer from "../graphql/queries/userEntries";
 import batchUpdateUserEntriesContainer from "../graphql/mutations/batchUpdateUserEntries";
@@ -47,7 +48,7 @@ const MultiSelectBar = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${props => lighten(0.45, props.theme.primary1Color)}
+  background-color: ${props => lighten(0.45, props.theme.primary1Color)};
 `;
 
 const asDisplayedUserEntry = userEntry => ({
@@ -135,7 +136,11 @@ export class Entries extends Component {
         .batchUpdateUserEntries({ ids, status })
         .then(() => this._handleExitSelectionMode());
     };
-    return statuses.map(status => <FlatButton onClick={onClick(status)}>{status}</FlatButton>);
+    return statuses.map(status =>
+      <FlatButton onClick={onClick(status)}>
+        {status}
+      </FlatButton>
+    );
   }
 
   _handleListScrolling({ overscanStopIndex }) {
@@ -156,11 +161,11 @@ export class Entries extends Component {
 
     return selectedEntries.length > 0
       ? <MultiSelectBar>
-          <FlatButton onClick={this._handleExitSelectionMode}>
-            Cancel
-          </FlatButton>
+          <FlatButton onClick={this._handleExitSelectionMode}>Cancel</FlatButton>
           <FlexSpacer />
-          <span>{selectedEntries.length} selected</span>
+          <span>
+            {selectedEntries.length} selected
+          </span>
           {React.Children.toArray(actions)}
         </MultiSelectBar>
       : null;

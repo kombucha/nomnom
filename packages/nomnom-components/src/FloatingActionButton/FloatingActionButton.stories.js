@@ -1,6 +1,6 @@
 import React from "react";
 import { storiesOf, action } from "@storybook/react";
-import FloatingActionButton from "../components/FloatingActionButton";
+import FloatingActionButton from "./index.js";
 import ContentAdd from "react-icons/lib/md/add";
 
 storiesOf("Floating Action Button", module)

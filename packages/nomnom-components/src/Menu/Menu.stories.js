@@ -1,7 +1,7 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { Menu, MenuItem, MenuContainer } from "../components/Menu";
-import RaisedButton from "../components/RaisedButton";
+import { Menu, MenuItem, MenuContainer } from "./index.js";
+import RaisedButton from "../RaisedButton";
 
 storiesOf("Menu", module)
   .addWithInfo("basic", () =>

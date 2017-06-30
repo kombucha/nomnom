@@ -5,7 +5,7 @@ import { lighten } from "polished";
 import UncheckedIcon from "react-icons/lib/md/check-box-outline-blank";
 import CheckedIcon from "react-icons/lib/md/check-box";
 
-import Avatar from "./Avatar";
+import Avatar from "nomnom-components/lib/Avatar";
 
 // ListItem
 export const LIST_ITEM_HEIGHT = 72;
@@ -50,8 +50,12 @@ export const ListItem = ({ imageUrl, title, subtitle }) =>
   <ListItemContainer>
     <Avatar src={imageUrl} size={`${IMAGE_SIZE}px`} />
     <ListItemTextContainer>
-      <ListItemTitle>{title}</ListItemTitle>
-      <ListItemSubtitle>{subtitle}</ListItemSubtitle>
+      <ListItemTitle>
+        {title}
+      </ListItemTitle>
+      <ListItemSubtitle>
+        {subtitle}
+      </ListItemSubtitle>
     </ListItemTextContainer>
   </ListItemContainer>;
 

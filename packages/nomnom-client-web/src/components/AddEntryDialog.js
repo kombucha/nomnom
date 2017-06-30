@@ -1,9 +1,9 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 
-import Dialog from "./Dialog";
-import FlatButton from "./FlatButton";
-import TextField from "./TextField";
+import Dialog from "nomnom-components/lib/Dialog";
+import FlatButton from "nomnom-components/lib/FlatButton";
+import TextField from "nomnom-components/lib/TextField";
 import addUserEntryMutation from "../graphql/mutations/addUserEntry";
 
 class AddEntryDialog extends PureComponent {
@@ -35,7 +35,9 @@ class AddEntryDialog extends PureComponent {
     const { entryUrl } = this.state;
     const { open, onRequestClose } = this.props;
     const actions = [
-      <FlatButton secondary onClick={onRequestClose}>Cancel</FlatButton>,
+      <FlatButton secondary onClick={onRequestClose}>
+        Cancel
+      </FlatButton>,
       <FlatButton
         primary
         disabled={!entryUrl}

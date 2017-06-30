@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import ContentAdd from "react-icons/lib/md/add";
 
+import { Card } from "nomnom-components/lib/Card";
+import FloatingActionButton from "nomnom-components/lib/FloatingActionButton";
+import { List, ListItem } from "nomnom-components/lib/List";
+import Toggle from "nomnom-components/lib/Toggle";
+
 import PageTitle from "../components/PageTitle";
-import FloatingActionButton from "../components/FloatingActionButton";
-import Toggle from "../components/Toggle";
-import { Card } from "../components/Card";
-import { List, ListItem } from "../components/List";
 import SubscribeToFeedDialog from "../components/SubscribeToFeedDialog";
 import feedsContainer from "../graphql/queries/feeds";
 
@@ -64,7 +65,9 @@ export class FeedsPage extends Component {
       <FeedItem key={userFeed.id}>
         <FeedInfo>
           {userFeed.name}
-          <FeedInfoSubtitle>{userFeed.feed.uri}</FeedInfoSubtitle>
+          <FeedInfoSubtitle>
+            {userFeed.feed.uri}
+          </FeedInfoSubtitle>
         </FeedInfo>
         <Toggle
           value={userFeed.enabled}

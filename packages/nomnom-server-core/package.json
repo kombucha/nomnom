@@ -5,7 +5,7 @@
   "private": true,
   "license": "MIT",
   "dependencies": {
-    "bluebird": "^3.5.0",
+    "bluebird": "3.5.0",
     "cheerio": "0.22.0",
     "cookie": "0.3.1",
     "date-fns": "1.28.5",
@@ -14,7 +14,7 @@
     "jsonwebtoken": "7.4.1",
     "mime-types": "2.1.15",
     "node-uuid": "1.4.8",
-    "pg": "6.2.4",
+    "pg": "6.4.0",
     "winston": "2.3.1"
   }
 }

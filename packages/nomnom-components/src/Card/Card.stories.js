@@ -1,6 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { Card, CardTitle } from "../components/Card";
+import { Card, CardTitle } from "./index.js";
 
 const storyBookStyle = {
   maxWidth: 800,

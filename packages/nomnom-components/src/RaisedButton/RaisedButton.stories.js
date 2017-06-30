@@ -1,6 +1,6 @@
 import React from "react";
 import { storiesOf, action } from "@storybook/react";
-import RaisedButton from "../components/RaisedButton";
+import RaisedButton from "./index.js";
 
 storiesOf("Raised Button", module)
   .addWithInfo("with text", () =>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { storiesOf, action } from "@storybook/react";
-import ChipInput from "../components/ChipInput";
+import ChipInput from "./index.js";
 
 class ChipInputWrapper extends Component {
   constructor(props) {

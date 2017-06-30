@@ -11,7 +11,7 @@ import Entries from "./pages/Entries";
 import Entry from "./pages/Entry";
 import Login from "./pages/Login";
 
-const PageContainer = styled.div`padding-top: ${APP_BAR_HEIGHT}`;
+const PageContainer = styled.div`padding-top: ${APP_BAR_HEIGHT};`;
 const UnstyledLink = styled(Link)`text-decoration: none; color: inherit;`;
 
 class App extends Component {
