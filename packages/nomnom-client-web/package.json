@@ -19,8 +19,6 @@
     "styled-components": "2.1.0"
   },
   "devDependencies": {
-    "@storybook/addon-info": "3.1.6",
-    "@storybook/react": "3.1.7",
     "react-scripts": "1.0.10",
     "source-map-explorer": "1.3.3"
   },
@@ -28,11 +26,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "coverage": "react-scripts test --env=jsdom --coverage --collectCoverageFrom='[\"src/**/*.js\",\"!src/**/*.stories.js\"]' --coverageReporters='[\"json\", \"html\", \"text\"]'",
+    "coverage": "react-scripts test --env=jsdom --coverage --collectCoverageFrom='[\"src/**/*.js\"]' --coverageReporters='[\"json\", \"html\", \"text\"]'",
     "eject": "react-scripts eject",
-    "analyse": "source-map-explorer build/static/js/main.*",
-    "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "analyse": "source-map-explorer build/static/js/main.*"
   },
   "proxy": "http://localhost:4001"
 }

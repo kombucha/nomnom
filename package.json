@@ -3,7 +3,8 @@
   "scripts": {
     "format": "prettier --print-width=100 --write --jsx-bracket-same-line=true 'packages/*/*.js' 'packages/*/!(node_modules)/**/*.js'",
     "precommit": "lint-staged",
-    "bootstrap": "lerna bootstrap --hoist"
+    "bootstrap": "lerna bootstrap --hoist",
+    "install": "npm run bootstrap"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",

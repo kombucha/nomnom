@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import styled from "styled-components";
 
+import { AppBar, APP_BAR_HEIGHT } from "nomnom-components/lib/AppBar";
 import asyncComponent from "./components/asyncComponent";
 import PageTitle from "./components/PageTitle";
-import { AppBar, APP_BAR_HEIGHT } from "./components/AppBar";
 import PrivateRoute from "./components/PrivateRoute";
 import UserMenu from "./components/UserMenu";
 import Entries from "./pages/Entries";

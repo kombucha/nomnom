@@ -1,6 +1,7 @@
 export { default as styles } from "./styles";
 export { default as theme } from "./theme";
 
+export { AppBar, APP_BAR_HEIGHT } from "./AppBar";
 export { default as Card } from "./Card";
 export { default as Chip } from "./Chip";
 export { default as ChipInput } from "./ChipInput";
