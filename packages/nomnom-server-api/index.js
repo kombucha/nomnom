@@ -13,13 +13,13 @@ const logger = require("nomnom-server-core/logger");
 
 const app = express();
 
+app.use(cors({ origin: true, credentials: true }));
 app.use(morgan("dev", { stream: logger.stream }));
 app.use("/img", express.static(process.env.IMAGES_PATH));
 app.use("/login", loginRouter);
 
 app.use(
   "/graphql",
-  cors(),
   authMiddleware(),
   loadersMiddleware(),
   bodyParser.json({ limit: "2mb" }),

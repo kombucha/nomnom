@@ -1,0 +1,38 @@
+{
+  "name": "nomnom-app",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "compression": "1.6.2",
+    "isomorphic-fetch": "2.2.1",
+    "next": "2.4.6",
+    "polished": "1.2.1",
+    "prop-types": "15.5.10",
+    "query-string": "4.3.4",
+    "react": "15.6.1",
+    "react-apollo": "1.4.2",
+    "react-dom": "15.6.1",
+    "react-google-login": "2.9.2",
+    "react-icons": "2.2.5",
+    "react-transition-group": "1.2.0",
+    "react-virtualized": "9.8.0",
+    "recompose": "0.23.5",
+    "styled-components": "2.0.1"
+  },
+  "devDependencies": {
+    "@storybook/addon-info": "3.1.6",
+    "@storybook/react": "^3.1.7",
+    "babel-plugin-styled-components": "1.1.6",
+    "pkg": "4.0.0"
+  },
+  "scripts": {
+    "build:next": "next build",
+    "build:pkg": "pkg -t node8-macos-x64 -o build/nomnom-app ./index.js",
+    "build": "npm run build:next && npm run build:pkg",
+    "start": "node index.js",
+    "clean": "rm -fr build/**",
+    "test": "TODO",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  }
+}

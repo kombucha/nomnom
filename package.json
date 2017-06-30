@@ -3,7 +3,7 @@
   "scripts": {
     "format": "prettier --print-width=100 --write --jsx-bracket-same-line=true 'packages/*/*.js' 'packages/*/!(node_modules)/**/*.js'",
     "precommit": "lint-staged",
-    "bootstrap": "lerna bootstrap --hoist",
+    "bootstrap": "lerna bootstrap",
     "install": "npm run bootstrap"
   },
   "devDependencies": {
@@ -13,7 +13,6 @@
     "lerna": "2.0.0-rc.5",
     "lint-staged": "4.0.0",
     "nodemon": "1.11.0",
-    "npm": "4.6.1",
     "prettier": "1.5.2"
   },
   "lint-staged": {
