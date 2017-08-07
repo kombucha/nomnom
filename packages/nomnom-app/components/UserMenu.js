@@ -5,8 +5,7 @@ import { compose, withProps } from "recompose";
 import styled from "styled-components";
 import { ellipsis } from "polished";
 
-import authService from "../services/authentication";
-import withAuth from "./withAuth";
+import logout from "../services/logout";
 import { MenuContainer, MenuItem } from "../toolkit/Menu";
 import FlatButton from "../toolkit/FlatButton";
 import Avatar from "../toolkit/Avatar";
@@ -24,7 +23,7 @@ export class UserMenu extends Component {
   }
 
   _logout() {
-    authService.logout();
+    logout();
   }
 
   _goToSettings() {
@@ -67,4 +66,4 @@ UserMenu.propTypes = {
   pushState: PropTypes.func.isRequired
 };
 
-export default compose(withAuth, userContainer, withProps({ pushState: Router.push }))(UserMenu);
+export default compose(userContainer, withProps({ pushState: Router.push }))(UserMenu);

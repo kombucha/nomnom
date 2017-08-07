@@ -11,8 +11,11 @@ const config = {
   idleTimeoutMillis: 30000
 };
 
-logger.info(`Connecting to database`);
 const pool = new pg.Pool(config);
+
+pool.on("connect", () => {
+  logger.info(`Connecting to database`);
+});
 
 pool.on("error", err => {
   logger.error("idle client error", err.message, err.stack);

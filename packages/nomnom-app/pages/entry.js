@@ -8,7 +8,7 @@ import FlatButton from "../toolkit/FlatButton";
 import { Card, CardTitle } from "../toolkit/Card";
 
 import withData from "../components/withData";
-import App from "../components/App";
+import PageWrapper from "../components/PageWrapper";
 import EditEntryTagsDialog from "../components/EditEntryTagsDialog";
 import PageTitle from "../components/PageTitle";
 import userEntryContainer from "../graphql/queries/userEntry";
@@ -138,11 +138,11 @@ export class Entry extends PureComponent {
   render() {
     const { userEntry, loading } = this.props;
     return (
-      <App>
+      <PageWrapper>
         <Container>
           {loading ? this.renderLoading() : this.renderEntry(userEntry)}
         </Container>
-      </App>
+      </PageWrapper>
     );
   }
 }

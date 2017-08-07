@@ -10,11 +10,11 @@
     "cookie": "0.3.1",
     "date-fns": "1.28.5",
     "get-stream": "3.0.0",
-    "got": "7.0.0",
-    "jsonwebtoken": "7.4.1",
-    "mime-types": "2.1.15",
+    "got": "7.1.0",
+    "jsonwebtoken": "7.4.2",
+    "mime-types": "2.1.16",
     "node-uuid": "1.4.8",
-    "pg": "6.4.0",
+    "pg": "7.1.0",
     "winston": "2.3.1"
   }
 }

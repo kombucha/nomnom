@@ -15,7 +15,7 @@ const UnstyledLink = styled.a`
   cursor: pointer;
 `;
 
-class App extends Component {
+class PageWrapper extends Component {
   render() {
     return (
       <ThemeProvider theme={theme}>
@@ -39,4 +39,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default PageWrapper;

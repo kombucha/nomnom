@@ -9,7 +9,7 @@ import { List, ListItem } from "../toolkit/List";
 import Toggle from "../toolkit/Toggle";
 
 import withData from "../components/withData";
-import App from "../components/App";
+import PageWrapper from "../components/PageWrapper";
 import PageTitle from "../components/PageTitle";
 import SubscribeToFeedDialog from "../components/SubscribeToFeedDialog";
 import feedsContainer from "../graphql/queries/feeds";
@@ -84,7 +84,7 @@ export class FeedsPage extends Component {
     const { data } = this.props;
     const { showAddFeedDialog } = this.state;
     return (
-      <App>
+      <PageWrapper>
         <PageContainer>
           <PageTitle value="Feeds" />
           <h1>Feeds</h1>
@@ -103,7 +103,7 @@ export class FeedsPage extends Component {
             onRequestClose={this._handleDialogClose}
           />
         </PageContainer>
-      </App>
+      </PageWrapper>
     );
   }
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import App from "../components/App";
+import PageWrapper from "../components/PageWrapper";
 import PageTitle from "../components/PageTitle";
 import withData from "../components/withData";
 
@@ -27,7 +27,7 @@ const Container = styled.div`
 `;
 
 export const Settings = () =>
-  <App>
+  <PageWrapper>
     <Container>
       <PageTitle value="Settings" />
       <BookmarkletSettings />
@@ -37,6 +37,6 @@ export const Settings = () =>
       <YoutubeSettings />
       <PrivacySettings />
     </Container>
-  </App>;
+  </PageWrapper>;
 
 export default withData(Settings);

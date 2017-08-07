@@ -1,15 +1,15 @@
 import { ApolloClient, createBatchingNetworkInterface } from "react-apollo";
 import fetch from "isomorphic-fetch";
-import authService from "./authentication";
+import logout from "./logout";
 
-const isInBrowser = process.browser;
-let cachedApolloClient = null;
+let apolloClient = null;
 
-if (!isInBrowser) {
+if (!process.browser) {
   global.fetch = fetch;
 }
 
-export function createNetworkInterface() {
+function create(initialState, { getToken }) {
+  let client;
   const networkInterface = createBatchingNetworkInterface({
     uri: "http://localhost:4001/graphql",
     batchInterval: 10,
@@ -21,9 +21,8 @@ export function createNetworkInterface() {
         req.options.headers = {};
       }
 
-      req.options.headers.authorization = authService.isAuthenticated()
-        ? `Bearer ${authService.getToken()}`
-        : null;
+      const token = getToken();
+      req.options.headers.authorization = token ? `Bearer ${token}` : null;
       next();
     }
   };
@@ -31,7 +30,7 @@ export function createNetworkInterface() {
     applyBatchAfterware({ responses }, next) {
       const shouldLogout = responses.some(res => res.status === 401 || res.status === 403);
       if (shouldLogout) {
-        authService.logout();
+        logout(client);
       }
       next();
     }
@@ -40,25 +39,27 @@ export function createNetworkInterface() {
   networkInterface.use([authMiddleware]);
   networkInterface.useAfter([logoutAfterware]);
 
-  return networkInterface;
+  client = new ApolloClient({
+    initialState,
+    ssrMode: !process.browser, // Disables forceFetch on the server (so queries are only run once)
+    queryDeduplication: true,
+    networkInterface
+  });
+
+  return client;
 }
 
-export function createApolloClient(initialState) {
-  const networkInterface = createNetworkInterface();
-  const apolloClient =
-    cachedApolloClient ||
-    new ApolloClient({
-      initialState,
-      ssrMode: !isInBrowser,
-      queryDeduplication: true,
-      networkInterface
-    });
+export default function initApollo(initialState, options) {
+  // Make sure to create a new client for every server-side request so that data
+  // isn't shared between connections (which would be bad)
+  if (!process.browser) {
+    return create(initialState, options);
+  }
 
-  if (isInBrowser) {
-    cachedApolloClient = apolloClient;
+  // Reuse client on the client-side
+  if (!apolloClient) {
+    apolloClient = create(initialState, options);
   }
 
   return apolloClient;
 }
-
-export default createApolloClient;

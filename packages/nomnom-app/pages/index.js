@@ -18,7 +18,7 @@ import FlatButton from "../toolkit/FlatButton";
 import FloatingActionButton from "../toolkit/FloatingActionButton";
 
 import withData from "../components/withData";
-import App from "../components/App";
+import PageWrapper from "../components/PageWrapper";
 import PageTitle from "../components/PageTitle";
 import { LIST_ITEM_HEIGHT, RichListItem, ListItemPlaceholder } from "../components/RichList";
 import DelayedComponent from "../components/DelayedComponent";
@@ -244,7 +244,7 @@ export class Entries extends Component {
     const isFirstLoad = loading && entries.length === 0;
 
     return (
-      <App>
+      <PageWrapper>
         <PageContainer>
           <PageTitle value="Home" />
 
@@ -274,7 +274,7 @@ export class Entries extends Component {
             onRequestClose={this._handleAddEntryDialogClose}
           />
         </PageContainer>
-      </App>
+      </PageWrapper>
     );
   }
 }

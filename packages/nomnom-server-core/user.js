@@ -37,8 +37,7 @@ async function getTokenPayload(token) {
 }
 
 async function getById(id) {
-  // const res = await db.query(`SELECT * FROM "nomnom"."User" WHERE id = $1 LIMIT 1;`, [String(id)]);
-  const res = await db.query(`SELECT * FROM "nomnom"."User" LIMIT 1;`);
+  const res = await db.query(`SELECT * FROM "nomnom"."User" WHERE id = $1 LIMIT 1;`, [String(id)]);
   return res.rows[0];
 }
 

@@ -3,27 +3,29 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "compression": "1.6.2",
+    "compression": "1.7.0",
+    "cookie-parser": "1.4.3",
     "isomorphic-fetch": "2.2.1",
-    "next": "2.4.6",
-    "polished": "1.2.1",
+    "next": "2.4.9",
+    "nomnom-server-core": "1.0.0",
+    "polished": "1.3.0",
     "prop-types": "15.5.10",
-    "query-string": "4.3.4",
+    "query-string": "5.0.0",
     "react": "15.6.1",
-    "react-apollo": "1.4.2",
+    "react-apollo": "1.4.10",
     "react-dom": "15.6.1",
-    "react-google-login": "2.9.2",
+    "react-google-login": "2.9.3",
     "react-icons": "2.2.5",
     "react-transition-group": "1.2.0",
-    "react-virtualized": "9.8.0",
-    "recompose": "0.23.5",
-    "styled-components": "2.0.1"
+    "react-virtualized": "9.9.0",
+    "recompose": "0.24.0",
+    "styled-components": "2.1.2"
   },
   "devDependencies": {
-    "@storybook/addon-info": "3.1.6",
-    "@storybook/react": "^3.1.7",
-    "babel-plugin-styled-components": "1.1.6",
-    "pkg": "4.0.0"
+    "@storybook/addon-info": "3.2.0",
+    "@storybook/react": "3.2.3",
+    "babel-plugin-styled-components": "1.1.7",
+    "pkg": "4.2.2"
   },
   "scripts": {
     "build:next": "next build",
