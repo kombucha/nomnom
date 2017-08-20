@@ -1,11 +1,12 @@
 import React, { PureComponent } from "react";
-import { Url as URL } from "url";
 import PropTypes from "prop-types";
+import { CSSTransitionGroup } from "react-transition-group";
 import styled from "styled-components";
 import { lighten } from "polished";
 import { mapProps, compose } from "recompose";
 import queryString from "query-string";
 import Router from "next/router";
+import { Url as URL } from "url";
 
 import ContentAdd from "react-icons/lib/md/add";
 import VirtualizedList from "react-virtualized/dist/commonjs/List";
@@ -31,6 +32,7 @@ import batchUpdateUserEntriesContainer from "../graphql/mutations/batchUpdateUse
 
 const DEFAULT_STATUS_FILTER = "NEW";
 
+const TRANSITION_TIME = 450; // how to get this from theme ? (apart from importing it...)
 const PageContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -55,6 +57,24 @@ const MultiSelectBar = styled.div`
   flex-direction: row;
   align-items: center;
   background-color: ${props => lighten(0.45, props.theme.primary1Color)};
+
+  &.animate-enter {
+    opacity: 0.01;
+  }
+
+  &.animate-enter.animate-enter-active {
+    opacity: 1;
+    transition: opacity ${props => props.theme.transitionConfig};
+  }
+
+  &.animate-leave {
+    opacity: 1;
+  }
+
+  &.animate-leave.animate-leave-active {
+    opacity: 0.01;
+    transition: opacity ${props => props.theme.transitionConfig};
+  }
 `;
 
 const asDisplayedUserEntry = userEntry => ({
@@ -142,18 +162,23 @@ export class Entries extends PureComponent {
     const { selectedRows } = this.state;
 
     const selectedEntries = entries ? entries.filter(entry => !!selectedRows[entry.id]) : [];
+    const shouldShowBar = selectedEntries.length > 0;
     const actions = this._getActions(selectedEntries);
 
-    return selectedEntries.length > 0
-      ? <MultiSelectBar>
-          <FlatButton onClick={this._handleExitSelectionMode}>Cancel</FlatButton>
-          <FlexSpacer />
-          <span>
-            {selectedEntries.length} selected
-          </span>
-          {React.Children.toArray(actions)}
-        </MultiSelectBar>
-      : null;
+    return (
+      <CSSTransitionGroup transitionName="animate" transitionEnterTimeout={TRANSITION_TIME}>
+        {shouldShowBar
+          ? <MultiSelectBar>
+              <FlatButton onClick={this._handleExitSelectionMode}>Cancel</FlatButton>
+              <FlexSpacer />
+              <span>
+                {selectedEntries.length} selected
+              </span>
+              {React.Children.toArray(actions)}
+            </MultiSelectBar>
+          : null}
+      </CSSTransitionGroup>
+    );
   };
 
   _renderPlaceholderList = () => {
