@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { compose } from "recompose";
 import styled from "styled-components";
 import ContentAdd from "react-icons/lib/md/add";
@@ -40,30 +40,26 @@ const FeedInfo = styled.div`
   flex: 1;
 `;
 
-export class FeedsPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { showAddFeedDialog: false };
-    this._handleDialogClose = this._handleDialogClose.bind(this);
-  }
+export class FeedsPage extends PureComponent {
+  state = { showAddFeedDialog: false };
 
-  _toggleAddFeedDialog(opened) {
+  _toggleAddFeedDialog = opened => {
     this.setState(() => ({ showAddFeedDialog: opened }));
-  }
+  };
 
-  _handleDialogClose(newFeedCreated) {
+  _handleDialogClose = newFeedCreated => {
     if (newFeedCreated) {
       this.props.data.refetch();
     }
 
     this._toggleAddFeedDialog(false);
-  }
+  };
 
-  _handleFeedToggleChange(userFeed, checked) {
+  _handleFeedToggleChange = (userFeed, checked) => {
     console.log(userFeed.id, checked);
-  }
+  };
 
-  _renderRow(userFeed) {
+  _renderRow = userFeed => {
     return (
       <FeedItem key={userFeed.id}>
         <FeedInfo>
@@ -78,7 +74,7 @@ export class FeedsPage extends Component {
         />
       </FeedItem>
     );
-  }
+  };
 
   render() {
     const { data } = this.props;

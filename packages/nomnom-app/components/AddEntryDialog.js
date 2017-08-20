@@ -7,17 +7,9 @@ import TextField from "../toolkit/TextField";
 import addUserEntryMutation from "../graphql/mutations/addUserEntry";
 
 class AddEntryDialog extends PureComponent {
-  constructor() {
-    super();
-    this.state = {
-      entryUrl: ""
-    };
+  state = { entryUrl: "" };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleAddEntry = this.handleAddEntry.bind(this);
-  }
-
-  handleAddEntry() {
+  _handleAddEntry = () => {
     const { entryUrl: url } = this.state;
     const { addUserEntry, onRequestClose } = this.props;
 
@@ -25,11 +17,9 @@ class AddEntryDialog extends PureComponent {
       this.setState({ entryUrl: "" });
       onRequestClose(true);
     });
-  }
+  };
 
-  handleChange(ev) {
-    this.setState({ entryUrl: ev.target.value });
-  }
+  _handleChange = ev => this.setState({ entryUrl: ev.target.value });
 
   render() {
     const { entryUrl } = this.state;
@@ -38,17 +28,14 @@ class AddEntryDialog extends PureComponent {
       <FlatButton secondary onClick={onRequestClose}>
         Cancel
       </FlatButton>,
-      <FlatButton
-        primary
-        disabled={!entryUrl}
-        onClick={() => this.handleAddEntry(this.state.entryUrl)}>
+      <FlatButton primary disabled={!entryUrl} onClick={this._handleAddEntry}>
         Add
       </FlatButton>
     ];
 
     return (
       <Dialog title="Add entry" open={open} actions={actions} onRequestClose={onRequestClose}>
-        <TextField hintText="Enter url" value={entryUrl} onChange={this.handleChange} autoFocus />
+        <TextField hintText="Enter url" value={entryUrl} onChange={this._handleChange} autoFocus />
       </Dialog>
     );
   }

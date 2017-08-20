@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
@@ -20,62 +20,51 @@ const InputFile = styled.input`
   cursor: pointer;
 `;
 
-export class FileInput extends Component {
-  constructor() {
-    super();
-    this.state = { draggingOver: false };
-    this._handleDragEnter = this._handleDragEnter.bind(this);
-    this._handleDragOver = this._handleDragOver.bind(this);
-    this._handleDragLeave = this._handleDragLeave.bind(this);
-    this._handleFileDrop = this._handleFileDrop.bind(this);
-    this._handleFileSelect = this._handleFileSelect.bind(this);
-  }
+export class FileInput extends PureComponent {
+  state = { draggingOver: false };
 
-  _canDrop(ev) {
+  _canDrop = ev => {
     return this.props.multiple || ev.dataTransfer.items.length === 1;
-  }
+  };
 
-  _handleDragOver(ev) {
+  _handleDragOver = ev => {
     ev.stopPropagation();
     ev.preventDefault();
     ev.dataTransfer.dropEffect = this._canDrop(ev) ? "copy" : "none";
-  }
+  };
 
-  _handleDragEnter(ev) {
+  _handleDragEnter = ev => {
     ev.stopPropagation();
     ev.preventDefault();
     this.setState({ draggingOver: this._canDrop(ev) });
-  }
+  };
 
-  _handleDragLeave(ev) {
+  _handleDragLeave = ev => {
     ev.stopPropagation();
     ev.preventDefault();
     this.setState({ draggingOver: false });
-  }
+  };
 
-  _handleFileDrop(ev) {
+  _handleFileDrop = ev => {
     ev.stopPropagation();
     ev.preventDefault();
     const value = Array.from(ev.dataTransfer.files);
     this.props.onChange(value);
-  }
+  };
 
-  _handleFileSelect(ev) {
+  _handleFileSelect = ev => {
     const value = Array.from(ev.target.files);
     this.props.onChange(value);
-  }
+  };
 
-  _renderValue(value) {
-    return (
-      <ul>
-        {value.map((file, idx) =>
-          <li key={idx}>
-            {file.name}
-          </li>
-        )}
-      </ul>
-    );
-  }
+  _renderValue = value =>
+    <ul>
+      {value.map((file, idx) =>
+        <li key={idx}>
+          {file.name}
+        </li>
+      )}
+    </ul>;
 
   render() {
     const { value, multiple } = this.props;
@@ -104,9 +93,10 @@ FileInput.propTypes = {
   onChange: PropTypes.func,
   multiple: PropTypes.bool
 };
+
 FileInput.defaultProps = {
   value: [],
-  onChange: value => {},
+  onChange: () => {},
   multiple: false
 };
 

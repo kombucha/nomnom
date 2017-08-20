@@ -17,18 +17,13 @@ const DEFAULT_STATE = {
 };
 
 export class FeedbinFavoritesSettings extends PureComponent {
-  constructor() {
-    super();
-    this.state = DEFAULT_STATE;
-    this._handleFileChange = this._handleFileChange.bind(this);
-    this._handleImport = this._handleImport.bind(this);
-  }
+  state = DEFAULT_STATE;
 
-  _handleFileChange(importFiles) {
+  _handleFileChange = importFiles => {
     this.setState({ importFiles });
-  }
+  };
 
-  _handleImport() {
+  _handleImport = () => {
     // Can be quite long !
     this.setState({ importing: true }, () => {
       const favoritesFile = this.state.importFiles[0];
@@ -36,7 +31,7 @@ export class FeedbinFavoritesSettings extends PureComponent {
         this.setState({ importing: false });
       });
     });
-  }
+  };
 
   render() {
     const { importFiles, importing } = this.state;
@@ -46,13 +41,13 @@ export class FeedbinFavoritesSettings extends PureComponent {
       <Card>
         <CardTitle>Import Feedbin favorites</CardTitle>
         <p>
-          Go to the{" "}
+          Go to the
           <a
             href="https://feedbin.com/settings/import_export"
             rel="noopener noreferrer"
             target="_blank">
             Export settings
-          </a>{" "}
+          </a>
           of your Feedbin account and click on "Export starred articles".
         </p>
         <p>You will receive an email with the exported file.</p>

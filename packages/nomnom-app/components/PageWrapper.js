@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Link from "next/link";
 import styled, { ThemeProvider } from "styled-components";
 
@@ -15,28 +15,23 @@ const UnstyledLink = styled.a`
   cursor: pointer;
 `;
 
-class PageWrapper extends Component {
-  render() {
-    return (
-      <ThemeProvider theme={theme}>
-        <div id="app">
-          <PageTitle value="NomNom" />
-          <AppBar
-            fixed
-            title={
-              <Link href="/">
-                <UnstyledLink>NomNom</UnstyledLink>
-              </Link>
-            }
-            rightElement={<UserMenu />}
-          />
-          <PageContainer>
-            {this.props.children}
-          </PageContainer>
-        </div>
-      </ThemeProvider>
-    );
-  }
-}
+const PageWrapper = ({ user, children }) =>
+  <ThemeProvider theme={theme}>
+    <div id="app">
+      <PageTitle value="NomNom" />
+      <AppBar
+        fixed
+        title={
+          <Link href="/">
+            <UnstyledLink>NomNom</UnstyledLink>
+          </Link>
+        }
+        rightElement={user ? <UserMenu user={user} /> : null}
+      />
+      <PageContainer>
+        {children}
+      </PageContainer>
+    </div>
+  </ThemeProvider>;
 
 export default PageWrapper;

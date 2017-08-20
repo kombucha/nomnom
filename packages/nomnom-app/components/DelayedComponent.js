@@ -1,10 +1,8 @@
-import { Component } from "react";
+import { PureComponent } from "react";
 import PropTypes from "prop-types";
 
-export class DelayedComponent extends Component {
-  state = {
-    shouldRender: false
-  };
+export class DelayedComponent extends PureComponent {
+  state = { shouldRender: false };
 
   componentWillReceiveProps({ delay }) {
     this._scheduleRender(delay);
@@ -33,7 +31,7 @@ export class DelayedComponent extends Component {
 
   _clearTimer() {
     if (this._timer) {
-      window.clearTimeout(this._timer);
+      clearTimeout(this._timer);
     }
   }
 

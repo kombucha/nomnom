@@ -7,7 +7,8 @@ import { Url as URL } from "url";
 import FlatButton from "../toolkit/FlatButton";
 import { Card, CardTitle } from "../toolkit/Card";
 
-import withData from "../components/withData";
+import withData from "../hoc/withData";
+import withAuth from "../hoc/withAuth";
 import PageWrapper from "../components/PageWrapper";
 import EditEntryTagsDialog from "../components/EditEntryTagsDialog";
 import PageTitle from "../components/PageTitle";
@@ -20,9 +21,7 @@ const Container = styled.div`
   padding: 20px;
 `;
 
-const EntryCard = styled(Card)`
-  max-width: 800px;
-`;
+const EntryCard = styled(Card)`max-width: 800px;`;
 
 const Article = styled.article`
   p {
@@ -43,40 +42,34 @@ const Article = styled.article`
 `;
 
 export class Entry extends PureComponent {
-  constructor() {
-    super();
-    this.state = {
-      editingTags: false
-    };
-    this.archiveEntry = this.archiveEntry.bind(this);
-    this.favoriteEntry = this.favoriteEntry.bind(this);
-    this.editTags = this.editTags.bind(this);
-  }
+  state = {
+    editingTags: false
+  };
 
-  renderLoading() {
+  renderLoading = () => {
     return (
       <div>
         <PageTitle value="Loading entry..." />
         Loading...
       </div>
     );
-  }
+  };
 
-  archiveEntry() {
+  archiveEntry = () => {
     const { id } = this.props.userEntry;
     this.props.updateUserEntry({ id, status: "ARCHIVED" });
-  }
+  };
 
-  favoriteEntry() {
+  favoriteEntry = () => {
     const { id } = this.props.userEntry;
     this.props.updateUserEntry({ id, status: "FAVORITE" });
-  }
+  };
 
-  editTags() {
+  editTags = () => {
     this.setState({ editingTags: true });
-  }
+  };
 
-  renderEntry(userEntry) {
+  renderEntry = userEntry => {
     const { editingTags } = this.state;
     const htmlContent = {
       __html: userEntry.entry.content
@@ -134,7 +127,8 @@ export class Entry extends PureComponent {
         />
       </EntryCard>
     );
-  }
+  };
+
   render() {
     const { userEntry, loading } = this.props;
     return (
@@ -155,6 +149,10 @@ Entry.propTypes = {
 
 const paramsFromUrl = mapProps(({ url }) => ({ entryId: url.query.entryId }));
 
-export default compose(withData, paramsFromUrl, userEntryContainer, updateUserEntryContainer)(
-  Entry
-);
+export default compose(
+  withData,
+  withAuth,
+  paramsFromUrl,
+  userEntryContainer,
+  updateUserEntryContainer
+)(Entry);

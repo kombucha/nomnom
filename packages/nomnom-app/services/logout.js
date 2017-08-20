@@ -1,4 +1,5 @@
 import cookie from "cookie";
+import redirect from "./redirect";
 
 export default function logout(apolloClient) {
   if (!process.browser) {

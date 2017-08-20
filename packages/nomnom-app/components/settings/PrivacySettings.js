@@ -20,28 +20,24 @@ const DEFAULT_STATE = {
 };
 
 export class PrivacySettings extends PureComponent {
-  constructor() {
-    super();
-    this.state = DEFAULT_STATE;
-  }
+  state = DEFAULT_STATE;
 
-  _doDelete() {
-    return new Promise((resolve, reject) => {
+  _doDelete = () =>
+    new Promise((resolve, reject) => {
       this.setState({ deleting: true }, () => {
         this.props.deleteAllMyData().then(resolve, reject);
       });
     });
-  }
 
   _reset() {
     this.setState(DEFAULT_STATE);
   }
 
-  _handleConfirmDelete(confirmed) {
+  _handleConfirmDelete = confirmed => {
     const actionPromise = confirmed ? this._doDelete() : Promise.resolve();
     // TODO: handle failure
     actionPromise.then(() => this._reset(), () => this._reset());
-  }
+  };
 
   render() {
     const { confirmationText, deleting } = this.state;

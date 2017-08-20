@@ -16,25 +16,20 @@ const DEFAULT_STATE = {
 };
 
 export class PocketSettings extends PureComponent {
-  constructor() {
-    super();
-    this.state = DEFAULT_STATE;
-    this._handleFileChange = this._handleFileChange.bind(this);
-    this._handleImport = this._handleImport.bind(this);
-  }
+  state = DEFAULT_STATE;
 
-  _handleFileChange(importFiles) {
+  _handleFileChange = importFiles => {
     this.setState({ importFiles });
-  }
+  };
 
-  _handleImport() {
+  _handleImport = () => {
     // Can be quite long !
     this.setState({ importing: true }, () => {
       importPocket(this.state.importFiles[0]).then(this.props.batchAddUserEntries).then(() => {
         this.setState({ importing: false });
       });
     });
-  }
+  };
 
   render() {
     const { importFiles, importing } = this.state;

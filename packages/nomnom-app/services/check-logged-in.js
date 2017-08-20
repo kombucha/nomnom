@@ -1,14 +1,13 @@
-import gql from "graphql-tag";
-import { query as userQuery } from "../graphql/queries/user";
+import { query } from "../graphql/queries/user";
 
 export default (context, apolloClient) =>
   apolloClient
-    .query({ query: userQuery })
+    .query({ query })
     .then(({ data }) => {
-      return { loggedInUser: data.me };
+      return data.me;
     })
     .catch(() => {
       // Fail gracefully
       console.log("Youre not logged in");
-      return { loggedInUser: {} };
+      return null;
     });

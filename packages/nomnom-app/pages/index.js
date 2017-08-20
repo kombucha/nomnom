@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { Url as URL } from "url";
 import PropTypes from "prop-types";
 import styled from "styled-components";
@@ -17,7 +17,8 @@ import { Menu, MenuItem } from "../toolkit/Menu";
 import FlatButton from "../toolkit/FlatButton";
 import FloatingActionButton from "../toolkit/FloatingActionButton";
 
-import withData from "../components/withData";
+import withData from "../hoc/withData";
+import withAuth from "../hoc/withAuth";
 import PageWrapper from "../components/PageWrapper";
 import PageTitle from "../components/PageTitle";
 import { LIST_ITEM_HEIGHT, RichListItem, ListItemPlaceholder } from "../components/RichList";
@@ -70,31 +71,21 @@ const noContent = () => <EmptyPlaceholder />;
 
 const hasItemsSelected = itemMap => Object.values(itemMap).some(selected => selected);
 
-export class Entries extends Component {
-  constructor() {
-    super();
-    this.state = { showAddEntryDialog: false, selectedRows: {} };
-    this._handleAddEntryDialogClose = this._handleAddEntryDialogClose.bind(this);
-    this._handleStatusFilterChange = this._handleStatusFilterChange.bind(this);
-    this._handleExitSelectionMode = this._handleExitSelectionMode.bind(this);
-    this._handleRowClicked = this._handleRowClicked.bind(this);
-    this._handleListScrolling = this._handleListScrolling.bind(this);
-  }
+const preventPropagation = e => e.stopPropagation();
 
-  _handleAddEntryDialogClose(newEntryCreated) {
-    this._toggleAddEntryDialog(false);
-  }
+export class Entries extends PureComponent {
+  state = { showAddEntryDialog: false, selectedRows: {} };
 
-  _handleStatusFilterChange(newStatus) {
+  _handleStatusFilterChange = newStatus => {
     const { query, pushState } = this.props;
     const newQueryParams = Object.assign({}, query, {
       status: newStatus
     });
 
     pushState(`/?${queryString.stringify(newQueryParams)}`);
-  }
+  };
 
-  _handleRowClicked(userEntry, requestingSelection) {
+  _handleRowClicked = (userEntry, requestingSelection) => {
     const shouldSelect = requestingSelection || hasItemsSelected(this.state.selectedRows);
 
     if (shouldSelect) {
@@ -106,17 +97,15 @@ export class Entries extends Component {
     } else {
       this.props.pushState(`/entry?entryId=${userEntry.id}`, `/entries/${userEntry.id}`);
     }
-  }
+  };
 
-  _handleExitSelectionMode() {
-    this.setState({ selectedRows: {} });
-  }
+  _handleExitSelectionMode = () => this.setState({ selectedRows: {} });
 
-  _toggleAddEntryDialog(opened) {
-    this.setState({ showAddEntryDialog: opened });
-  }
+  _handleAddEntryDialogOpen = () => this.setState({ showAddEntryDialog: true });
 
-  _getActions(userEntries) {
+  _handleAddEntryDialogClose = () => this.setState({ showAddEntryDialog: false });
+
+  _getActions = userEntries => {
     const isSingleMode =
       userEntries.length === 1 ||
       userEntries.every(entry => entry.status === userEntries[0].status);
@@ -137,9 +126,9 @@ export class Entries extends Component {
         {status}
       </FlatButton>
     );
-  }
+  };
 
-  _handleListScrolling({ overscanStopIndex }) {
+  _handleListScrolling = ({ overscanStopIndex }) => {
     const { entries, hasMore, loading, fetchMore } = this.props;
     const hasReachedEnd = overscanStopIndex === entries.length - 1;
     const shouldLoadMore = hasReachedEnd && hasMore && !loading;
@@ -147,9 +136,9 @@ export class Entries extends Component {
     if (shouldLoadMore) {
       fetchMore();
     }
-  }
+  };
 
-  _renderMultiSelecBar(entries) {
+  _renderMultiSelecBar = entries => {
     const { selectedRows } = this.state;
 
     const selectedEntries = entries ? entries.filter(entry => !!selectedRows[entry.id]) : [];
@@ -165,9 +154,9 @@ export class Entries extends Component {
           {React.Children.toArray(actions)}
         </MultiSelectBar>
       : null;
-  }
+  };
 
-  _renderPlaceholderList() {
+  _renderPlaceholderList = () => {
     return (
       <DelayedComponent delay={100}>
         <div>
@@ -175,9 +164,9 @@ export class Entries extends Component {
         </div>
       </DelayedComponent>
     );
-  }
+  };
 
-  _renderRow(userEntry, selectMode, { key, style, index, isScrolling }) {
+  _renderRow = (userEntry, selectMode, { key, style, index, isScrolling }) => {
     const tagsCount = userEntry.tags.length;
     const tags = tagsCount > 0 ? ` | ${userEntry.tags.join(", ")}` : "";
     const isSelected = !!this.state.selectedRows[userEntry.id];
@@ -185,12 +174,7 @@ export class Entries extends Component {
       ? null
       : [
           ...this._getActions([userEntry]),
-          <a
-            href={userEntry.url}
-            target="__blank"
-            onClick={ev => {
-              ev.stopPropagation();
-            }}>
+          <a href={userEntry.url} target="__blank" onClick={preventPropagation}>
             <FlatButton>View original</FlatButton>
           </a>
         ];
@@ -209,9 +193,9 @@ export class Entries extends Component {
         />
       </div>
     );
-  }
+  };
 
-  _renderList(entries) {
+  _renderList = entries => {
     const userEntries = entries.map(asDisplayedUserEntry);
     const selectMode = hasItemsSelected(this.state.selectedRows);
 
@@ -236,7 +220,7 @@ export class Entries extends Component {
           </AutoSizer>}
       </WindowScroller>
     );
-  }
+  };
 
   render() {
     const { showAddEntryDialog } = this.state;
@@ -265,7 +249,7 @@ export class Entries extends Component {
             </Card>
           </MainContainer>
 
-          <FloatingActionButton secondary fixed onClick={() => this._toggleAddEntryDialog(true)}>
+          <FloatingActionButton secondary fixed onClick={this._handleAddEntryDialogOpen}>
             <ContentAdd className="icon" />
           </FloatingActionButton>
 
@@ -301,6 +285,7 @@ const statusPropContainer = mapProps(({ url }) => ({
 
 export default compose(
   withData,
+  withAuth,
   statusPropContainer,
   batchUpdateUserEntriesContainer,
   userEntriesContainer

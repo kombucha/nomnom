@@ -17,18 +17,13 @@ const DEFAULT_STATE = {
 };
 
 export class FeedbinSubscriptionsSettings extends PureComponent {
-  constructor() {
-    super();
-    this.state = DEFAULT_STATE;
-    this._handleFileChange = this._handleFileChange.bind(this);
-    this._handleImport = this._handleImport.bind(this);
-  }
+  state = DEFAULT_STATE;
 
-  _handleFileChange(importFiles) {
+  _handleFileChange = importFiles => {
     this.setState({ importFiles });
-  }
+  };
 
-  _handleImport() {
+  _handleImport = () => {
     // Can be quite long !
     this.setState({ importing: true }, () => {
       const importedFile = this.state.importFiles[0];
@@ -36,7 +31,7 @@ export class FeedbinSubscriptionsSettings extends PureComponent {
         this.setState({ importing: false });
       });
     });
-  }
+  };
 
   render() {
     const { importFiles, importing } = this.state;
@@ -52,7 +47,7 @@ export class FeedbinSubscriptionsSettings extends PureComponent {
             rel="noopener noreferrer"
             target="_blank">
             Export settings
-          </a>{" "}
+          </a>
           of your Feedbin account and click on "Download".
         </p>
         <p>You will receive an email with the exported file.</p>

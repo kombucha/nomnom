@@ -15,9 +15,9 @@ const THIRTY_DAYS = 30 * 24 * 60 * 60;
 
 class LoginPage extends PureComponent {
   static async getInitialProps(context, apolloClient) {
-    const { loggedInUser } = await checkLoggedIn(context, apolloClient);
+    const loggedInUser = await checkLoggedIn(context, apolloClient);
 
-    if (loggedInUser.user) {
+    if (loggedInUser) {
       redirect(context, "/");
     }
 
@@ -43,8 +43,8 @@ class LoginPage extends PureComponent {
   };
 
   render() {
-    const { from } = this.props.url.query.from || { from: { pathname: "/" } };
-    const { authenticated } = this.props;
+    // const { from } = this.props.url.query.from || { from: { pathname: "/" } };
+    // const { authenticated } = this.props;
 
     return (
       <PageWrapper>

@@ -13,13 +13,7 @@ const DEFAULT_STATE = {
 };
 
 export class EditEntryTagsDialog extends PureComponent {
-  constructor() {
-    super();
-    this.state = DEFAULT_STATE;
-
-    this._handleChange = this._handleChange.bind(this);
-    this._handleSave = this._handleSave.bind(this);
-  }
+  state = DEFAULT_STATE;
 
   componentWillReceiveProps(newProps) {
     if (newProps.data && !newProps.data.loading) {
@@ -27,7 +21,7 @@ export class EditEntryTagsDialog extends PureComponent {
     }
   }
 
-  _handleSave() {
+  _handleSave = () => {
     const { newTags } = this.state;
     const { userEntryId, updateUserEntry, onRequestClose } = this.props;
 
@@ -36,11 +30,9 @@ export class EditEntryTagsDialog extends PureComponent {
       this.setState(DEFAULT_STATE);
       onRequestClose(true);
     });
-  }
+  };
 
-  _handleChange(newTags) {
-    this.setState({ newTags, enableSave: true });
-  }
+  _handleChange = newTags => this.setState({ newTags, enableSave: true });
 
   render() {
     const { open, onRequestClose, data } = this.props;

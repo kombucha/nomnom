@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { lighten } from "polished";
@@ -102,8 +102,19 @@ const CheckboxContainer = styled.div`
   opacity: ${props => (props.shown ? "1" : "0")};
 `;
 
-export class RichListItem extends Component {
+export class RichListItem extends PureComponent {
   state = { showActions: false, overSelector: false };
+
+  _handleCheckboxClicked = ev => {
+    const { onClick, selected } = this.props;
+    ev.stopPropagation();
+    ev.preventDefault();
+    onClick(ev, true, selected);
+  };
+  _handleItemEnter = () => this.setState({ showActions: true });
+  _handleItemOut = () => this.setState({ showActions: false });
+  _handleCheckboxEnter = () => this.setState({ overSelector: true });
+  _handleCheckboxOut = () => this.setState({ overSelector: false });
 
   render() {
     const {
@@ -125,8 +136,8 @@ export class RichListItem extends Component {
       <RichListItemContainer
         selected={selected}
         onClick={ev => onClick(ev, isSelectionMode, selected)}
-        onMouseEnter={() => this.setState({ showActions: true })}
-        onMouseLeave={() => this.setState({ showActions: false })}>
+        onMouseEnter={this._handleItemEnter}
+        onMouseLeave={this._handleItemOut}>
         <ListItem imageUrl={imageUrl} title={title} subtitle={subtitle} />
 
         {/* Select state */}
@@ -134,13 +145,9 @@ export class RichListItem extends Component {
           <CheckboxContainer
             shown={shouldShowSelector}
             selected={selected}
-            onMouseEnter={() => this.setState({ overSelector: true })}
-            onMouseLeave={() => this.setState({ overSelector: false })}
-            onClick={ev => {
-              ev.stopPropagation();
-              ev.preventDefault();
-              onClick(ev, true, selected);
-            }}>
+            onMouseEnter={this._handleCheckboxEnter}
+            onMouseLeave={this._handleCheckboxOut}
+            onClick={this._handleCheckboxClicked}>
             {selected ? <CheckedIcon className="icon" /> : <UncheckedIcon className="icon" />}
           </CheckboxContainer>}
 
@@ -178,7 +185,7 @@ const ListItemPlaceholderContainer = styled.li`
   padding: ${CELL_SPACING}px;
 `;
 const PlaceHolderElement = styled.span`
-  background: #eeeeee;
+  background: #eee;
   &::after {
     content: '.';
     display: block;

@@ -12,14 +12,9 @@ const DEFAULT_STATE = {
 };
 
 export class SubscribeToFeedDialog extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = DEFAULT_STATE;
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubscribeToFeed = this.handleSubscribeToFeed.bind(this);
-  }
+  state = DEFAULT_STATE;
 
-  handleSubscribeToFeed() {
+  handleSubscribeToFeed = () => {
     const { feedUri: uri, feedName: name } = this.state;
     const { subscribeToFeed, onRequestClose } = this.props;
 
@@ -27,11 +22,11 @@ export class SubscribeToFeedDialog extends PureComponent {
       this.setState(DEFAULT_STATE);
       onRequestClose(true);
     });
-  }
+  };
 
-  handleChange(name, ev) {
+  _handleChange = name => ev => {
     this.setState({ [name]: ev.target.value });
-  }
+  };
 
   render() {
     const { feedName, feedUri } = this.state;
@@ -59,14 +54,10 @@ export class SubscribeToFeedDialog extends PureComponent {
         <TextField
           hintText="Name"
           value={feedName}
-          onChange={ev => this.handleChange("feedName", ev)}
+          onChange={this._handleChange("feedName")}
           autoFocus
         />
-        <TextField
-          hintText="URI"
-          value={feedUri}
-          onChange={ev => this.handleChange("feedUri", ev)}
-        />
+        <TextField hintText="URI" value={feedUri} onChange={this._handleChange("feedUri")} />
       </Dialog>
     );
   }

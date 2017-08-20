@@ -6,8 +6,10 @@ const promisify = require("nomnom-server-core/utils/promisify");
 const logger = require("nomnom-server-core/logger");
 const { login } = require("nomnom-server-core/user");
 
-const loginRouter = new Router();
+const plus = google.plus("v1").people;
+const loadUserProfile = promisify(plus.get, plus);
 
+const loginRouter = new Router();
 loginRouter.use(bodyParser.text());
 
 /**
@@ -20,9 +22,7 @@ loginRouter.post("/google", async (req, res) => {
     process.env.GOOGLE_CLIENT_SECRET,
     process.env.GOOGLE_REDIRECT_URL || ""
   );
-  const plus = google.plus("v1").people;
   const loadTokens = promisify(oauth2Client.getToken, oauth2Client);
-  const loadUserProfile = promisify(plus.get, plus);
 
   const authorizationCode = req.body;
   try {
@@ -42,14 +42,12 @@ loginRouter.post("/google", async (req, res) => {
 });
 
 function simpleProfile(googleProfile) {
-  const email = googleProfile.emails.find(email => email.type === "account") || {
-    value: ""
-  };
+  const accountEmail = googleProfile.emails.find(email => email.type === "account");
 
   return {
     name: googleProfile.displayName,
     avatarUrl: googleProfile.image ? googleProfile.image.url : "",
-    email: email.value
+    email: accountEmail ? accountEmail.value : ""
   };
 }
 

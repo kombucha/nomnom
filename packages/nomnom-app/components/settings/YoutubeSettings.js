@@ -15,18 +15,13 @@ const DEFAULT_STATE = {
 };
 
 export class YoutubeSettings extends PureComponent {
-  constructor() {
-    super();
-    this.state = DEFAULT_STATE;
-    this._handleFileChange = this._handleFileChange.bind(this);
-    this._handleImport = this._handleImport.bind(this);
-  }
+  state = DEFAULT_STATE;
 
-  _handleFileChange(importFiles) {
+  _handleFileChange = importFiles => {
     this.setState({ importFiles });
-  }
+  };
 
-  _handleImport() {
+  _handleImport = () => {
     // Can be quite long !
     this.setState({ importing: true }, () => {
       const importedFile = this.state.importFiles[0];
@@ -34,7 +29,7 @@ export class YoutubeSettings extends PureComponent {
         this.setState({ importing: false });
       });
     });
-  }
+  };
 
   render() {
     const { importFiles, importing } = this.state;
