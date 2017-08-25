@@ -108,11 +108,7 @@ export class MenuContainer extends Component {
 
 MenuContainer.propTypes = {
   target: PropTypes.node.isRequired,
-  children: PropTypes.arrayOf(
-    PropTypes.shape({
-      type: PropTypes.oneOf([MenuItem])
-    })
-  ),
+  children: PropTypes.arrayOf(PropTypes.node),
   alignRight: PropTypes.bool
 };
 

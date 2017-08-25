@@ -166,7 +166,10 @@ export class Entries extends PureComponent {
     const actions = this._getActions(selectedEntries);
 
     return (
-      <CSSTransitionGroup transitionName="animate" transitionEnterTimeout={TRANSITION_TIME}>
+      <CSSTransitionGroup
+        transitionName="animate"
+        transitionEnterTimeout={TRANSITION_TIME}
+        transitionLeaveTimeout={TRANSITION_TIME}>
         {shouldShowBar
           ? <MultiSelectBar>
               <FlatButton onClick={this._handleExitSelectionMode}>Cancel</FlatButton>
@@ -249,11 +252,11 @@ export class Entries extends PureComponent {
 
   render() {
     const { showAddEntryDialog } = this.state;
-    const { loading, entries, status } = this.props;
+    const { user, loading, entries, status } = this.props;
     const isFirstLoad = loading && entries.length === 0;
 
     return (
-      <PageWrapper>
+      <PageWrapper user={user}>
         <PageContainer>
           <PageTitle value="Home" />
 
@@ -302,8 +305,9 @@ Entries.propTypes = {
   pushState: PropTypes.func.isRequired
 };
 
-const statusPropContainer = mapProps(({ url }) => ({
+const mappedProps = mapProps(({ loggedInUser: user, url }) => ({
   status: url.query.status || DEFAULT_STATUS_FILTER,
+  user,
   query: url.query,
   pushState: Router.push
 }));
@@ -311,7 +315,7 @@ const statusPropContainer = mapProps(({ url }) => ({
 export default compose(
   withData,
   withAuth,
-  statusPropContainer,
+  mappedProps,
   batchUpdateUserEntriesContainer,
   userEntriesContainer
 )(Entries);

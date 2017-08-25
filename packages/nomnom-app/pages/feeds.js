@@ -8,7 +8,8 @@ import FloatingActionButton from "../toolkit/FloatingActionButton";
 import { List, ListItem } from "../toolkit/List";
 import Toggle from "../toolkit/Toggle";
 
-import withData from "../components/withData";
+import withData from "../hoc/withData";
+import withAuth from "../hoc/withAuth";
 import PageWrapper from "../components/PageWrapper";
 import PageTitle from "../components/PageTitle";
 import SubscribeToFeedDialog from "../components/SubscribeToFeedDialog";
@@ -77,10 +78,11 @@ export class FeedsPage extends PureComponent {
   };
 
   render() {
-    const { data } = this.props;
+    const { data, loggedInUser } = this.props;
     const { showAddFeedDialog } = this.state;
+
     return (
-      <PageWrapper>
+      <PageWrapper user={loggedInUser}>
         <PageContainer>
           <PageTitle value="Feeds" />
           <h1>Feeds</h1>
@@ -104,4 +106,4 @@ export class FeedsPage extends PureComponent {
   }
 }
 
-export default compose(withData, feedsContainer)(FeedsPage);
+export default compose(withData, withAuth, feedsContainer)(FeedsPage);

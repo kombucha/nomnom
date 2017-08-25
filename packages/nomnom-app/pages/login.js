@@ -6,7 +6,7 @@ import cookie from "cookie";
 
 import PageWrapper from "../components/PageWrapper";
 import PageTitle from "../components/PageTitle";
-import withData from "../components/withData";
+import withData from "../hoc/withData";
 import checkLoggedIn from "../services/check-logged-in";
 import redirect from "../services/redirect";
 

@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { ApolloProvider, getDataFromTree } from "react-apollo";
-import Head from "next/head";
 import cookie from "cookie";
 
 import initApollo from "../services/createApolloClient";

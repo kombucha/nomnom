@@ -2,11 +2,11 @@ import React, { PureComponent } from "react";
 import ActionDelete from "react-icons/lib/md/delete";
 import styled from "styled-components";
 
-import { Card, CardTitle } from "../toolkit/Card";
-import Dialog from "../toolkit/Dialog";
-import TextField from "../toolkit/TextField";
-import FlatButton from "../toolkit/FlatButton";
-import RaisedButton from "../toolkit/RaisedButton";
+import { Card, CardTitle } from "../../toolkit/Card";
+import Dialog from "../../toolkit/Dialog";
+import TextField from "../../toolkit/TextField";
+import FlatButton from "../../toolkit/FlatButton";
+import RaisedButton from "../../toolkit/RaisedButton";
 
 import deleteAllMyDataContainer from "../../graphql/mutations/deleteAllMyData";
 

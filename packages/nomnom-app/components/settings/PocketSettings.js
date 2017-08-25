@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 
-import { Card, CardTitle } from "../toolkit/Card";
-import RaisedButton from "../toolkit/RaisedButton";
+import { Card, CardTitle } from "../../toolkit/Card";
+import RaisedButton from "../../toolkit/RaisedButton";
 import FileInput from "../../components/FileInput";
 import batchAddUserEntriesContainer from "../../graphql/mutations/batchAddUserEntries";
 

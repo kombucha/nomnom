@@ -29,7 +29,7 @@ export class UserMenu extends PureComponent {
             <UserName>
               {user.name}
             </UserName>
-            <Avatar size="30px" src={user.avatarUrl} />
+            <Avatar size="30px" src={user.avatarUrl} alt={`${user.name}'s avatar`} />
           </MenuButton>
         }>
         <MenuItem onClick={this._goToFeeds}>Feeds</MenuItem>

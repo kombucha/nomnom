@@ -6,42 +6,51 @@
     "compression": "1.7.0",
     "cookie-parser": "1.4.3",
     "isomorphic-fetch": "2.2.1",
-    "next": "3.0.3",
-    "nomnom-server-core": "1.0.0",
-    "polished": "1.3.0",
+    "next": "3.0.6",
+    "polished": "1.4.1",
     "prop-types": "15.5.10",
     "query-string": "5.0.0",
     "react": "15.6.1",
-    "react-apollo": "1.4.11",
+    "react-apollo": "1.4.15",
     "react-dom": "15.6.1",
     "react-google-login": "2.9.3",
     "react-icons": "2.2.5",
     "react-transition-group": "1.2.0",
     "react-virtualized": "9.9.0",
-    "recompose": "0.24.0",
+    "recompose": "0.25.0",
     "styled-components": "2.1.2"
   },
   "devDependencies": {
-    "@storybook/addon-info": "3.2.0",
-    "@storybook/react": "3.2.3",
+    "@storybook/addon-info": "3.2.7",
+    "@storybook/react": "3.2.8",
     "babel-eslint": "7.2.3",
     "babel-plugin-styled-components": "1.1.7",
     "eslint": "3.19.0",
     "eslint-config-react-app": "2.0.0",
-    "eslint-plugin-flowtype": "2.33.0",
-    "eslint-plugin-import": "2.2.0",
+    "eslint-plugin-flowtype": "2.35.0",
+    "eslint-plugin-import": "2.7.0",
     "eslint-plugin-jsx-a11y": "5.0.1",
-    "eslint-plugin-react": "7.0.1",
-    "pkg": "4.2.2"
+    "eslint-plugin-react": "7.3.0",
+    "pkg": "4.2.4"
   },
   "scripts": {
-    "build:next": "next build",
-    "build:pkg": "pkg -t node8-macos-x64 -o build/nomnom-app ./index.js",
-    "build": "npm run build:next && npm run build:pkg",
-    "start": "node index.js",
-    "clean": "rm -fr build/**",
-    "test": "TODO",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "dev": "node server.js",
+    "build": "next build",
+    "clean": "rm -fr .next dist/**",
+    "prestart": "npm run build",
+    "start": "NODE_ENV=production node server.js",
+    "predist": "npm run build",
+    "dist": "pkg index.js -t node8-macos-x64 -o dist/nomnom-app"
+  },
+  "pkg": {
+    "assets": [
+      ".next",
+      "pages"
+    ],
+    "scripts": [
+      ".next/dist/**/*.js"
+    ]
   }
 }

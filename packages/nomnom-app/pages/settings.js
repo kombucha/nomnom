@@ -1,9 +1,11 @@
 import React from "react";
+import { compose } from "recompose";
 import styled from "styled-components";
 
 import PageWrapper from "../components/PageWrapper";
 import PageTitle from "../components/PageTitle";
-import withData from "../components/withData";
+import withData from "../hoc/withData";
+import withAuth from "../hoc/withAuth";
 
 import PrivacySettings from "../components/settings/PrivacySettings";
 import PocketSettings from "../components/settings/PocketSettings";
@@ -26,8 +28,8 @@ const Container = styled.div`
   }
 `;
 
-export const Settings = () =>
-  <PageWrapper>
+export const Settings = ({ loggedInUser }) =>
+  <PageWrapper user={loggedInUser}>
     <Container>
       <PageTitle value="Settings" />
       <BookmarkletSettings />
@@ -39,4 +41,4 @@ export const Settings = () =>
     </Container>
   </PageWrapper>;
 
-export default withData(Settings);
+export default compose(withData, withAuth)(Settings);

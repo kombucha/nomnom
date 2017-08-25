@@ -130,9 +130,9 @@ export class Entry extends PureComponent {
   };
 
   render() {
-    const { userEntry, loading } = this.props;
+    const { userEntry, loading, loggedInUser } = this.props;
     return (
-      <PageWrapper>
+      <PageWrapper user={loggedInUser}>
         <Container>
           {loading ? this.renderLoading() : this.renderEntry(userEntry)}
         </Container>
@@ -147,12 +147,15 @@ Entry.propTypes = {
   updateUserEntry: PropTypes.func.isRequired
 };
 
-const paramsFromUrl = mapProps(({ url }) => ({ entryId: url.query.entryId }));
+const mappedProps = mapProps(({ url, loggedInUser }) => ({
+  entryId: url.query.entryId,
+  loggedInUser
+}));
 
 export default compose(
   withData,
   withAuth,
-  paramsFromUrl,
+  mappedProps,
   userEntryContainer,
   updateUserEntryContainer
 )(Entry);

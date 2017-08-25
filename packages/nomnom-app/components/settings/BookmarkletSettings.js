@@ -1,7 +1,7 @@
 import React from "react";
 import { gql, graphql } from "react-apollo";
 
-import { Card, CardTitle } from "../toolkit/Card";
+import { Card, CardTitle } from "../../toolkit/Card";
 
 function bookmarkletFn() {
   const TOKEN = "%TOKEN%";
