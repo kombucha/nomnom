@@ -6,7 +6,7 @@ import { lighten } from "polished";
 import { mapProps, compose } from "recompose";
 import queryString from "query-string";
 import Router from "next/router";
-import { Url as URL } from "url";
+import url from "url";
 import ContentAdd from "react-icons/lib/md/add";
 import VisibilitySensor from "react-visibility-sensor";
 
@@ -79,9 +79,9 @@ const MultiSelectBar = styled.div`
 const asDisplayedUserEntry = userEntry => ({
   id: userEntry.id,
   title: userEntry.entry.title,
-  imageUrl: "//localhost:4001" + userEntry.entry.imageUrl || "http://placekitten.com/g/200/200",
+  imageUrl: userEntry.entry.imageUrl || "http://placekitten.com/g/200/200",
   url: userEntry.entry.url,
-  domain: new URL(userEntry.entry.url).hostname,
+  domain: url.parse(userEntry.entry.url).hostname,
   status: userEntry.status,
   tags: userEntry.tags
 });
@@ -119,7 +119,6 @@ export class Entries extends PureComponent {
   _handleExitSelectionMode = () => this.setState({ selectedRows: {} });
 
   _handleAddEntryDialogOpen = () => this.setState({ showAddEntryDialog: true });
-
   _handleAddEntryDialogClose = () => this.setState({ showAddEntryDialog: false });
 
   _getActions = userEntries => {
@@ -184,7 +183,11 @@ export class Entries extends PureComponent {
     return (
       <DelayedComponent delay={100}>
         <List>
-          {Array(20).fill().map((_, idx) => <ListItemPlaceholder key={idx} />)}
+          {Array(20).fill().map((_, idx) =>
+            <li key={idx}>
+              <ListItemPlaceholder />
+            </li>
+          )}
         </List>
       </DelayedComponent>
     );
@@ -230,7 +233,11 @@ export class Entries extends PureComponent {
           Adding a key to the visibility sensor force a rerender when rerendering the list,
           which re-triggers the visilibity check, and thus enables the infinite scroll behavior :)
           */}
-          <VisibilitySensor key={userEntries.length} onChange={this._handleInfiniteScroll} />
+          <VisibilitySensor
+            key={userEntries.length}
+            resizeCheck
+            onChange={this._handleInfiniteScroll}
+          />
         </List>
       : <EmptyPlaceholder />;
   };

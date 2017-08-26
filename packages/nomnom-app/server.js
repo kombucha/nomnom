@@ -14,6 +14,9 @@ async function start() {
   const server = express();
   server.use(compression(), cookieParser());
 
+  // FIXME: Temp workaround
+  server.use("/img", express.static("/Users/vincentlemeunier/src/nomnom/data/img"));
+
   server.get("/entries/:entryId", (req, res) => {
     return app.render(req, res, "/entry", req.params);
   });
