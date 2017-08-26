@@ -16,7 +16,7 @@
     "react-google-login": "2.9.3",
     "react-icons": "2.2.5",
     "react-transition-group": "1.2.0",
-    "react-virtualized": "9.9.0",
+    "react-visibility-sensor": "3.10.1",
     "recompose": "0.25.0",
     "styled-components": "2.1.2"
   },

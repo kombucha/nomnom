@@ -11,7 +11,6 @@ import Avatar from "../toolkit/Avatar";
 export const LIST_ITEM_HEIGHT = 72;
 const IMAGE_SIZE = 40;
 const CELL_SPACING = 16;
-// Make it a div instead of a li for now, cuz no <ul> in react-virtualized...
 const ListItemContainer = styled.div`
   height: ${LIST_ITEM_HEIGHT}px;
   margin: 0;

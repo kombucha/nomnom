@@ -7,26 +7,21 @@ import { mapProps, compose } from "recompose";
 import queryString from "query-string";
 import Router from "next/router";
 import { Url as URL } from "url";
-
 import ContentAdd from "react-icons/lib/md/add";
-import VirtualizedList from "react-virtualized/dist/commonjs/List";
-import WindowScroller from "react-virtualized/dist/commonjs/WindowScroller";
-import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer";
+import VisibilitySensor from "react-visibility-sensor";
 
 import { Card } from "../toolkit/Card";
 import { Menu, MenuItem } from "../toolkit/Menu";
 import FlatButton from "../toolkit/FlatButton";
 import FloatingActionButton from "../toolkit/FloatingActionButton";
-
 import withData from "../hoc/withData";
 import withAuth from "../hoc/withAuth";
 import PageWrapper from "../components/PageWrapper";
 import PageTitle from "../components/PageTitle";
-import { LIST_ITEM_HEIGHT, RichListItem, ListItemPlaceholder } from "../components/RichList";
+import { RichListItem, ListItemPlaceholder } from "../components/RichList";
 import DelayedComponent from "../components/DelayedComponent";
 import AddEntryDialog from "../components/AddEntryDialog";
 import EmptyPlaceholder from "../components/EmptyPlaceholder";
-
 import userEntriesContainer from "../graphql/queries/userEntries";
 import batchUpdateUserEntriesContainer from "../graphql/mutations/batchUpdateUserEntries";
 
@@ -42,7 +37,11 @@ const PageContainer = styled.div`
 const MainContainer = styled.main`flex: 1;`;
 const FilterContainer = styled.section`margin-right: 32px;`;
 
-const StyledVirtualizedList = styled(VirtualizedList)`outline: 0`;
+const List = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+`;
 
 const FlexSpacer = styled.div`flex: 1;`;
 const MultiSelectBar = styled.div`
@@ -86,8 +85,6 @@ const asDisplayedUserEntry = userEntry => ({
   status: userEntry.status,
   tags: userEntry.tags
 });
-
-const noContent = () => <EmptyPlaceholder />;
 
 const hasItemsSelected = itemMap => Object.values(itemMap).some(selected => selected);
 
@@ -148,9 +145,8 @@ export class Entries extends PureComponent {
     );
   };
 
-  _handleListScrolling = ({ overscanStopIndex }) => {
-    const { entries, hasMore, loading, fetchMore } = this.props;
-    const hasReachedEnd = overscanStopIndex === entries.length - 1;
+  _handleInfiniteScroll = hasReachedEnd => {
+    const { hasMore, loading, fetchMore } = this.props;
     const shouldLoadMore = hasReachedEnd && hasMore && !loading;
 
     if (shouldLoadMore) {
@@ -187,14 +183,14 @@ export class Entries extends PureComponent {
   _renderPlaceholderList = () => {
     return (
       <DelayedComponent delay={100}>
-        <div>
+        <List>
           {Array(20).fill().map((_, idx) => <ListItemPlaceholder key={idx} />)}
-        </div>
+        </List>
       </DelayedComponent>
     );
   };
 
-  _renderRow = (userEntry, selectMode, { key, style, index, isScrolling }) => {
+  _renderRow = (userEntry, selectMode) => {
     const tagsCount = userEntry.tags.length;
     const tags = tagsCount > 0 ? ` | ${userEntry.tags.join(", ")}` : "";
     const isSelected = !!this.state.selectedRows[userEntry.id];
@@ -208,7 +204,7 @@ export class Entries extends PureComponent {
         ];
 
     return (
-      <div key={key} style={style}>
+      <li key={userEntry.id}>
         <RichListItem
           imageUrl={userEntry.imageUrl}
           title={userEntry.title}
@@ -219,7 +215,7 @@ export class Entries extends PureComponent {
           selected={isSelected}
           selectMode={selectMode}
         />
-      </div>
+      </li>
     );
   };
 
@@ -227,27 +223,16 @@ export class Entries extends PureComponent {
     const userEntries = entries.map(asDisplayedUserEntry);
     const selectMode = hasItemsSelected(this.state.selectedRows);
 
-    return (
-      <WindowScroller>
-        {({ height, isScrolling, scrollTop }) =>
-          <AutoSizer disableHeight>
-            {({ width }) =>
-              <StyledVirtualizedList
-                height={height}
-                width={width}
-                autoHeight
-                isScrolling={isScrolling}
-                scrollTop={scrollTop}
-                rowCount={userEntries.length}
-                rowHeight={LIST_ITEM_HEIGHT}
-                noRowsRenderer={noContent}
-                onRowsRendered={this._handleListScrolling}
-                rowRenderer={params =>
-                  this._renderRow(userEntries[params.index], selectMode, params)}
-              />}
-          </AutoSizer>}
-      </WindowScroller>
-    );
+    return userEntries.length
+      ? <List>
+          {userEntries.map(userEntry => this._renderRow(userEntry, selectMode))}
+          {/*
+          Adding a key to the visibility sensor force a rerender when rerendering the list,
+          which re-triggers the visilibity check, and thus enables the infinite scroll behavior :)
+          */}
+          <VisibilitySensor key={userEntries.length} onChange={this._handleInfiniteScroll} />
+        </List>
+      : <EmptyPlaceholder />;
   };
 
   render() {
