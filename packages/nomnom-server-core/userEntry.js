@@ -103,13 +103,14 @@ async function batchUpdate(userEntryIds, updateValues) {
   const params = [new Date(), ...userEntryIds];
   const varOffset = params.length + 1;
   UPDATABLE_KEYS.forEach(key => {
-    if (updateValues[key]) {
+    if (Object.hasOwnProperty.call(updateValues, key)) {
       updates.push(`"${key}" = $${updates.length + varOffset}`);
       params.push(updateValues[key]);
     }
   });
 
   let results;
+
   try {
     if (userEntryIds.length === 1) {
       results = await db.query(

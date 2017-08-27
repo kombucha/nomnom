@@ -1,14 +1,15 @@
 import React from "react";
+import { pure } from "recompose";
 import Link from "next/link";
 import styled, { ThemeProvider } from "styled-components";
 
 import "../toolkit/styles.js";
-import { AppBar, APP_BAR_HEIGHT } from "../toolkit/AppBar";
+import { AppBar } from "../toolkit/AppBar";
 import theme from "../toolkit/theme";
 import PageTitle from "./PageTitle";
 import UserMenu from "./UserMenu";
 
-const PageContainer = styled.div`padding-top: ${APP_BAR_HEIGHT};`;
+const PageContainer = styled.div`padding-top: ${props => props.theme.appBarHeight};`;
 const UnstyledLink = styled.a`
   text-decoration: none;
   color: inherit;
@@ -34,4 +35,4 @@ const PageWrapper = ({ user, children }) =>
     </div>
   </ThemeProvider>;
 
-export default PageWrapper;
+export default pure(PageWrapper);

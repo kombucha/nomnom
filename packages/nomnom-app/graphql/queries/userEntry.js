@@ -5,6 +5,7 @@ export const query = gql`
     userEntry(userEntryId: $userEntryId) {
       id
       status
+      progress
       entry {
         url
         title

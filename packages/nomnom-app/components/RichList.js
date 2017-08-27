@@ -178,7 +178,7 @@ RichListItem.defaultProps = Object.assign({}, ListItem.defaultProps, {
 });
 
 // Placeholder
-const ListItemPlaceholderContainer = styled.li`
+const ListItemPlaceholderContainer = styled.div`
   display: flex;
   align-items: center;
   padding: ${CELL_SPACING}px;

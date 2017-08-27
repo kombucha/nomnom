@@ -6,6 +6,7 @@
     "compression": "1.7.0",
     "cookie-parser": "1.4.3",
     "isomorphic-fetch": "2.2.1",
+    "lodash.debounce": "4.0.8",
     "next": "3.0.6",
     "polished": "1.5.0",
     "prop-types": "15.5.10",

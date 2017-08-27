@@ -49,7 +49,7 @@ const MultiSelectBar = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  height: 64px;
+  height: ${props => props.theme.appBarHeight};
   padding: 0 16px;
   z-index: 10001;
   display: flex;

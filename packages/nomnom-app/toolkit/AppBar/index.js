@@ -1,11 +1,10 @@
 import React from "react";
+import { pure } from "recompose";
 import styled from "styled-components";
-
-export const APP_BAR_HEIGHT = "64px";
 
 const AppBarContainer = styled.div`
   position: ${props => (props.fixed ? "fixed" : "static")};
-  height: ${APP_BAR_HEIGHT};
+  height: ${props => props.theme.appBarHeight};
   width: 100%;
   padding: 0px 24px;
   z-index: 1000;
@@ -32,4 +31,4 @@ export const AppBar = ({ title, rightElement, fixed }) =>
     {rightElement}
   </AppBarContainer>;
 
-export default AppBar;
+export default pure(AppBar);
