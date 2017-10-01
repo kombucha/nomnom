@@ -14,6 +14,7 @@
     "jsonwebtoken": "7.4.2",
     "mime-types": "2.1.16",
     "node-uuid": "1.4.8",
+    "nomnom-server-readability": "1.0.0",
     "pg": "7.1.0",
     "winston": "2.3.1"
   }

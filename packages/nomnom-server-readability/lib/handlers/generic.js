@@ -1,23 +1,15 @@
-const url = require("url");
-const fs = require("fs");
-const path = require("path");
-const cookie = require("cookie");
-const crypto = require("crypto");
-const getStream = require("get-stream");
-const parseDate = require("date-fns/parse");
-const isValidDate = require("date-fns/is_valid");
-const Promise = require("bluebird");
-
 const cheerio = require("cheerio");
-const mime = require("mime-types");
-const got = require("got");
+const {
+  getTitle,
+  getAuthor,
+  getDescription,
+  getPublicationDate,
+  getImage,
+  getWordCount,
+  getDurationFromWordCount
+} = require("../helpers");
 
 const TOP_CANDIDATES = 5;
-const TITLE_META_NAMES = /og:title|title/i;
-const AUTHOR_META_NAMES = /author|article:author|twitter:creator/i;
-const DESCRIPTION_META_NAMES = /og:description|twitter:description|description/i;
-const IMAGE_META_NAMES = /og:image|twitter:image:src/i;
-const PUBLICATION_DATE_META_NAMES = /publication|publish|date|time[\b|$]/i;
 const UNLIKELY_CANDIDATES = /banner|breadcrumbs|combx|comment|community|cover-wrap|disqus|extra|foot|header|legends|menu|modal|related|remark|replies|rss|shoutbox|sidebar|skyscraper|social|sponsor|supplemental|ad-break|agegate|pagination|pager|popup|yom-remote/i;
 const OK_MAYBE_ITS_A_CANDIDATE = /and|article|body|column|main|shadow/i;
 const POSITIVE_SCORE_NAMES = /article|body|content|entry|hentry|h-entry|main|page|pagination|post|text|blog|story/i;
@@ -25,35 +17,25 @@ const NEGATIVE_SCORE_NAMES = /hidden|^hid$| hid$| hid |^hid |banner|combx|commen
 const VIDEOS_EMBED_ATTRIBUTES = /\/\/(www\.)?(dailymotion|youtube|youtube-nocookie|player\.vimeo)\.com/i;
 const ALTER_TO_DIV_EXCEPTIONS = ["div", "article", "section", "p"];
 const DEFAULT_TAGS_TO_SCORE = ["section", "h2", "h3", "h4", "h5", "h6", "p", "td", "pre"];
-// Lifted from https://github.com/regexhq/word-regex, wtf npm ^^
-const WORD_REGEX = /[a-zA-Z0-9_\u0392-\u03c9\u0400-\u04FF]+|[\u4E00-\u9FFF\u3400-\u4dbf\uf900-\ufaff\u3040-\u309f\uac00-\ud7af\u0400-\u04FF]+|[\u00E4\u00C4\u00E5\u00C5\u00F6\u00D6]+|\w+/g;
-const AVG_WORDS_PER_SECOND = 275 / 60;
 
-async function readability(url) {
-  const response = await load(url);
-  const originalContent = String(response.body);
-  const $html = cheerio.load(originalContent);
+async function canHandle() {
+  return true;
+}
 
-  // Prepwork
-  preProcessHtml($html);
-
-  // Metadata
-  // ENHANCEMENT: get first non null ? (right now, just gets the first that matches)
-  const title = getArticleTitle($html);
-  const author = getMetaValue($html, AUTHOR_META_NAMES);
-  const excerpt = getMetaValue($html, DESCRIPTION_META_NAMES);
+async function process($html) {
+  const title = getTitle($html);
+  const author = getAuthor($html);
+  const excerpt = getDescription($html);
   const publicationDate = getPublicationDate($html);
-  const imageUrl = await getArticleImage(url, $html);
+  const imageUrl = getImage($html);
 
-  // Article
   const $article = grabArticle($html);
-  fixRelativeUrls(url, $article);
-  await processImages($article);
 
   const content = $article.html();
+  const originalContent = $html.html();
   const textContent = $article.text();
-  const wordCount = extractWordCount($article);
-  const duration = durationFromWordCount(wordCount);
+  const wordCount = getWordCount($article);
+  const duration = getDurationFromWordCount(wordCount);
 
   return {
     title,
@@ -71,49 +53,10 @@ async function readability(url) {
   };
 }
 
-function load(url) {
-  const baseOptions = {
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36"
-    }
-  };
-  return new Promise((resolve, reject) => {
-    const responseStream = got
-      .stream(url, baseOptions)
-      .on("redirect", (response, nextOptions) => {
-        const cookies = response.headers["set-cookie"];
-        if (!cookies) {
-          return;
-        }
-
-        const cookiesStr = cookies.join(";");
-        const parsedCookie = cookie.parse(cookiesStr);
-        const serializedCookies = Object.keys(parsedCookie)
-          .filter(key => !key.match(/expires|path|domain/i))
-          .map(key => `${key}=${encodeURIComponent(parsedCookie[key])}`)
-          .join(";");
-        nextOptions.headers.cookie = serializedCookies;
-      })
-      .on("response", async res => {
-        try {
-          // Doesnt work if using getStream(res)...dunno why
-          const data = await getStream(responseStream);
-          res.body = data;
-          resolve(res);
-        } catch (error) {
-          reject(error);
-        }
-      })
-      .on("error", error => {
-        reject(error);
-      });
-  });
-}
-
 function grabArticle($page) {
   const CONTENT_ELEMENTS = ["div", "section", "header", "h1", "h2", "h3", "h4", "h5", "h6"];
 
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const elementsToScore = [];
     let $node = $page("body").clone();
@@ -285,144 +228,129 @@ function grabArticle($page) {
   }
 }
 
-async function processImages($html) {
-  const images = $html.find("img").get();
-  await Promise.map(
-    images,
-    async img => {
-      const $img = cheerio(img);
-      const imgUrl = $img.attr("src");
-      const cachedUrl = await cacheImage(imgUrl);
-      $img.attr("src", cachedUrl);
-    },
-    { concurrency: 4 }
-  );
+// Helper methods
+function getNodeName($node) {
+  return ($node.get(0).name || $node.get(0).tagName || "").toLowerCase();
 }
 
-async function cacheImage(imageUrl) {
-  // TODO: check if already in cache
-  return new Promise((resolve, reject) => {
-    const imgStream = got.stream(imageUrl);
-    let newImageUrl;
-
-    imgStream
-      .on("response", response => {
-        const imgHash = hash(imageUrl);
-        const imgExtension = mime.extension(response.headers["content-type"]);
-        const newImageName = `${imgHash}.${imgExtension}`;
-        const imagePath = path.resolve(process.env.IMAGES_PATH, newImageName);
-        newImageUrl = url.resolve("/img/", newImageName);
-        imgStream.pipe(fs.createWriteStream(imagePath));
-      })
-      .on("end", () => resolve(newImageUrl))
-      .on("error", reject);
-  });
+function getNodeMatchString($node) {
+  return `${$node.attr("class") || ""} ${$node.attr("id") || ""}`;
 }
 
-function hash(data) {
-  return crypto.createHash("md5").update(data).digest("hex");
+function removeAndGetNext($node) {
+  const $nextNode = getNextNode($node, true);
+  $node.remove();
+  return $nextNode;
 }
 
-// METADATA HELPERS
-// Should I be smarter for the title ? they do a lot of stuff in readability.js
-// See https://github.com/mozilla/readability/blob/master/Readability.js#L304
-function getArticleTitle($html) {
-  return getMetaValue($html, TITLE_META_NAMES) || $html("title").text();
+function getNextNode($node, ignoreSelfAndKids) {
+  if (!ignoreSelfAndKids && $node.children().length > 0) {
+    return $node.children().first();
+  }
+
+  const $nextSibling = $node.next();
+  if ($nextSibling.length > 0) {
+    return cheerio($nextSibling);
+  }
+
+  const parent = $node.parent();
+  return parent.length > 0 ? getNextNode(parent, true) : null;
 }
 
-async function getArticleImage(url, $html) {
-  const originalImageRelativeUrl = getMetaValue($html, IMAGE_META_NAMES);
-  if (!originalImageRelativeUrl) return;
-
-  const originalImageUrl = toAbsoluteUrl(url, originalImageRelativeUrl);
-  const cachedImageUrl = await cacheImage(originalImageUrl);
-  return cachedImageUrl;
+function hasContent($el) {
+  return $el.text().trim().length > 0 || $el.children(":not(hr, br)").length > 0;
 }
 
-function getPublicationDate($html) {
-  const publicationDateValue = getMetaValue($html, PUBLICATION_DATE_META_NAMES);
-  const date = publicationDateValue ? parseDate(publicationDateValue) : null;
-
-  return date && isValidDate(date) ? date.getTime() : null;
+function normalizeText(str) {
+  return str ? str.trim().replace(/\s{2,}/, " ") : "";
 }
 
-function getMetaValue($html, metaNameRegex) {
-  const meta = $html("meta").get().find(meta => {
-    const $meta = cheerio(meta);
-    const name = $meta.attr("name") || $meta.attr("property") || $meta.attr("itemprop") || null;
-    return name ? name.match(metaNameRegex) : false;
-  });
+function getInitialAncestorReadabilityScore($node) {
+  let readabilityScore = 0;
 
-  return meta ? cheerio(meta).attr("content") : null;
+  switch (getNodeName($node)) {
+    case "div":
+      readabilityScore += 5;
+      break;
+
+    case "pre":
+    case "td":
+    case "blockquote":
+    case "code":
+      readabilityScore += 3;
+      break;
+
+    case "address":
+    case "ol":
+    case "ul":
+    case "dl":
+    case "dd":
+    case "dt":
+    case "li":
+    case "form":
+      readabilityScore -= 3;
+      break;
+
+    case "h1":
+    case "h2":
+    case "h3":
+    case "h4":
+    case "h5":
+    case "h6":
+    case "th":
+      readabilityScore -= 5;
+      break;
+  }
+
+  readabilityScore += getClassIdScore($node);
+
+  return readabilityScore;
 }
 
-function extractWordCount($html) {
-  const wordCountMatch = $html.text().match(WORD_REGEX);
-  return wordCountMatch ? wordCountMatch.length : 0;
-}
+function getLinkDensity($node) {
+  const textLength = normalizeText($node.text()).length;
+  if (textLength === 0) {
+    return 0;
+  }
 
-function durationFromWordCount(wordCount) {
-  return Math.round(wordCount / AVG_WORDS_PER_SECOND);
-}
-
-// HELPERS
-function preProcessHtml($html) {
-  $html("script,noscript").remove();
-  $html("style,link[rel=stylesheet]").remove();
-
-  // TODO Turn <div>foo<br>bar<br> <br><br>abc</div>  into   <div>foo<br>bar<p>abc</p></div>
-  // Replace <font> by <span>
-  $html("font").each((i, el) => {
-    const e = cheerio(el);
-    e.replaceWith(`<span>${e.html()}</span>`);
-  });
-}
-
-function fixRelativeUrls(baseUrl, $html) {
-  $html.find("a").each((i, link) => {
-    const $link = cheerio(link);
-    const href = $link.attr("href") || "";
-    if (href.indexOf("javascript:") === 0) {
-      $link.removeAttr("href");
-    } else {
-      $link.attr("href", toAbsoluteUrl(baseUrl, href));
-      $link.attr("target", "_blank");
-      $link.attr("ref", "noopener noreferrer");
-    }
+  let linkLength = 0;
+  $node.find("a").each((i, el) => {
+    linkLength += normalizeText(cheerio(el).text()).length;
   });
 
-  $html.find("img").each((i, img) => {
-    const $img = cheerio(img);
-    const src = $img.attr("src") || "";
-    $img.attr("src", toAbsoluteUrl(baseUrl, src));
-  });
-
-  return $html;
+  return linkLength / textLength;
 }
 
-function toAbsoluteUrl(from, to) {
-  // Remove anchor and last /
-  const normalizedFrom = from.replace(/#.*?$/, "").replace(/\/$/, "");
-  return url.resolve(normalizedFrom, to);
+function getClassIdScore($node) {
+  let score = 0;
+  const className = $node.attr("class") || "";
+  const id = $node.attr("id") || "";
+
+  // Look for a special classname
+  if (className) {
+    if (NEGATIVE_SCORE_NAMES.test(className)) score -= 25;
+    if (POSITIVE_SCORE_NAMES.test(className)) score += 25;
+  }
+
+  // Look for a special ID
+  if (id) {
+    if (NEGATIVE_SCORE_NAMES.test(id)) score -= 25;
+    if (POSITIVE_SCORE_NAMES.test(id)) score += 25;
+  }
+
+  return score;
 }
 
+// TODO: should probably be a common post processing step
 function cleanArticle($article) {
-  $article.find("*").removeAttr("style");
-
   markDataTable($article);
 
   cleanFishyNodes($article, "form,fieldset");
   $article.find("h1,footer").remove();
-
-  // Clean sharing content
-  $article.find("[class*=share],[id*=share]").remove();
   // TODO: Remove h2 which are actually the article title
 
   // Clean embed that are not whitelisted
   $article.find("object,embed,iframe").filter((i, el) => !isWhitelistedEmbed(el)).remove();
-
-  // Clean form elements
-  $article.find("input,textarea,select,button").remove();
 
   // Clean out spurious headers
   $article.find("h1,h2,h3").filter((i, header) => getClassIdScore(cheerio(header)) < 0).remove();
@@ -443,8 +371,6 @@ function cleanArticle($article) {
     .remove();
 
   $article.find("img").removeAttr("srcset,onerror"); // Remove srcset for now, handle it later
-  $article.find("*").removeAttr("class");
-  // TODO: remove custom data- attributes
 
   return $article;
 }
@@ -537,116 +463,7 @@ function isWhitelistedEmbed(embedEl) {
   );
 }
 
-function hasContent($el) {
-  return $el.text().trim().length > 0 || $el.children(":not(hr, br)").length > 0;
-}
-
-function removeAndGetNext($node) {
-  const $nextNode = getNextNode($node, true);
-  $node.remove();
-  return $nextNode;
-}
-
-function getNodeName($node) {
-  return ($node.get(0).name || $node.get(0).tagName || "").toLowerCase();
-}
-
-function getNodeMatchString($node) {
-  return `${$node.attr("class") || ""} ${$node.attr("id") || ""}`;
-}
-
-function getNextNode($node, ignoreSelfAndKids) {
-  if (!ignoreSelfAndKids && $node.children().length > 0) {
-    return $node.children().first();
-  }
-
-  const $nextSibling = $node.next();
-  if ($nextSibling.length > 0) {
-    return cheerio($nextSibling);
-  }
-
-  const parent = $node.parent();
-  return parent.length > 0 ? getNextNode(parent, true) : null;
-}
-
-function normalizeText(str) {
-  return str ? str.trim().replace(/\s{2,}/, " ") : "";
-}
-
-function getInitialAncestorReadabilityScore($node) {
-  let readabilityScore = 0;
-
-  switch (getNodeName($node)) {
-    case "div":
-      readabilityScore += 5;
-      break;
-
-    case "pre":
-    case "td":
-    case "blockquote":
-    case "code":
-      readabilityScore += 3;
-      break;
-
-    case "address":
-    case "ol":
-    case "ul":
-    case "dl":
-    case "dd":
-    case "dt":
-    case "li":
-    case "form":
-      readabilityScore -= 3;
-      break;
-
-    case "h1":
-    case "h2":
-    case "h3":
-    case "h4":
-    case "h5":
-    case "h6":
-    case "th":
-      readabilityScore -= 5;
-      break;
-  }
-
-  readabilityScore += getClassIdScore($node);
-
-  return readabilityScore;
-}
-
-function getClassIdScore($node) {
-  let score = 0;
-  const className = $node.attr("class") || "";
-  const id = $node.attr("id") || "";
-
-  // Look for a special classname
-  if (className) {
-    if (NEGATIVE_SCORE_NAMES.test(className)) score -= 25;
-    if (POSITIVE_SCORE_NAMES.test(className)) score += 25;
-  }
-
-  // Look for a special ID
-  if (id) {
-    if (NEGATIVE_SCORE_NAMES.test(id)) score -= 25;
-    if (POSITIVE_SCORE_NAMES.test(id)) score += 25;
-  }
-
-  return score;
-}
-
-function getLinkDensity($node) {
-  const textLength = normalizeText($node.text()).length;
-  if (textLength === 0) {
-    return 0;
-  }
-
-  let linkLength = 0;
-  $node.find("a").each((i, el) => {
-    linkLength += normalizeText(cheerio(el).text()).length;
-  });
-
-  return linkLength / textLength;
-}
-
-module.exports = readability;
+module.exports = {
+  canHandle,
+  process
+};

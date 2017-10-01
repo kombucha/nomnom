@@ -1,7 +1,13 @@
 const uuid = require("node-uuid");
 const logger = require("./logger");
 const db = require("./db");
-const readability = require("./readability");
+const readability = require("nomnom-server-readability");
+
+const READABILITY_CONFIG = {
+  youtubeApiKey: process.env.YOUTUBE_API_KEY,
+  imageFilePath: process.env.IMAGES_PATH,
+  imageBaseUrl: "/img/"
+};
 
 // TODO: handle multiple types of entries (only generic "article" behavior now)
 async function createFromUrl(url) {
@@ -12,7 +18,7 @@ async function createFromUrl(url) {
     return entryFromDb;
   }
 
-  const entry = Object.assign({}, await readability(url), {
+  const entry = Object.assign({}, await readability(url, READABILITY_CONFIG), {
     id: uuid.v4(),
     creationDate: new Date(),
     url
