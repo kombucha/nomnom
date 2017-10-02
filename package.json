@@ -2,6 +2,9 @@
   "name": "nomnom",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=8.5.0"
+  },
   "scripts": {
     "format": "prettier --print-width=100 --write --jsx-bracket-same-line=true 'packages/*/*.js' 'packages/*/!(node_modules)/**/*.js'",
     "precommit": "lint-staged",
@@ -9,15 +12,18 @@
     "install": "npm run bootstrap"
   },
   "devDependencies": {
-    "babel-eslint": "^7.2.3",
-    "eslint": "4.5.0",
+    "babel-eslint": "8.0.1",
+    "eslint": "4.8.0",
     "husky": "0.14.3",
-    "lerna": "2.1.0",
-    "lint-staged": "4.0.4",
-    "nodemon": "1.11.0",
-    "prettier": "1.5.3"
+    "lerna": "2.2.0",
+    "lint-staged": "4.2.3",
+    "nodemon": "1.12.1",
+    "prettier": "1.7.3"
   },
   "lint-staged": {
-    "*.js": ["prettier --print-width=100 --jsx-bracket-same-line=true --write", "git add"]
+    "*.js": [
+      "prettier --print-width=100 --jsx-bracket-same-line=true --write",
+      "git add"
+    ]
   }
 }

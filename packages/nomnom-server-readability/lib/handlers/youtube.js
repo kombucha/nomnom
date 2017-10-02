@@ -37,7 +37,7 @@ async function processVideo($html, url, config) {
     imageUrl: video.snippet.thumbnails.default.url,
 
     content,
-    // originalContent: $html.html(),
+    originalContent: $html.html(),
 
     wordCount: 0, // irrelevant
     duration: moment.duration(video.contentDetails.duration).asSeconds()
