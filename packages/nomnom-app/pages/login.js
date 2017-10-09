@@ -10,7 +10,7 @@ import withData from "../hoc/withData";
 import checkLoggedIn from "../services/check-logged-in";
 import redirect from "../services/redirect";
 
-const GOOGLE_CLIENT_ID = "388702499328-ld8l7lj9kggb3nfs53aoq7k651udla6u.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const THIRTY_DAYS = 30 * 24 * 60 * 60;
 
 class LoginPage extends PureComponent {
@@ -26,7 +26,7 @@ class LoginPage extends PureComponent {
 
   _handleLoginSucessful = ({ code }) => {
     const { client } = this.props;
-    return fetch("http://localhost:4001/login/google", {
+    return fetch(`"${process.env.API_HOST}/login/google"`, {
       method: "POST",
       body: code
     })

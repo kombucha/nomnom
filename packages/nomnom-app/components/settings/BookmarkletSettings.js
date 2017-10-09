@@ -38,7 +38,7 @@ function bookmarkletFn() {
 }
 
 const bookmarkletFnStr = bookmarkletFn.toString();
-const host = "http://localhost:4001"; // TODO: inject this
+const host = process.env.API_HOST;
 const createBookmarklet = token => {
   const preparedBookmarkletFnStr = bookmarkletFnStr
     .replace("%HOST%", host)
@@ -50,13 +50,15 @@ const createBookmarklet = token => {
 };
 
 // TODO: an extension ! CSP will prevent this from working on a lot of sites...
-export const BookmarkletSettings = ({ data }) =>
+export const BookmarkletSettings = ({ data }) => (
   <Card>
     <CardTitle> Bookmarklet </CardTitle>
     <p> Drag and drop the following link to your bookmark bar </p>
-    {data.bookmarkletToken &&
-      <a href={createBookmarklet(data.bookmarkletToken)}> Add to nomnom </a>}
-  </Card>;
+    {data.bookmarkletToken && (
+      <a href={createBookmarklet(data.bookmarkletToken)}> Add to nomnom </a>
+    )}
+  </Card>
+);
 
 const bookmarkletQuery = gql`
   query {

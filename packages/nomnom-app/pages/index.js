@@ -241,7 +241,6 @@ export class Entries extends PureComponent {
   };
 
   render() {
-    console.log(React.version);
     const { showAddEntryDialog } = this.state;
     const { user, loading, entries, status } = this.props;
     const isFirstLoad = loading && entries.length === 0;

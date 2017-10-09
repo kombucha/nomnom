@@ -11,7 +11,7 @@ if (!process.browser) {
 function create(initialState, { getToken }) {
   let client;
   const networkInterface = createBatchingNetworkInterface({
-    uri: "http://localhost:4001/graphql",
+    uri: `${process.env.API_HOST}/graphql`,
     batchInterval: 10,
     opts: { credentials: "include" }
   });
