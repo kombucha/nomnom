@@ -5,7 +5,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "start": "API_PORT=4001 nodemon --watch . --watch ./node_modules/nomnom-server-core index.js",
+    "start": "API_PORT=4001 nodemon -r dotenv/config --watch . --watch ./node_modules/nomnom-server-core index.js",
     "build": "pkg -t node8-alpine-x64 ./index.js -o build/nomnom-api",
     "clean": "rm -fr build/"
   },
@@ -26,6 +26,7 @@
     "nomnom-server-core": "1.0.0"
   },
   "devDependencies": {
+    "nodemon": "1.12.1",
     "pkg": "4.2.4"
   }
 }
