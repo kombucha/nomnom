@@ -104,22 +104,16 @@ export class Entry extends PureComponent {
         <ProgressBar style={{ width: `${userEntry.progress}%` }} />
 
         <EntryCard>
-          <CardTitle>
-            {userEntry.entry.title}
-          </CardTitle>
+          <CardTitle>{userEntry.entry.title}</CardTitle>
 
           <div>
             <div>
-              <span>
-                By {userEntry.entry.author},
-              </span>
+              <span>By {userEntry.entry.author},</span>
               <a target="_blank" rel="noopener noreferrer" href={userEntry.entry.url}>
                 {domain}
               </a>
               <br />
-              <span>
-                {publicationDate}
-              </span>
+              <span>{publicationDate}</span>
             </div>
             <Article dangerouslySetInnerHTML={htmlContent} />
           </div>
@@ -152,7 +146,14 @@ export class Entry extends PureComponent {
   componentWillReceiveProps({ userEntry }) {
     if (userEntry) {
       const progressPercent = userEntry.progress ? userEntry.progress / 100 : 0;
-      setScrollPercent(progressPercent);
+      // FIXME: Broken, need to take into account image loading because it affects the height !
+      this.scrollTimeout = setTimeout(() => setScrollPercent(progressPercent), 100);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.scrollTimeout) {
+      window.clearTimeout(this.scrollTimeout);
     }
   }
 
@@ -160,9 +161,7 @@ export class Entry extends PureComponent {
     const { userEntry, loading, loggedInUser } = this.props;
     return (
       <PageWrapper user={loggedInUser}>
-        <Container>
-          {loading ? this._renderLoading() : this._renderEntry(userEntry)}
-        </Container>
+        <Container>{loading ? this._renderLoading() : this._renderEntry(userEntry)}</Container>
       </PageWrapper>
     );
   }

@@ -1,5 +1,5 @@
 
-# Created by https://www.gitignore.io/api/node,osx
+# Created by https://www.gitignore.io/api/node,osx,code
 
 ### Node ###
 # Logs
@@ -90,10 +90,18 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# End of https://www.gitignore.io/api/node,osx
+### Code ###
+# Visual Studio Code - https://code.visualstudio.com/
+.settings/
+.vscode/
+tsconfig.json
+jsconfig.json
 
+# End of https://www.gitignore.io/api/node,osx,code
 
 ### Project ###
 /data/
 .env
 build/
+
+

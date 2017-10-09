@@ -137,11 +137,7 @@ export class Entries extends PureComponent {
         .batchUpdateUserEntries({ ids, status })
         .then(() => this._handleExitSelectionMode());
     };
-    return statuses.map(status =>
-      <FlatButton onClick={onClick(status)}>
-        {status}
-      </FlatButton>
-    );
+    return statuses.map(status => <FlatButton onClick={onClick(status)}>{status}</FlatButton>);
   };
 
   _handleInfiniteScroll = hasReachedEnd => {
@@ -165,16 +161,14 @@ export class Entries extends PureComponent {
         transitionName="animate"
         transitionEnterTimeout={TRANSITION_TIME}
         transitionLeaveTimeout={TRANSITION_TIME}>
-        {shouldShowBar
-          ? <MultiSelectBar>
-              <FlatButton onClick={this._handleExitSelectionMode}>Cancel</FlatButton>
-              <FlexSpacer />
-              <span>
-                {selectedEntries.length} selected
-              </span>
-              {React.Children.toArray(actions)}
-            </MultiSelectBar>
-          : null}
+        {shouldShowBar ? (
+          <MultiSelectBar>
+            <FlatButton onClick={this._handleExitSelectionMode}>Cancel</FlatButton>
+            <FlexSpacer />
+            <span>{selectedEntries.length} selected</span>
+            {React.Children.toArray(actions)}
+          </MultiSelectBar>
+        ) : null}
       </CSSTransitionGroup>
     );
   };
@@ -183,11 +177,13 @@ export class Entries extends PureComponent {
     return (
       <DelayedComponent delay={100}>
         <List>
-          {Array(20).fill().map((_, idx) =>
-            <li key={idx}>
-              <ListItemPlaceholder />
-            </li>
-          )}
+          {Array(20)
+            .fill()
+            .map((_, idx) => (
+              <li key={idx}>
+                <ListItemPlaceholder />
+              </li>
+            ))}
         </List>
       </DelayedComponent>
     );
@@ -226,23 +222,26 @@ export class Entries extends PureComponent {
     const userEntries = entries.map(asDisplayedUserEntry);
     const selectMode = hasItemsSelected(this.state.selectedRows);
 
-    return userEntries.length
-      ? <List>
-          {userEntries.map(userEntry => this._renderRow(userEntry, selectMode))}
-          {/*
+    return userEntries.length ? (
+      <List>
+        {userEntries.map(userEntry => this._renderRow(userEntry, selectMode))}
+        {/*
           Adding a key to the visibility sensor force a rerender when rerendering the list,
           which re-triggers the visilibity check, and thus enables the infinite scroll behavior :)
           */}
-          <VisibilitySensor
-            key={userEntries.length}
-            resizeCheck
-            onChange={this._handleInfiniteScroll}
-          />
-        </List>
-      : <EmptyPlaceholder />;
+        <VisibilitySensor
+          key={userEntries.length}
+          resizeCheck
+          onChange={this._handleInfiniteScroll}
+        />
+      </List>
+    ) : (
+      <EmptyPlaceholder />
+    );
   };
 
   render() {
+    console.log(React.version);
     const { showAddEntryDialog } = this.state;
     const { user, loading, entries, status } = this.props;
     const isFirstLoad = loading && entries.length === 0;

@@ -32,7 +32,9 @@ class LoginPage extends PureComponent {
     })
       .then(r => (r.ok ? r.text() : Promise.reject("Fail !")))
       .then(token => {
-        document.cookie = cookie.serialize("token", token, { maxAge: THIRTY_DAYS });
+        document.cookie = cookie.serialize("token", token, {
+          maxAge: THIRTY_DAYS
+        });
         return client.resetStore();
       })
       .then(() => redirect({}, "/"));
@@ -43,9 +45,6 @@ class LoginPage extends PureComponent {
   };
 
   render() {
-    // const { from } = this.props.url.query.from || { from: { pathname: "/" } };
-    // const { authenticated } = this.props;
-
     return (
       <PageWrapper>
         <PageTitle value="Login" />
