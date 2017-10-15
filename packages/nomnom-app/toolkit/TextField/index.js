@@ -73,9 +73,7 @@ export class TextField extends Component {
     const { type, value, onChange, hintText, ...rest } = this.props;
     return (
       <FieldContainer>
-        <HintText show={!value}>
-          {hintText}
-        </HintText>
+        <HintText show={!value}>{hintText}</HintText>
         <CustomInput
           type={type}
           value={value}

@@ -65,9 +65,7 @@ export class FeedsPage extends PureComponent {
       <FeedItem key={userFeed.id}>
         <FeedInfo>
           {userFeed.name}
-          <FeedInfoSubtitle>
-            {userFeed.feed.uri}
-          </FeedInfoSubtitle>
+          <FeedInfoSubtitle>{userFeed.feed.uri}</FeedInfoSubtitle>
         </FeedInfo>
         <Toggle
           value={userFeed.enabled}
@@ -87,9 +85,7 @@ export class FeedsPage extends PureComponent {
           <PageTitle value="Feeds" />
           <h1>Feeds</h1>
           <Card>
-            <List>
-              {data.me && data.me.feeds.map(userFeed => this._renderRow(userFeed))}
-            </List>
+            <List>{data.me && data.me.feeds.map(userFeed => this._renderRow(userFeed))}</List>
           </Card>
 
           <FloatingActionButton primary fixed onClick={() => this._toggleAddFeedDialog(true)}>

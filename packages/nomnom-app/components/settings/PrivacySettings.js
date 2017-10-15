@@ -52,17 +52,19 @@ export class PrivacySettings extends PureComponent {
       <FlatButton secondary disabled={deleting} onClick={() => this._handleConfirmDelete(false)}>
         Cancel
       </FlatButton>,
-      deleting
-        ? <FlatButton primary disabled>
-            <span>Deleting</span>
-            {/* TODO: <CircularProgress size={24} />*/}
-          </FlatButton>
-        : <FlatButton
-            primary
-            disabled={confirmationText !== CONFIRMATION_TEXT}
-            onClick={() => this._handleConfirmDelete(true)}>
-            Delete
-          </FlatButton>
+      deleting ? (
+        <FlatButton primary disabled>
+          <span>Deleting</span>
+          {/* TODO: <CircularProgress size={24} />*/}
+        </FlatButton>
+      ) : (
+        <FlatButton
+          primary
+          disabled={confirmationText !== CONFIRMATION_TEXT}
+          onClick={() => this._handleConfirmDelete(true)}>
+          Delete
+        </FlatButton>
+      )
     ];
 
     return (

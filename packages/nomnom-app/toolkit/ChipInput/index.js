@@ -7,32 +7,26 @@ import TextField from "../TextField";
 const ENTER_KEY_CODE = 13;
 
 export class ChipInput extends PureComponent {
-  constructor() {
-    super();
-    this.state = { textValue: "" };
-    this._handleTextChange = this._handleTextChange.bind(this);
-    this._handleAddValue = this._handleAddValue.bind(this);
-    this._handleDeleteValue = this._handleDeleteValue.bind(this);
-  }
+  state = { textValue: "" };
 
-  _handleTextChange(ev) {
+  _handleTextChange = ev => {
     this.setState({ textValue: ev.target.value });
-  }
+  };
 
-  _handleDeleteValue(deletedValue) {
+  _handleDeleteValue = deletedValue => {
     const { value: values } = this.props;
     const newValues = values.filter(value => value !== deletedValue);
     this.props.onChange(newValues);
-  }
+  };
 
-  _handleAddValue(newValue) {
+  _handleAddValue = newValue => {
     const { value: values } = this.props;
     if (newValue && !values.includes(newValue)) {
       const newValues = [...values, newValue];
       this.props.onChange(newValues);
     }
     this.setState({ textValue: "" });
-  }
+  };
 
   render() {
     const { value: values } = this.props;
@@ -41,11 +35,11 @@ export class ChipInput extends PureComponent {
 
     return (
       <div>
-        {values.map(chipValue =>
+        {values.map(chipValue => (
           <Chip key={chipValue} onRequestDelete={() => this._handleDeleteValue(chipValue)}>
             {chipValue}
           </Chip>
-        )}
+        ))}
 
         <TextField
           hintText={hintText}

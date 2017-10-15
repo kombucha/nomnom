@@ -57,14 +57,7 @@ export class FileInput extends PureComponent {
     this.props.onChange(value);
   };
 
-  _renderValue = value =>
-    <ul>
-      {value.map((file, idx) =>
-        <li key={idx}>
-          {file.name}
-        </li>
-      )}
-    </ul>;
+  _renderValue = value => <ul>{value.map((file, idx) => <li key={idx}>{file.name}</li>)}</ul>;
 
   render() {
     const { value, multiple } = this.props;

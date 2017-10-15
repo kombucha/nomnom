@@ -65,11 +65,10 @@ const ChildrenWrapper = styled.div`
   justify-content: center;
 `;
 
-export const RaisedButton = ({ children, ...rest }) =>
+export const RaisedButton = ({ children, ...rest }) => (
   <StyledButton {...rest}>
-    <ChildrenWrapper>
-      {children}
-    </ChildrenWrapper>
-  </StyledButton>;
+    <ChildrenWrapper>{children}</ChildrenWrapper>
+  </StyledButton>
+);
 
 export default RaisedButton;

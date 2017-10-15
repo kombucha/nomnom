@@ -62,11 +62,14 @@ function getDurationFromWordCount(wordCount) {
  * @return {string} the metadata value if found, null otherwise.
  */
 function getMetaValue($html, metaNameRegex) {
-  const meta = $html.find("meta").get().find(meta => {
-    const $meta = cheerio(meta);
-    const name = $meta.attr("name") || $meta.attr("property") || $meta.attr("itemprop") || null;
-    return name ? name.match(metaNameRegex) : false;
-  });
+  const meta = $html
+    .find("meta")
+    .get()
+    .find(meta => {
+      const $meta = cheerio(meta);
+      const name = $meta.attr("name") || $meta.attr("property") || $meta.attr("itemprop") || null;
+      return name ? name.match(metaNameRegex) : false;
+    });
 
   return meta ? cheerio(meta).attr("content") : null;
 }

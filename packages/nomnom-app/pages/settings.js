@@ -28,7 +28,7 @@ const Container = styled.div`
   }
 `;
 
-export const Settings = ({ loggedInUser }) =>
+export const Settings = ({ loggedInUser }) => (
   <PageWrapper user={loggedInUser}>
     <Container>
       <PageTitle value="Settings" />
@@ -39,6 +39,7 @@ export const Settings = ({ loggedInUser }) =>
       <YoutubeSettings />
       <PrivacySettings />
     </Container>
-  </PageWrapper>;
+  </PageWrapper>
+);
 
 export default compose(withData, withAuth)(Settings);

@@ -51,11 +51,10 @@ const ChildrenWrapper = styled.div`
   justify-content: center;
 `;
 
-export const FlatButton = ({ children, ...rest }) =>
+export const FlatButton = ({ children, ...rest }) => (
   <StyledButton {...rest}>
-    <ChildrenWrapper>
-      {children}
-    </ChildrenWrapper>
-  </StyledButton>;
+    <ChildrenWrapper>{children}</ChildrenWrapper>
+  </StyledButton>
+);
 
 export default FlatButton;

@@ -350,10 +350,16 @@ function cleanArticle($article) {
   // TODO: Remove h2 which are actually the article title
 
   // Clean embed that are not whitelisted
-  $article.find("object,embed,iframe").filter((i, el) => !isWhitelistedEmbed(el)).remove();
+  $article
+    .find("object,embed,iframe")
+    .filter((i, el) => !isWhitelistedEmbed(el))
+    .remove();
 
   // Clean out spurious headers
-  $article.find("h1,h2,h3").filter((i, header) => getClassIdScore(cheerio(header)) < 0).remove();
+  $article
+    .find("h1,h2,h3")
+    .filter((i, header) => getClassIdScore(cheerio(header)) < 0)
+    .remove();
 
   // Do these last as the previous stuff may have removed junk that will affect these
   cleanFishyNodes($article, "table");
@@ -409,7 +415,10 @@ function markDataTable($html) {
 }
 
 function cleanFishyNodes($node, selector) {
-  $node.find(selector).filter((i, el) => isFishy(cheerio(el))).remove();
+  $node
+    .find(selector)
+    .filter((i, el) => isFishy(cheerio(el)))
+    .remove();
 }
 
 function isFishy($node) {

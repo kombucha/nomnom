@@ -26,9 +26,7 @@ export class UserMenu extends PureComponent {
         alignRight
         target={
           <MenuButton>
-            <UserName>
-              {user.name}
-            </UserName>
+            <UserName>{user.name}</UserName>
             <Avatar size="30px" src={user.avatarUrl} alt={`${user.name}'s avatar`} />
           </MenuButton>
         }>

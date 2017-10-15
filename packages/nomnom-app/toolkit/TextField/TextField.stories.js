@@ -28,13 +28,13 @@ TextFieldWrapper.propTypes = TextField.propTypes;
 TextFieldWrapper.defaultProps = TextField.defaultProps;
 
 storiesOf("Text field", module)
-  .addWithInfo("Basic usage", () =>
+  .addWithInfo("Basic usage", () => (
     <div style={storyBookStyle}>
       <TextFieldWrapper hintText="hint text" />
     </div>
-  )
-  .addWithInfo("When disabled", () =>
+  ))
+  .addWithInfo("When disabled", () => (
     <div style={storyBookStyle}>
       <TextField hintText="Im disabled! #theITCrowd" disabled />
     </div>
-  );
+  ));

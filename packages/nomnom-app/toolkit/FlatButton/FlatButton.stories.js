@@ -4,7 +4,7 @@ import FlatButton from "./index.js";
 
 // Flat Button
 storiesOf("Flat Button", module)
-  .addWithInfo("with text", () =>
+  .addWithInfo("with text", () => (
     <div>
       <FlatButton onClick={action("clicked")}>Hello Button</FlatButton>
       <FlatButton primary onClick={action("clicked")}>
@@ -14,7 +14,7 @@ storiesOf("Flat Button", module)
         Hello Button
       </FlatButton>
     </div>
-  )
-  .addWithInfo("with some emoji", () =>
+  ))
+  .addWithInfo("with some emoji", () => (
     <FlatButton onClick={action("clicked")}>😀 😎 👍 💯</FlatButton>
-  );
+  ));

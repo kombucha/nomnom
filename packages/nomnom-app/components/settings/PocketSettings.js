@@ -25,9 +25,11 @@ export class PocketSettings extends PureComponent {
   _handleImport = () => {
     // Can be quite long !
     this.setState({ importing: true }, () => {
-      importPocket(this.state.importFiles[0]).then(this.props.batchAddUserEntries).then(() => {
-        this.setState({ importing: false });
-      });
+      importPocket(this.state.importFiles[0])
+        .then(this.props.batchAddUserEntries)
+        .then(() => {
+          this.setState({ importing: false });
+        });
     });
   };
 

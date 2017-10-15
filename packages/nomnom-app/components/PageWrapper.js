@@ -16,7 +16,7 @@ const UnstyledLink = styled.a`
   cursor: pointer;
 `;
 
-const PageWrapper = ({ user, children }) =>
+const PageWrapper = ({ user, children }) => (
   <ThemeProvider theme={theme}>
     <div id="app">
       <PageTitle value="NomNom" />
@@ -29,10 +29,9 @@ const PageWrapper = ({ user, children }) =>
         }
         rightElement={user ? <UserMenu user={user} /> : null}
       />
-      <PageContainer>
-        {children}
-      </PageContainer>
+      <PageContainer>{children}</PageContainer>
     </div>
-  </ThemeProvider>;
+  </ThemeProvider>
+);
 
 export default pure(PageWrapper);

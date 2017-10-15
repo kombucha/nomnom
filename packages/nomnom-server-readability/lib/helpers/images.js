@@ -58,7 +58,10 @@ async function cacheImage(imageUrl, config) {
 }
 
 function hash(data) {
-  return crypto.createHash("md5").update(data).digest("hex");
+  return crypto
+    .createHash("md5")
+    .update(data)
+    .digest("hex");
 }
 
 module.exports = { processImages, cacheImage };

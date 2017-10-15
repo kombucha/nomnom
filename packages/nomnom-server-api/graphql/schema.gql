@@ -10,11 +10,7 @@ type User {
   email: String!
   name: String
   avatarUrl: String
-  entries(
-    status: UserEntryStatus = null
-    first: Int
-    after: String
-  ): UserEntriesConnection!
+  entries(status: UserEntryStatus = null, first: Int, after: String): UserEntriesConnection!
   feeds: [UserFeed!]!
 }
 
@@ -121,17 +117,11 @@ type Query {
 
 type Mutation {
   addUserEntry(addUserEntryInput: AddUserEntryInput!): UserEntry!
-  batchAddUserEntries(
-    batchAddUserEntriesInput: [AddUserEntryInput!]!
-  ): [UserEntry]!
+  batchAddUserEntries(batchAddUserEntriesInput: [AddUserEntryInput!]!): [UserEntry]!
   updateUserEntry(entryUpdateInput: EntryUpdateInput!): UserEntry!
-  batchUpdateUserEntries(
-    batchUpdateUserEntriesInput: BatchUpdateUserEntriesInput!
-  ): [UserEntry]!
+  batchUpdateUserEntries(batchUpdateUserEntriesInput: BatchUpdateUserEntriesInput!): [UserEntry]!
   subscribeToFeed(subscribeToFeedInput: SubscribeToFeedInput!): UserFeed!
-  batchSubscribeToFeeds(
-    batchSubscribeToFeedsInput: [SubscribeToFeedInput!]!
-  ): [UserFeed]!
+  batchSubscribeToFeeds(batchSubscribeToFeedsInput: [SubscribeToFeedInput!]!): [UserFeed]!
   updateUserFeed(updateUserFeedInput: UpdateUserFeedInput!): UserFeed!
   unsubscribeFromFeed(id: ID!): Boolean!
   batchUnsubscribeFromFeeds(ids: [ID!]!): [Boolean!]!

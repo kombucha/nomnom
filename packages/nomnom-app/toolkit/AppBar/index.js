@@ -23,12 +23,11 @@ const AppTitle = styled.span`
   font-weight: 400;
 `;
 
-export const AppBar = ({ title, rightElement, fixed }) =>
+export const AppBar = ({ title, rightElement, fixed }) => (
   <AppBarContainer fixed={fixed}>
-    <AppTitle>
-      {title}
-    </AppTitle>
+    <AppTitle>{title}</AppTitle>
     {rightElement}
-  </AppBarContainer>;
+  </AppBarContainer>
+);
 
 export default pure(AppBar);

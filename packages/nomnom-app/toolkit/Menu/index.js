@@ -24,7 +24,7 @@ export const MenuItem = styled(ListItem)`
   }
 `;
 
-export const Menu = ({ children, value, onChange, ...rest }) =>
+export const Menu = ({ children, value, onChange, ...rest }) => (
   <Card fullBleed {...rest}>
     <List>
       {React.Children.map(children, menuItem => {
@@ -41,7 +41,8 @@ export const Menu = ({ children, value, onChange, ...rest }) =>
         return React.cloneElement(menuItem, newProps);
       })}
     </List>
-  </Card>;
+  </Card>
+);
 
 Menu.propTypes = {
   // children: PropTypes.arrayOf(
@@ -68,20 +69,15 @@ const Container = styled.div`position: relative;`;
 const WrappedMenu = styled(Menu)`
   position: absolute;
   top: 100%;
-  ${props => (props.alignRight ? "right: 0;" : "left: 0;")}
-  z-index: 10001;
+  ${props => (props.alignRight ? "right: 0;" : "left: 0;")} z-index: 10001;
 `;
 
 export class MenuContainer extends Component {
-  constructor() {
-    super();
-    this.state = { showMenu: false };
-    this._toggleMenu = this._toggleMenu.bind(this);
-  }
+  state = { showMenu: false };
 
-  _toggleMenu() {
+  _toggleMenu = () => {
     this.setState(state => ({ showMenu: !state.showMenu }));
-  }
+  };
 
   render() {
     const { target, children: menuItems, alignRight } = this.props;
@@ -95,11 +91,11 @@ export class MenuContainer extends Component {
         {showMenu ? <Overlay onClick={this._toggleMenu} /> : null}
         <Container>
           {menuButton}
-          {showMenu
-            ? <WrappedMenu alignRight={alignRight} onClick={this._toggleMenu}>
-                {menuItems}
-              </WrappedMenu>
-            : null}
+          {showMenu ? (
+            <WrappedMenu alignRight={alignRight} onClick={this._toggleMenu}>
+              {menuItems}
+            </WrappedMenu>
+          ) : null}
         </Container>
       </div>
     );

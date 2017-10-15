@@ -51,31 +51,20 @@ const DialogActions = styled.div`
 `;
 
 export class Dialog extends Component {
-  constructor() {
-    super();
-    this._handleDismiss = this._handleDismiss.bind(this);
-  }
-
-  _handleDismiss(ev) {
+  _handleDismiss = ev => {
     const clickedOutsideDialog = ev.target === this._dialogContainer;
     if (clickedOutsideDialog) {
       this.props.onRequestClose();
     }
-  }
+  };
 
   render() {
     const { open, title, actions, children } = this.props;
-    const dialogTitle = title
-      ? <CardTitle>
-          {title}
-        </CardTitle>
-      : null;
+    const dialogTitle = title ? <CardTitle>{title}</CardTitle> : null;
     const dialogActions =
-      actions && React.Children.count(actions) > 0
-        ? <DialogActions>
-            {React.Children.toArray(actions)}
-          </DialogActions>
-        : null;
+      actions && React.Children.count(actions) > 0 ? (
+        <DialogActions>{React.Children.toArray(actions)}</DialogActions>
+      ) : null;
 
     return (
       <CSSTransitionGroup
@@ -83,17 +72,17 @@ export class Dialog extends Component {
         transitionEnterTimeout={TRANSITION_TIME}
         transitionLeave={false}
         component="div">
-        {open
-          ? <DialogContainer
-              onClick={this._handleDismiss}
-              innerRef={ref => (this._dialogContainer = ref)}>
-              <DialogCard>
-                {dialogTitle}
-                {children}
-                {dialogActions}
-              </DialogCard>
-            </DialogContainer>
-          : null}
+        {open ? (
+          <DialogContainer
+            onClick={this._handleDismiss}
+            innerRef={ref => (this._dialogContainer = ref)}>
+            <DialogCard>
+              {dialogTitle}
+              {children}
+              {dialogActions}
+            </DialogCard>
+          </DialogContainer>
+        ) : null}
       </CSSTransitionGroup>
     );
   }

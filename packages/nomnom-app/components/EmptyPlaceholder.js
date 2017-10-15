@@ -9,10 +9,11 @@ const EmptyListContainer = styled.div`
 `;
 const EmptyListSmiley = styled.span`font-size: 10em;`;
 
-export const EmptyPlaceholder = () =>
+export const EmptyPlaceholder = () => (
   <EmptyListContainer>
     <EmptyListSmiley>:(</EmptyListSmiley>
     <h2>No content to display</h2>
-  </EmptyListContainer>;
+  </EmptyListContainer>
+);
 
 export default EmptyPlaceholder;

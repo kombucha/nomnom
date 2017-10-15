@@ -27,9 +27,11 @@ export class FeedbinSubscriptionsSettings extends PureComponent {
     // Can be quite long !
     this.setState({ importing: true }, () => {
       const importedFile = this.state.importFiles[0];
-      importSubscriptions(importedFile).then(this.props.batchSubscribeToFeeds).then(() => {
-        this.setState({ importing: false });
-      });
+      importSubscriptions(importedFile)
+        .then(this.props.batchSubscribeToFeeds)
+        .then(() => {
+          this.setState({ importing: false });
+        });
     });
   };
 

@@ -25,9 +25,11 @@ export class YoutubeSettings extends PureComponent {
     // Can be quite long !
     this.setState({ importing: true }, () => {
       const importedFile = this.state.importFiles[0];
-      importYoutubeSubscriptions(importedFile).then(this.props.batchSubscribeToFeeds).then(() => {
-        this.setState({ importing: false });
-      });
+      importYoutubeSubscriptions(importedFile)
+        .then(this.props.batchSubscribeToFeeds)
+        .then(() => {
+          this.setState({ importing: false });
+        });
     });
   };
 

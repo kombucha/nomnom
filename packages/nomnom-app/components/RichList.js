@@ -45,18 +45,15 @@ const ListItemSubtitle = styled.span`
   white-space: nowrap;
 `;
 
-export const ListItem = ({ imageUrl, title, subtitle }) =>
+export const ListItem = ({ imageUrl, title, subtitle }) => (
   <ListItemContainer>
     <Avatar src={imageUrl} size={`${IMAGE_SIZE}px`} />
     <ListItemTextContainer>
-      <ListItemTitle>
-        {title}
-      </ListItemTitle>
-      <ListItemSubtitle>
-        {subtitle}
-      </ListItemSubtitle>
+      <ListItemTitle>{title}</ListItemTitle>
+      <ListItemSubtitle>{subtitle}</ListItemSubtitle>
     </ListItemTextContainer>
-  </ListItemContainer>;
+  </ListItemContainer>
+);
 
 ListItem.propTypes = {
   imageUrl: PropTypes.string.isRequired,
@@ -140,7 +137,7 @@ export class RichListItem extends PureComponent {
         <ListItem imageUrl={imageUrl} title={title} subtitle={subtitle} />
 
         {/* Select state */}
-        {selectable &&
+        {selectable && (
           <CheckboxContainer
             shown={shouldShowSelector}
             selected={selected}
@@ -148,13 +145,15 @@ export class RichListItem extends PureComponent {
             onMouseLeave={this._handleCheckboxOut}
             onClick={this._handleCheckboxClicked}>
             {selected ? <CheckedIcon className="icon" /> : <UncheckedIcon className="icon" />}
-          </CheckboxContainer>}
+          </CheckboxContainer>
+        )}
 
         {/* Actions */}
-        {shouldShowActions &&
+        {shouldShowActions && (
           <RichListItemActionsContainer>
             {React.Children.toArray(actions)}
-          </RichListItemActionsContainer>}
+          </RichListItemActionsContainer>
+        )}
       </RichListItemContainer>
     );
   }
@@ -186,7 +185,7 @@ const ListItemPlaceholderContainer = styled.div`
 const PlaceHolderElement = styled.span`
   background: #eee;
   &::after {
-    content: '.';
+    content: ".";
     display: block;
     visibility: hidden;
   }
@@ -201,13 +200,14 @@ const placeholderStyles = {
   subtitle: { width: "30%" }
 };
 
-export const ListItemPlaceholder = () =>
+export const ListItemPlaceholder = () => (
   <ListItemPlaceholderContainer>
     <FakeAvatar />
     <ListItemTextContainer>
       <PlaceHolderElement style={placeholderStyles.title} />
       <PlaceHolderElement style={placeholderStyles.subtitle} />
     </ListItemTextContainer>
-  </ListItemPlaceholderContainer>;
+  </ListItemPlaceholderContainer>
+);
 
 export default ListItem;

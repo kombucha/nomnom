@@ -27,9 +27,12 @@ export class FeedbinFavoritesSettings extends PureComponent {
     // Can be quite long !
     this.setState({ importing: true }, () => {
       const favoritesFile = this.state.importFiles[0];
-      feedbin.importFavorites(favoritesFile).then(this.props.batchAddUserEntries).then(() => {
-        this.setState({ importing: false });
-      });
+      feedbin
+        .importFavorites(favoritesFile)
+        .then(this.props.batchAddUserEntries)
+        .then(() => {
+          this.setState({ importing: false });
+        });
     });
   };
 
