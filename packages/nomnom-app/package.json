@@ -46,21 +46,9 @@
   "scripts": {
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "dev": "node -r dotenv/config server.js",
-    "build": "next build",
     "clean": "rm -fr .next .dist/**",
-    "prestart": "npm run build",
-    "start": "NODE_ENV=production node server.js",
-    "predist": "npm run build",
-    "dist": "pkg index.js -t node8-macos-x64 -o .dist/nomnom-app"
-  },
-  "pkg": {
-    "assets": [
-      ".next",
-      "pages"
-    ],
-    "scripts": [
-      ".next/dist/**/*.js"
-    ]
+    "dev": "node -r dotenv/config index.js",
+    "prestart": "next build",
+    "start": "node index.js"
   }
 }

@@ -100,8 +100,8 @@ jsconfig.json
 # End of https://www.gitignore.io/api/node,osx,code
 
 ### Project ###
-/data/
+.data
 .env
-build/
+build
 
 

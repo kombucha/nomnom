@@ -2,7 +2,7 @@ import React from "react";
 import { ApolloProvider } from "react-apollo";
 import App, { Container } from "next/app";
 
-import withApollo from "../hoc/withApollo";
+import withApollo from "../components/hoc/withApollo";
 
 class MyApp extends App {
   render() {

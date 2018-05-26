@@ -13,7 +13,7 @@ import { Card } from "../toolkit/Card";
 import { Menu, MenuItem } from "../toolkit/Menu";
 import FlatButton from "../toolkit/FlatButton";
 import FloatingActionButton from "../toolkit/FloatingActionButton";
-import withAuth from "../hoc/withAuth";
+import withAuth from "../components/hoc/withAuth";
 import PageWrapper from "../components/PageWrapper";
 import PageTitle from "../components/PageTitle";
 import { RichListItem, ListItemPlaceholder } from "../components/RichList";

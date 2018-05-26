@@ -7,7 +7,7 @@ import { Url as URL } from "url";
 import FlatButton from "../toolkit/FlatButton";
 import { Card, CardTitle } from "../toolkit/Card";
 
-import withAuth from "../hoc/withAuth";
+import withAuth from "../components/hoc/withAuth";
 import PageTitle from "../components/PageTitle";
 import ScrollPercentage from "../components/ScrollPercentage";
 import PageWrapper from "../components/PageWrapper";

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import PageWrapper from "../components/PageWrapper";
 import PageTitle from "../components/PageTitle";
-import withAuth from "../hoc/withAuth";
+import withAuth from "../components/hoc/withAuth";
 
 import PrivacySettings from "../components/settings/PrivacySettings";
 import PocketSettings from "../components/settings/PocketSettings";

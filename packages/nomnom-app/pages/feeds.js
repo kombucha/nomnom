@@ -8,7 +8,7 @@ import FloatingActionButton from "../toolkit/FloatingActionButton";
 import { List, ListItem } from "../toolkit/List";
 import Toggle from "../toolkit/Toggle";
 
-import withAuth from "../hoc/withAuth";
+import withAuth from "../components/hoc/withAuth";
 import PageWrapper from "../components/PageWrapper";
 import PageTitle from "../components/PageTitle";
 import SubscribeToFeedDialog from "../components/SubscribeToFeedDialog";
