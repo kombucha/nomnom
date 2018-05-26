@@ -1,7 +1,7 @@
 const Promise = require("bluebird");
 
 const logger = require("../../core/logger");
-const UserFeed = require("../../core/UserFeed");
+const UserFeed = require("../../core/userFeed");
 
 module.exports = (_, { batchSubscribeToFeedsInput }, { user }) =>
   Promise.map(
