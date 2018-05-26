@@ -12,7 +12,8 @@
   "author": "Vincent Lemeunier",
   "license": "ISC",
   "engines": {
-    "node": "~10.1.0"
+    "node": "~10.1.0",
+    "yarn": "1.7"
   },
   "dependencies": {
     "apollo-server-express": "1.3.6",
