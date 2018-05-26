@@ -1,5 +1,4 @@
 import React, { PureComponent } from "react";
-import { withRouter } from "next/router";
 import PropTypes from "prop-types";
 import { compose, mapProps } from "recompose";
 import styled from "styled-components";
@@ -176,20 +175,9 @@ Entry.propTypes = {
   updateUserEntry: PropTypes.func.isRequired
 };
 
-const mappedProps = mapProps(
-  ({ router, loggedInUser }) => (
-    console.log("yo", router.query),
-    {
-      entryId: router.query.entryId,
-      loggedInUser
-    }
-  )
-);
+const mappedProps = mapProps(({ router, loggedInUser }) => ({
+  entryId: router.query.entryId,
+  loggedInUser
+}));
 
-export default compose(
-  withRouter,
-  withAuth,
-  mappedProps,
-  userEntryContainer,
-  updateUserEntryContainer
-)(Entry);
+export default compose(withAuth, mappedProps, userEntryContainer, updateUserEntryContainer)(Entry);

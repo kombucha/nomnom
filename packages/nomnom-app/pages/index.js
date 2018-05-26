@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { lighten } from "polished";
 import { mapProps, compose } from "recompose";
 import queryString from "query-string";
-import { withRouter } from "next/router";
 import url from "url";
 import ContentAdd from "react-icons/lib/md/add";
 import VisibilitySensor from "react-visibility-sensor";
@@ -99,12 +98,12 @@ export class Entries extends PureComponent {
   state = { showAddEntryDialog: false, selectedRows: {} };
 
   _handleStatusFilterChange = newStatus => {
-    const { query, pushState } = this.props;
-    const newQueryParams = Object.assign({}, query, {
+    const { router } = this.props;
+    const newQueryParams = Object.assign({}, router.query, {
       status: newStatus
     });
 
-    pushState(`/?${queryString.stringify(newQueryParams)}`);
+    router.push(`/?${queryString.stringify(newQueryParams)}`);
   };
 
   _handleRowClicked = (userEntry, requestingSelection) => {
@@ -117,7 +116,7 @@ export class Entries extends PureComponent {
       });
       this.setState({ selectedRows: newSelectedRows });
     } else {
-      this.props.pushState(`/entry?entryId=${userEntry.id}`, `/entries/${userEntry.id}`);
+      this.props.router.push(`/entry?entryId=${userEntry.id}`, `/entries/${userEntry.id}`);
     }
   };
 
@@ -297,19 +296,16 @@ Entries.propTypes = {
   fetchMore: PropTypes.func.isRequired,
   batchUpdateUserEntries: PropTypes.func.isRequired,
 
-  query: PropTypes.object.isRequired,
-  pushState: PropTypes.func.isRequired
+  router: PropTypes.object.isRequired
 };
 
 const mappedProps = mapProps(({ loggedInUser: user, router }) => ({
   status: router.query.status || DEFAULT_STATUS_FILTER,
   user,
-  query: router.query,
-  pushState: router.push
+  router
 }));
 
 export default compose(
-  withRouter,
   withAuth,
   mappedProps,
   batchUpdateUserEntriesContainer,
