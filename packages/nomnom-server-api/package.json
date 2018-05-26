@@ -12,7 +12,7 @@
   "author": "Vincent Lemeunier",
   "license": "ISC",
   "engines": {
-    "node": "~10.1.0",
+    "node": "^10",
     "yarn": "1.7"
   },
   "dependencies": {

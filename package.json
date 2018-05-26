@@ -6,12 +6,13 @@
     "packages/*"
   ],
   "engines": {
-    "node": "~10.1.0",
+    "node": "^10",
     "yarn": "1.7"
   },
   "scripts": {
     "format": "prettier --print-width=100 --write --jsx-bracket-same-line=true 'packages/*/*.js' 'packages/*/!(node_modules)/**/*.js'",
     "precommit": "lint-staged",
+    "clean": "lerna clean",
     "bootstrap": "yarn",
     "install": "yarn"
   },
