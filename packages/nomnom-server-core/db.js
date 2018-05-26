@@ -2,11 +2,7 @@ const pg = require("pg");
 const logger = require("./logger");
 
 const config = {
-  user: process.env.PG_USER,
-  database: process.env.PG_DATABASE,
-  password: process.env.PG_PASSWORD,
-  host: process.env.PG_HOST,
-  port: process.env.PG_PORT,
+  connectionString: process.env.DATABASE_URL,
   max: 10,
   idleTimeoutMillis: 30000
 };

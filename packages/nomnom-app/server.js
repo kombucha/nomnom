@@ -6,7 +6,6 @@ const next = require("next");
 const nextConfig = require("./next.config");
 
 async function start() {
-  const PORT = 3000;
   const app = next(nextConfig);
   const handle = app.getRequestHandler();
 
@@ -16,7 +15,7 @@ async function start() {
   server.use(compression(), cookieParser());
 
   // FIXME: Temp workaround
-  server.use("/img", express.static("/Users/vincentlemeunier/src/nomnom/data/img"));
+  server.use("/img", express.static(nextConfig.serverRuntimeConfig.dataPath));
 
   server.get("/entries/:entryId", (req, res) => {
     return app.render(req, res, "/entry", req.params);
@@ -26,9 +25,9 @@ async function start() {
     return handle(req, res);
   });
 
-  server.listen(PORT, err => {
+  server.listen(nextConfig.serverRuntimeConfig.port, err => {
     if (err) throw err;
-    console.log(`> Ready on http://localhost:${PORT}`);
+    console.log(`> Ready on http://localhost:${nextConfig.serverRuntimeConfig.port}`);
   });
 }
 

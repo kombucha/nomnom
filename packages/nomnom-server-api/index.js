@@ -38,6 +38,6 @@ process.on("unhandledRejection", reason => {
   logger.error("unhandledRejection", reason);
 });
 
-const port = parseInt(process.env.API_PORT, 10);
+const port = parseInt(process.env.PORT, 10);
 app.listen(port);
 logger.info(`Running api server at http://localhost:${port}`);
