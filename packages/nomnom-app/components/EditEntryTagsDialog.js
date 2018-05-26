@@ -44,8 +44,6 @@ export class EditEntryTagsDialog extends PureComponent {
     const { newTags, enableSave } = this.state;
     const loading = !data || data.loading;
 
-    console.log(data, this.props);
-
     const actions = [
       <FlatButton secondary onClick={onRequestClose}>
         Cancel

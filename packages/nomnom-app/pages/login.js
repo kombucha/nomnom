@@ -27,7 +27,7 @@ class LoginPage extends PureComponent {
 
   _handleLoginSucessful = ({ code }) => {
     const { apolloClient } = this.props;
-    console.log(this.props);
+
     return fetch(`${apiUrl}/login/google`, {
       method: "POST",
       body: code
