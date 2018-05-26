@@ -11,13 +11,13 @@
   "author": "Vincent Lemeunier",
   "license": "MIT",
   "dependencies": {
-    "bluebird": "3.5.0",
+    "bluebird": "3.5.1",
     "cheerio": "1.0.0-rc.2",
     "cookie": "0.3.1",
-    "date-fns": "1.28.5",
+    "date-fns": "1.29.0",
     "get-stream": "3.0.0",
-    "got": "7.1.0",
-    "mime-types": "2.1.17",
-    "moment": "2.18.1"
+    "got": "8.3.1",
+    "mime-types": "2.1.18",
+    "moment": "2.22.1"
   }
 }
