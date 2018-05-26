@@ -10,6 +10,9 @@
   },
   "author": "Vincent Lemeunier",
   "license": "MIT",
+  "engines": {
+    "node": "~10.1.0"
+  },
   "dependencies": {
     "bluebird": "3.5.1",
     "cheerio": "1.0.0-rc.2",

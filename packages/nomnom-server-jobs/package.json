@@ -4,6 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": "~10.1.0"
+  },
   "dependencies": {
     "bluebird": "3.5.1",
     "express": "4.16.3",
