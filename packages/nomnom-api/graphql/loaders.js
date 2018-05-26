@@ -10,7 +10,7 @@ const placeholders = count =>
 const tableLoader = tableName => async ids => {
   const res = await db.query(
     `
-      SELECT * FROM "nomnom"."${tableName}"
+      SELECT * FROM "${tableName}"
       WHERE "id" IN (${placeholders(ids.length).join(", ")});`,
     ids
   );

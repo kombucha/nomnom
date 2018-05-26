@@ -16,10 +16,12 @@ async function createUser(profile) {
     avatarUrl: profile.avatarUrl
   };
 
-  await db.query(
-    `INSERT INTO "nomnom"."User"("id", "name", "email", "avatarUrl") VALUES ($1, $2, $3, $4)`,
-    [user.id, user.name, user.email, user.avatarUrl]
-  );
+  await db.query(`INSERT INTO "User"("id", "name", "email", "avatarUrl") VALUES ($1, $2, $3, $4)`, [
+    user.id,
+    user.name,
+    user.email,
+    user.avatarUrl
+  ]);
 
   return user;
 }
@@ -37,12 +39,12 @@ async function getTokenPayload(token) {
 }
 
 async function getById(id) {
-  const res = await db.query(`SELECT * FROM "nomnom"."User" WHERE id = $1 LIMIT 1;`, [String(id)]);
+  const res = await db.query(`SELECT * FROM "User" WHERE id = $1 LIMIT 1;`, [String(id)]);
   return res.rows[0];
 }
 
 async function getByEmail(email) {
-  const res = await db.query(`SELECT * FROM "nomnom"."User" WHERE email = $1 LIMIT 1;`, [email]);
+  const res = await db.query(`SELECT * FROM "User" WHERE email = $1 LIMIT 1;`, [email]);
   return res.rows[0];
 }
 

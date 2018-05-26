@@ -8,7 +8,7 @@ const FEED_TYPES = {
 };
 
 async function getAll() {
-  const res = await db.query(`SELECT * FROM "nomnom"."Feed"`);
+  const res = await db.query(`SELECT * FROM "Feed"`);
   return res.rows;
 }
 
@@ -32,7 +32,7 @@ async function createFromUri(uri) {
 
   await db.query(
     `
-    INSERT INTO "nomnom"."Feed"("id", "creationDate", "uri", "type")
+    INSERT INTO "Feed"("id", "creationDate", "uri", "type")
     VALUES ($1, $2, $3, $4);
     `,
     [feed.id, feed.creationDate, feed.uri, feed.type]
@@ -44,7 +44,7 @@ async function createFromUri(uri) {
 async function getFromUri(uri) {
   const res = await db.query(
     `SELECT *
-     FROM "nomnom"."Feed"
+     FROM "Feed"
      WHERE "uri" = $1
      LIMIT 1`,
     [uri]

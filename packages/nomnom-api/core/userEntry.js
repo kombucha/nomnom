@@ -37,7 +37,7 @@ async function create(userId, userEntryParam) {
 
   await db.query(
     `INSERT INTO
-    "nomnom"."UserEntry"("id", "UserId", "EntryId", "creationDate", "lastUpdateDate", "progress", "status", "tags")
+    "UserEntry"("id", "UserId", "EntryId", "creationDate", "lastUpdateDate", "progress", "status", "tags")
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
     [
       userEntry.id,
@@ -57,7 +57,7 @@ async function create(userId, userEntryParam) {
 async function getFromUrl(url) {
   const res = await db.query(
     `SELECT "UserEntry".*
-     FROM "nomnom"."UserEntry" "UserEntry" INNER JOIN "nomnom"."Entry" "Entry" ON ("UserEntry"."EntryId" = "Entry"."id")
+     FROM "UserEntry" "UserEntry" INNER JOIN "Entry" "Entry" ON ("UserEntry"."EntryId" = "Entry"."id")
      WHERE "Entry"."url" = $1`,
     [url]
   );
@@ -81,7 +81,7 @@ async function list(userId, options) {
 
   const res = await db.query(
     `
-    SELECT * FROM "nomnom"."UserEntry"
+    SELECT * FROM "UserEntry"
     WHERE ${filters.join(" AND ")}
     ORDER BY "creationDate" DESC
     LIMIT $2
@@ -114,22 +114,22 @@ async function batchUpdate(userEntryIds, updateValues) {
   try {
     if (userEntryIds.length === 1) {
       results = await db.query(
-        `UPDATE "nomnom"."UserEntry"
+        `UPDATE "UserEntry"
        SET "lastUpdateDate" = $1,
        ${updates.join(", ")}
        WHERE "id" = $2
-       RETURNING "nomnom"."UserEntry".*;
+       RETURNING "UserEntry".*;
       `,
         params
       );
     } else {
       const idsPlaceholders = userEntryIds.map((_, idx) => `$${idx + 2}`);
       results = await db.query(
-        `UPDATE "nomnom"."UserEntry"
+        `UPDATE "UserEntry"
        SET "lastUpdateDate" = $1,
        ${updates.join(", ")}
        WHERE "id" IN (${idsPlaceholders.join(",")})
-       RETURNING "nomnom"."UserEntry".*;
+       RETURNING "UserEntry".*;
       `,
         params
       );
@@ -145,7 +145,7 @@ async function batchUpdate(userEntryIds, updateValues) {
 async function deleteAll(userId) {
   try {
     await db.query(
-      `DELETE FROM "nomnom"."UserEntry"
+      `DELETE FROM "UserEntry"
        WHERE "UserId" = $1`,
       [userId]
     );

@@ -19,7 +19,7 @@ async function create(userId, userFeedParam) {
   await db.query(
     `
     INSERT INTO
-    "nomnom"."UserFeed"("id", "UserId", "FeedId", "name", "creationDate", "enabled")
+    "UserFeed"("id", "UserId", "FeedId", "name", "creationDate", "enabled")
     VALUES ($1, $2, $3, $4, $5, $6)
     `,
     [
@@ -38,7 +38,7 @@ async function create(userId, userFeedParam) {
 async function list(userId) {
   const res = await db.query(
     `
-    SELECT * FROM "nomnom"."UserFeed"
+    SELECT * FROM "UserFeed"
     WHERE "UserId" = $1
     ORDER BY "creationDate" DESC
   `,
@@ -51,8 +51,8 @@ async function list(userId) {
 async function listUsersForFeed(feedId) {
   const res = await db.query(
     `SELECT "User".*
-     FROM "nomnom"."User" "User"
-      INNER JOIN "nomnom"."UserFeed" "UserFeed"
+     FROM "User" "User"
+      INNER JOIN "UserFeed" "UserFeed"
       ON ("User"."id" = "UserFeed"."UserId")
      WHERE "UserFeed"."FeedId" = $1
      LIMIT 1`,

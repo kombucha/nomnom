@@ -26,7 +26,7 @@ async function createFromUrl(url) {
 
   await db.query(
     `
-    INSERT INTO "nomnom"."Entry"("id", "url", "title", "originalContent",
+    INSERT INTO "Entry"("id", "url", "title", "originalContent",
     "creationDate", "publicationDate", "author", "excerpt", "content", "imageUrl", "duration")
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
   `,
@@ -51,7 +51,7 @@ async function createFromUrl(url) {
 async function getFromUrl(url) {
   const res = await db.query(
     `SELECT *
-     FROM "nomnom"."Entry"
+     FROM "Entry"
      WHERE "url" = $1
      LIMIT 1`,
     [url]
