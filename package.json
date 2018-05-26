@@ -2,26 +2,29 @@
   "name": "nomnom",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "engines": {
-    "node": ">=8.5.0"
+    "node": ">=10.1.0"
   },
   "scripts": {
     "format": "prettier --print-width=100 --write --jsx-bracket-same-line=true 'packages/*/*.js' 'packages/*/!(node_modules)/**/*.js'",
     "precommit": "lint-staged",
-    "bootstrap": "lerna bootstrap",
-    "install": "npm run bootstrap"
+    "bootstrap": "yarn",
+    "install": "yarn"
   },
   "devDependencies": {
-    "babel-eslint": "8.0.1",
-    "eslint": "4.8.0",
+    "babel-eslint": "8.2.3",
+    "eslint": "4.19.1",
     "husky": "0.14.3",
-    "lerna": "2.2.0",
-    "lint-staged": "4.2.3",
-    "prettier": "1.7.3"
+    "lerna": "2.11.0",
+    "lint-staged": "7.1.2",
+    "prettier": "1.12.1"
   },
   "lint-staged": {
     "*.{js,json,gql}": [
-      "prettier --write",
+      "npm run prettier --print-width=100 --jsx-bracket-same-line=true --write",
       "git add"
     ]
   }
