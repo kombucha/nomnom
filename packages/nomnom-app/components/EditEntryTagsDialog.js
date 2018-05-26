@@ -16,10 +16,14 @@ const DEFAULT_STATE = {
 export class EditEntryTagsDialog extends PureComponent {
   state = DEFAULT_STATE;
 
-  static getDerivedStateFromProps(newProps) {
-    return newProps.data && !newProps.data.loading
-      ? { newTags: newProps.data.userEntry.tags }
-      : null;
+  static getDerivedStateFromProps(props, state) {
+    if (!props.open) {
+      return { newTags: [] };
+    } else if (props.data && !props.data.loading && !state.newTags.length) {
+      return { newTags: props.data.userEntry.tags };
+    }
+
+    return null;
   }
 
   _handleSave = () => {
@@ -39,6 +43,8 @@ export class EditEntryTagsDialog extends PureComponent {
     const { open, onRequestClose, data } = this.props;
     const { newTags, enableSave } = this.state;
     const loading = !data || data.loading;
+
+    console.log(data, this.props);
 
     const actions = [
       <FlatButton secondary onClick={onRequestClose}>
