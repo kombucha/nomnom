@@ -1,4 +1,5 @@
-import { gql, graphql } from "react-apollo";
+import { graphql } from "react-apollo";
+import gql from "graphql-tag";
 
 // TODO: Update store
 // http://dev.apollodata.com/react/cache-updates.html

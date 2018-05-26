@@ -1,10 +1,14 @@
-import { gql, graphql } from "react-apollo";
+import { graphql } from "react-apollo";
+import gql from "graphql-tag";
+
 import { UserEntryListFragment } from "../fragments/userEntry";
 import { query as EntriesListQuery } from "../queries/userEntries";
 
 export const mutation = gql`
   mutation addUserEntry($addUserEntryInput: AddUserEntryInput!) {
-    addUserEntry(addUserEntryInput: $addUserEntryInput) {...UserEntryListFragment}
+    addUserEntry(addUserEntryInput: $addUserEntryInput) {
+      ...UserEntryListFragment
+    }
   }
   ${UserEntryListFragment}
 `;

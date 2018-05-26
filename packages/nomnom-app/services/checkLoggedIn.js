@@ -1,7 +1,7 @@
 import { query } from "../graphql/queries/user";
 
-export default (context, apolloClient) =>
-  apolloClient
+export default context =>
+  context.apolloClient
     .query({ query })
     .then(({ data }) => {
       return data.me;

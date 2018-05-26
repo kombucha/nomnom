@@ -1,21 +1,22 @@
 import React, { PureComponent } from "react";
-import { withApollo } from "react-apollo";
-import { compose } from "recompose";
+import getConfig from "next/config";
 import GoogleLogin from "react-google-login";
 import cookie from "cookie";
 
 import PageWrapper from "../components/PageWrapper";
 import PageTitle from "../components/PageTitle";
-import withData from "../hoc/withData";
-import checkLoggedIn from "../services/check-logged-in";
+import checkLoggedIn from "../services/checkLoggedIn";
 import redirect from "../services/redirect";
 
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const {
+  publicRuntimeConfig: { apiUrl, googleClientId }
+} = getConfig();
+
 const THIRTY_DAYS = 30 * 24 * 60 * 60;
 
 class LoginPage extends PureComponent {
-  static async getInitialProps(context, apolloClient) {
-    const loggedInUser = await checkLoggedIn(context, apolloClient);
+  static async getInitialProps(context) {
+    const loggedInUser = await checkLoggedIn(context);
 
     if (loggedInUser) {
       redirect(context, "/");
@@ -25,8 +26,9 @@ class LoginPage extends PureComponent {
   }
 
   _handleLoginSucessful = ({ code }) => {
-    const { client } = this.props;
-    return fetch(`"${process.env.API_HOST}/login/google"`, {
+    const { apolloClient } = this.props;
+    console.log(this.props);
+    return fetch(`${apiUrl}/login/google`, {
       method: "POST",
       body: code
     })
@@ -35,7 +37,7 @@ class LoginPage extends PureComponent {
         document.cookie = cookie.serialize("token", token, {
           maxAge: THIRTY_DAYS
         });
-        return client.resetStore();
+        return apolloClient.resetStore();
       })
       .then(() => redirect({}, "/"));
   };
@@ -49,7 +51,7 @@ class LoginPage extends PureComponent {
       <PageWrapper>
         <PageTitle value="Login" />
         <GoogleLogin
-          clientId={GOOGLE_CLIENT_ID}
+          clientId={googleClientId}
           buttonText="Log in with Google"
           responseType="code"
           onSuccess={this._handleLoginSucessful}
@@ -60,4 +62,4 @@ class LoginPage extends PureComponent {
   }
 }
 
-export default compose(withData, withApollo)(LoginPage);
+export default LoginPage;

@@ -8,14 +8,15 @@ import FloatingActionButton from "../toolkit/FloatingActionButton";
 import { List, ListItem } from "../toolkit/List";
 import Toggle from "../toolkit/Toggle";
 
-import withData from "../hoc/withData";
 import withAuth from "../hoc/withAuth";
 import PageWrapper from "../components/PageWrapper";
 import PageTitle from "../components/PageTitle";
 import SubscribeToFeedDialog from "../components/SubscribeToFeedDialog";
 import feedsContainer from "../graphql/queries/feeds";
 
-const PageContainer = styled.div`padding: 16px;`;
+const PageContainer = styled.div`
+  padding: 16px;
+`;
 
 // TODO: refactor ListItem definition, a lot of duplication (padding, hover etc)
 const FeedItem = styled(ListItem)`
@@ -102,4 +103,4 @@ export class FeedsPage extends PureComponent {
   }
 }
 
-export default compose(withData, withAuth, feedsContainer)(FeedsPage);
+export default compose(withAuth, feedsContainer)(FeedsPage);

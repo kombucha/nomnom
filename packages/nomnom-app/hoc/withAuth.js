@@ -1,17 +1,17 @@
 import React, { Component } from "react";
-import checkLoggedIn from "../services/check-logged-in";
+import checkLoggedIn from "../services/checkLoggedIn";
 import redirect from "../services/redirect";
 
 export default ComposedComponent => {
   return class WithAuth extends Component {
     static displayName = `WithAuth(${ComposedComponent.displayName})`;
 
-    static async getInitialProps(context, apolloClient) {
-      if (!apolloClient) {
-        throw new Error("WithAuth must be used -after- WithData");
+    static async getInitialProps(context) {
+      if (!context.apolloClient) {
+        throw new Error("WithAuth must be used -after- WithApollo");
       }
 
-      const loggedInUser = await checkLoggedIn(context, apolloClient);
+      const loggedInUser = await checkLoggedIn(context);
 
       if (!loggedInUser) {
         // If not signed in, send them somewhere more useful
@@ -20,7 +20,7 @@ export default ComposedComponent => {
 
       let composedInitialProps = {};
       if (ComposedComponent.getInitialProps) {
-        composedInitialProps = await ComposedComponent.getInitialProps(context, apolloClient);
+        composedInitialProps = await ComposedComponent.getInitialProps(context);
       }
 
       return {

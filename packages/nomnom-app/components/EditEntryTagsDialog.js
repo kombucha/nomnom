@@ -1,5 +1,6 @@
 import React, { PureComponent } from "react";
-import { gql, graphql, compose } from "react-apollo";
+import { graphql, compose } from "react-apollo";
+import gql from "graphql-tag";
 import PropTypes from "prop-types";
 
 import Dialog from "../toolkit/Dialog";
@@ -15,10 +16,10 @@ const DEFAULT_STATE = {
 export class EditEntryTagsDialog extends PureComponent {
   state = DEFAULT_STATE;
 
-  componentWillReceiveProps(newProps) {
-    if (newProps.data && !newProps.data.loading) {
-      this.setState({ newTags: newProps.data.userEntry.tags });
-    }
+  static getDerivedStateFromProps(newProps) {
+    return newProps.data && !newProps.data.loading
+      ? { newTags: newProps.data.userEntry.tags }
+      : null;
   }
 
   _handleSave = () => {

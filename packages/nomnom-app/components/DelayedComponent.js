@@ -4,11 +4,12 @@ import PropTypes from "prop-types";
 export class DelayedComponent extends PureComponent {
   state = { shouldRender: false };
 
-  componentWillReceiveProps({ delay }) {
+  componentDidUpdate() {
+    const { delay } = this.props;
     this._scheduleRender(delay);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this._scheduleRender(this.props.delay);
   }
 

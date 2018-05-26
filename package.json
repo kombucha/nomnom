@@ -24,7 +24,7 @@
   },
   "lint-staged": {
     "*.{js,json,gql}": [
-      "npm run prettier --print-width=100 --jsx-bracket-same-line=true --write",
+      "yarn prettier --print-width=100 --jsx-bracket-same-line=true --write",
       "git add"
     ]
   }

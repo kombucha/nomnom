@@ -1,15 +1,25 @@
-import { gql, graphql } from "react-apollo";
+import { graphql } from "react-apollo";
+import gql from "graphql-tag";
+
 import { UserEntryListFragment } from "../fragments/userEntry";
 
-export const query = gql`query($status: UserEntryStatus, $afterCursor: String) {
-  me {
-    entries(status: $status, first: 20, after: $afterCursor) {
-      edges { node {...UserEntryListFragment}, cursor }
-      pageInfo { hasNextPage }
+export const query = gql`
+  query($status: UserEntryStatus, $afterCursor: String) {
+    me {
+      entries(status: $status, first: 20, after: $afterCursor) {
+        edges {
+          node {
+            ...UserEntryListFragment
+          }
+          cursor
+        }
+        pageInfo {
+          hasNextPage
+        }
+      }
     }
   }
-}
-${UserEntryListFragment}
+  ${UserEntryListFragment}
 `;
 
 export const withQuery = graphql(query, {

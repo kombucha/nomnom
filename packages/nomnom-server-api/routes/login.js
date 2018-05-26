@@ -1,8 +1,8 @@
 const { Router } = require("express");
 const bodyParser = require("body-parser");
-const google = require("googleapis");
+const { google } = require("googleapis");
 
-const promisify = require("nomnom-server-core/utils/promisify");
+// const promisify = require("nomnom-server-core/utils/promisify");
 const logger = require("nomnom-server-core/logger");
 const { login } = require("nomnom-server-core/user");
 
@@ -20,20 +20,17 @@ loginRouter.post("/google", async (req, res) => {
     process.env.GOOGLE_CLIENT_SECRET,
     process.env.GOOGLE_REDIRECT_URL || ""
   );
-  const plus = google.plus("v1").people;
-  const loadTokens = promisify(oauth2Client.getToken, oauth2Client);
-  const loadUserProfile = promisify(plus.get, plus);
-
   const authorizationCode = req.body;
+
   try {
-    const tokens = await loadTokens(authorizationCode);
+    const { tokens } = await oauth2Client.getToken(authorizationCode);
     oauth2Client.setCredentials(tokens);
-    const googleProfile = await loadUserProfile({
+    const profileRes = await google.plus("v1").people.get({
       userId: "me",
       auth: oauth2Client
     });
 
-    const { token } = await login(simpleProfile(googleProfile));
+    const { token } = await login(simpleProfile(profileRes.data));
     res.send(token);
   } catch (error) {
     logger.error(error);

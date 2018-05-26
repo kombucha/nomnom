@@ -1,4 +1,5 @@
 import React, { PureComponent } from "react";
+import { withRouter } from "next/router";
 import PropTypes from "prop-types";
 import { compose, mapProps } from "recompose";
 import styled from "styled-components";
@@ -7,7 +8,6 @@ import { Url as URL } from "url";
 import FlatButton from "../toolkit/FlatButton";
 import { Card, CardTitle } from "../toolkit/Card";
 
-import withData from "../hoc/withData";
 import withAuth from "../hoc/withAuth";
 import PageTitle from "../components/PageTitle";
 import ScrollPercentage from "../components/ScrollPercentage";
@@ -23,7 +23,9 @@ const Container = styled.div`
   padding: 20px;
 `;
 
-const EntryCard = styled(Card)`max-width: 800px;`;
+const EntryCard = styled(Card)`
+  max-width: 800px;
+`;
 
 const Article = styled.article`
   p {
@@ -143,7 +145,8 @@ export class Entry extends PureComponent {
     );
   };
 
-  componentWillReceiveProps({ userEntry }) {
+  componentDidUpdate() {
+    const { userEntry } = this.props;
     if (userEntry) {
       const progressPercent = userEntry.progress ? userEntry.progress / 100 : 0;
       // FIXME: Broken, need to take into account image loading because it affects the height !
@@ -173,13 +176,18 @@ Entry.propTypes = {
   updateUserEntry: PropTypes.func.isRequired
 };
 
-const mappedProps = mapProps(({ url, loggedInUser }) => ({
-  entryId: url.query.entryId,
-  loggedInUser
-}));
+const mappedProps = mapProps(
+  ({ router, loggedInUser }) => (
+    console.log("yo", router.query),
+    {
+      entryId: router.query.entryId,
+      loggedInUser
+    }
+  )
+);
 
 export default compose(
-  withData,
+  withRouter,
   withAuth,
   mappedProps,
   userEntryContainer,

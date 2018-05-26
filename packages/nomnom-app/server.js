@@ -3,10 +3,11 @@ const compression = require("compression");
 const cookieParser = require("cookie-parser");
 const next = require("next");
 
+const nextConfig = require("./next.config");
+
 async function start() {
-  const dev = process.env.NODE_ENV !== "production";
   const PORT = 3000;
-  const app = next({ dev });
+  const app = next(nextConfig);
   const handle = app.getRequestHandler();
 
   await app.prepare();

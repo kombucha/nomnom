@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { lighten } from "polished";
 import { mapProps, compose } from "recompose";
 import queryString from "query-string";
-import Router from "next/router";
+import { withRouter } from "next/router";
 import url from "url";
 import ContentAdd from "react-icons/lib/md/add";
 import VisibilitySensor from "react-visibility-sensor";
@@ -14,7 +14,6 @@ import { Card } from "../toolkit/Card";
 import { Menu, MenuItem } from "../toolkit/Menu";
 import FlatButton from "../toolkit/FlatButton";
 import FloatingActionButton from "../toolkit/FloatingActionButton";
-import withData from "../hoc/withData";
 import withAuth from "../hoc/withAuth";
 import PageWrapper from "../components/PageWrapper";
 import PageTitle from "../components/PageTitle";
@@ -34,8 +33,12 @@ const PageContainer = styled.div`
   justify-content: center;
   padding: 16px;
 `;
-const MainContainer = styled.main`flex: 1;`;
-const FilterContainer = styled.section`margin-right: 32px;`;
+const MainContainer = styled.main`
+  flex: 1;
+`;
+const FilterContainer = styled.section`
+  margin-right: 32px;
+`;
 
 const List = styled.ul`
   list-style: none;
@@ -43,7 +46,9 @@ const List = styled.ul`
   padding: 0;
 `;
 
-const FlexSpacer = styled.div`flex: 1;`;
+const FlexSpacer = styled.div`
+  flex: 1;
+`;
 const MultiSelectBar = styled.div`
   position: fixed;
   top: 0;
@@ -210,7 +215,8 @@ export class Entries extends PureComponent {
           subtitle={`${userEntry.domain}${tags}`}
           actions={actions}
           onClick={(ev, requestingSelection) =>
-            this._handleRowClicked(userEntry, requestingSelection)}
+            this._handleRowClicked(userEntry, requestingSelection)
+          }
           selected={isSelected}
           selectMode={selectMode}
         />
@@ -295,15 +301,15 @@ Entries.propTypes = {
   pushState: PropTypes.func.isRequired
 };
 
-const mappedProps = mapProps(({ loggedInUser: user, url }) => ({
-  status: url.query.status || DEFAULT_STATUS_FILTER,
+const mappedProps = mapProps(({ loggedInUser: user, router }) => ({
+  status: router.query.status || DEFAULT_STATUS_FILTER,
   user,
-  query: url.query,
-  pushState: Router.push
+  query: router.query,
+  pushState: router.push
 }));
 
 export default compose(
-  withData,
+  withRouter,
   withAuth,
   mappedProps,
   batchUpdateUserEntriesContainer,

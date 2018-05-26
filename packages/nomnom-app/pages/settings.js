@@ -1,10 +1,8 @@
 import React from "react";
-import { compose } from "recompose";
 import styled from "styled-components";
 
 import PageWrapper from "../components/PageWrapper";
 import PageTitle from "../components/PageTitle";
-import withData from "../hoc/withData";
 import withAuth from "../hoc/withAuth";
 
 import PrivacySettings from "../components/settings/PrivacySettings";
@@ -42,4 +40,4 @@ export const Settings = ({ loggedInUser }) => (
   </PageWrapper>
 );
 
-export default compose(withData, withAuth)(Settings);
+export default withAuth(Settings);

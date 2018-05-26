@@ -8,8 +8,8 @@ export class ScrollPercentage extends Component {
     return false;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.onChange !== this.props.onChange) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.onChange !== this.props.onChange) {
       this.props.onChange(getScrollPercent());
     }
   }

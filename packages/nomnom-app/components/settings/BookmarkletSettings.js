@@ -1,7 +1,13 @@
 import React from "react";
-import { gql, graphql } from "react-apollo";
+import { graphql } from "react-apollo";
+import getConfig from "next/config";
+import gql from "graphql-tag";
 
 import { Card, CardTitle } from "../../toolkit/Card";
+
+const {
+  publicRuntimeConfig: { apiUrl }
+} = getConfig();
 
 function bookmarkletFn() {
   const TOKEN = "%TOKEN%";
@@ -38,10 +44,9 @@ function bookmarkletFn() {
 }
 
 const bookmarkletFnStr = bookmarkletFn.toString();
-const host = process.env.API_HOST;
 const createBookmarklet = token => {
   const preparedBookmarkletFnStr = bookmarkletFnStr
-    .replace("%HOST%", host)
+    .replace("%HOST%", apiUrl)
     .replace("%TOKEN%", token);
 
   const script = `(${preparedBookmarkletFnStr})()`;

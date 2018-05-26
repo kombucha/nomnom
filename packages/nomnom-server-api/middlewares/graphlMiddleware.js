@@ -1,4 +1,4 @@
-const { graphqlExpress } = require("graphql-server-express");
+const { graphqlExpress } = require("apollo-server-express");
 const schema = require("../graphql/schema");
 
 module.exports = () =>

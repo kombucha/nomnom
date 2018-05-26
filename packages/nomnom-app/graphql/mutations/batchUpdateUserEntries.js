@@ -1,13 +1,17 @@
-import { gql, graphql } from "react-apollo";
+import { graphql } from "react-apollo";
+import gql from "graphql-tag";
+
 import { UserEntryListFragment } from "../fragments/userEntry";
 import { query as EntriesListQuery } from "../queries/userEntries";
 
 export const mutation = gql`
   mutation batchUpdateUserEntries($batchUpdateUserEntriesInput: BatchUpdateUserEntriesInput!) {
-    batchUpdateUserEntries(batchUpdateUserEntriesInput: $batchUpdateUserEntriesInput) {...UserEntryListFragment}
+    batchUpdateUserEntries(batchUpdateUserEntriesInput: $batchUpdateUserEntriesInput) {
+      ...UserEntryListFragment
+    }
   }
   ${UserEntryListFragment}
-  `;
+`;
 
 function cleanUpOldLists(proxy, userEntry) {
   ["NEW", "LATER", "ARCHIVED", "FAVORITE"].forEach(status => {
