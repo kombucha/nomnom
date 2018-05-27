@@ -11,7 +11,8 @@ module.exports = (_, { batchAddUserEntriesInput }, { user }) =>
         const userEntry = await UserEntry.create(user.id, addUserEntryInput);
         return userEntry;
       } catch (error) {
-        logger.error(`Failed to add user entry for url ${addUserEntryInput.url}`, error);
+        logger.error(`Failed to add user entry for url ${addUserEntryInput.url}`);
+        logger.error(error);
         return null;
       }
     },

@@ -24,9 +24,18 @@ async function readability(url, config) {
   for (const [handlerName, handler] of Object.entries(handlers)) {
     if (await handler.canHandle($html, url, config)) {
       logger.verbose(`Processing using ${handlerName} handler`);
-      result = await handler.process($html, url, config);
-      break;
+      try {
+        result = await handler.process($html, url, config);
+        break;
+      } catch (e) {
+        logger.error(`${handlerName} failed to process content, skipping`);
+        logger.error(e);
+      }
     }
+  }
+
+  if (!result) {
+    throw new Error("Parsing failed");
   }
 
   // Common post processing

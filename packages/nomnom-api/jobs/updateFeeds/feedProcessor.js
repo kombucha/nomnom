@@ -22,7 +22,8 @@ async function createForUser(userId, entries) {
     try {
       await userEntryService.create(userId, { url: entry.url, status: "NEW" });
     } catch (error) {
-      logger.error("Failed to create user entry while processing feed", error);
+      logger.error("Failed to create user entry while processing feed");
+      logger.error(error);
     }
   });
 }
@@ -43,7 +44,8 @@ async function feedProcessor(job) {
     const entries = await getFeedEntries(feed);
     await Promise.each(users, user => createForUser(user.id, entries));
   } catch (error) {
-    logger.error(`Failed to process feed ${feed.uri}`, error);
+    logger.error(`Failed to process feed ${feed.uri}`);
+    logger.error(error);
   }
 }
 
