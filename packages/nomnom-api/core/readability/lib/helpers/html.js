@@ -64,7 +64,11 @@ function clean($html) {
 
     const $el = cheerio(el);
     Object.keys(el.attribs).forEach(attr => {
-      if (!ATTRIBUTES_WHITELIST.includes(attr)) {
+      const isNomNomClass =
+        attr === "class" && el.attribs.class && el.attribs.class.startsWith("nomnom-");
+      attr === "class" && console.log(isNomNomClass, el.attribs.class);
+
+      if (!isNomNomClass && !ATTRIBUTES_WHITELIST.includes(attr)) {
         $el.removeAttr(attr);
       }
     });

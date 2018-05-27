@@ -26,8 +26,12 @@ async function processVideo($html, url, config) {
   const video = response.body.items[0];
   const content = cheerio.load(`
     <article>
-      ${video.player.embedHtml}
-      <p>${video.snippet.description}</p>
+      <div class="nomnom-youtube-container">
+        ${video.player.embedHtml}
+      </div>
+      <p>
+        ${video.snippet.description}
+      </p>
     </article>
   `)("article");
 

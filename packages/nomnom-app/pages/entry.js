@@ -27,6 +27,21 @@ const EntryCard = styled(Card)`
 `;
 
 const Article = styled.article`
+  .nomnom-youtube-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+
+    > iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
   p {
     text-align: justify;
   }
