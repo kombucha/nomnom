@@ -10,17 +10,19 @@ async function readability(url, config) {
   const response = await load(url);
   const htmlStr = String(response.body);
 
-  // Common preprocessing
   let $html = cheerio.load(htmlStr, { useHtmlParser2: true })("html");
+
+  // Common preprocessin
   for (const preProcess of preProcessers) {
     $html = await preProcess($html, url, config);
   }
 
   // Run readability scripts
   let result;
-  for (const handler of handlers) {
+  for (const [handlerName, handler] of Object.entries(handlers)) {
     if (await handler.canHandle($html, url, config)) {
       try {
+        console.log(`Processing using ${handlerName} handler`);
         result = await handler.process($html, url, config);
         break;
       } catch (e) {

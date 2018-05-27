@@ -50,12 +50,14 @@ function grabArticle($html) {
   // Process figures
   article.find("figure").each((i, el) => {
     const $el = cheerio(el);
+    const $image = $el.find("img");
     const isEmbed = $el.attr("class").includes("iframe");
+    const hasImage = $image.length > 0;
 
-    if (isEmbed) {
+    if (isEmbed || !hasImage) {
       $el.remove();
     } else {
-      const imgSrc = $el.find("img[data-src]").attr("data-src");
+      const imgSrc = $image.attr("data-src") || $image.attr("src");
       $el.replaceWith(`<img src="${imgSrc}"/>`);
     }
   });

@@ -19,6 +19,12 @@ async function processImages($html, url, config) {
     async img => {
       const $img = cheerio(img);
       const imgUrl = $img.attr("src");
+
+      if (!imgUrl) {
+        console.log("Skipping image", $img.toString());
+        return;
+      }
+
       const cachedUrl = await cacheImage(imgUrl, config);
       $img.attr("src", cachedUrl);
     },
