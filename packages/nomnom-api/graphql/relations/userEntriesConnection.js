@@ -15,30 +15,44 @@ const decodeCursor = cursor => {
   };
 };
 
-module.exports = async (parentUser, { status, first = 10, after }, { user }) => {
+const shouldFetchField = (info, fieldName) =>
+  info.fieldNodes[0].selectionSet.selections.some(selection => selection.name.value === fieldName);
+
+module.exports = async (parentUser, { status, first = 10, after }, { user }, info) => {
   if (parentUser.id !== user.id) {
     return [];
   } else if (first < 1) {
     throw new Error(`Invalid first argument: ${first} (must be > 0)`);
   }
 
-  const limit = first + 1;
-  const beforeCreationDate = after ? decodeCursor(after).creationDate : null;
-  const userEntries = await UserEntry.list(parentUser.id, { status, limit, beforeCreationDate });
+  let edges;
+  let pageInfo;
+  let totalCount;
 
-  const edges = userEntries.slice(0, first).map(userEntry => ({
-    node: userEntry,
-    cursor: createCursor(status, userEntry)
-  }));
+  if (shouldFetchField(info, "totalCount")) {
+    totalCount = await UserEntry.count(parentUser.id, status);
+  }
 
-  const hasNextPage = userEntries.length === limit;
-  const pageInfo = {
-    hasPreviousPage: false,
-    hasNextPage
-  };
+  if (shouldFetchField(info, "edges") || shouldFetchField(info, "pageInfo")) {
+    const limit = first + 1;
+    const beforeCreationDate = after ? decodeCursor(after).creationDate : null;
+    const userEntries = await UserEntry.list(parentUser.id, { status, limit, beforeCreationDate });
+
+    edges = userEntries.slice(0, first).map(userEntry => ({
+      node: userEntry,
+      cursor: createCursor(status, userEntry)
+    }));
+
+    const hasNextPage = userEntries.length === limit;
+    pageInfo = {
+      hasPreviousPage: false,
+      hasNextPage
+    };
+  }
 
   return {
     edges,
-    pageInfo
+    pageInfo,
+    totalCount
   };
 };

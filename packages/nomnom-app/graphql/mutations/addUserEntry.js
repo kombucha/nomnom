@@ -34,6 +34,10 @@ export const withMutation = graphql(mutation, {
               __typename: "UserEntryEdge"
             });
 
+            if (data.me.entries.totalCount) {
+              data.me.entries.total += 1;
+            }
+
             proxy.writeQuery({ data, ...queryToUpdate });
           } catch (e) {
             console.error(e);

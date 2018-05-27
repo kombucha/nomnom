@@ -90,6 +90,23 @@ async function list(userId, options) {
   return res.rows;
 }
 
+async function count(userId, status) {
+  const filters = [`"UserId" = $1`];
+  const filtersParams = [userId];
+
+  if (status) {
+    filters.push(`"status" = $2`);
+    filtersParams.push(status);
+  }
+
+  const res = await db.query(
+    `SELECT COUNT(*) FROM "UserEntry" WHERE ${filters.join(" AND ")}`,
+    filtersParams
+  );
+
+  return res.rows[0].count;
+}
+
 const UPDATABLE_KEYS = ["status", "tags", "progress"];
 async function update(userEntryId, updateValues) {
   const userEntries = await batchUpdate([userEntryId], updateValues);
@@ -159,6 +176,7 @@ module.exports = {
 
   create,
   list,
+  count,
   update,
   batchUpdate,
   deleteAll

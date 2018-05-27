@@ -18,6 +18,7 @@ type User {
 type UserEntriesConnection {
   edges: [UserEntryEdge]!
   pageInfo: PageInfo
+  totalCount: Int!
 }
 
 type UserEntryEdge {

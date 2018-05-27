@@ -10,7 +10,6 @@ import ContentAdd from "react-icons/lib/md/add";
 import VisibilitySensor from "react-visibility-sensor";
 
 import { Card } from "../toolkit/Card";
-import { Menu, MenuItem } from "../toolkit/Menu";
 import FlatButton from "../toolkit/FlatButton";
 import FloatingActionButton from "../toolkit/FloatingActionButton";
 import withAuth from "../components/hoc/withAuth";
@@ -20,6 +19,7 @@ import { RichListItem, ListItemPlaceholder } from "../components/RichList";
 import DelayedComponent from "../components/DelayedComponent";
 import AddEntryDialog from "../components/AddEntryDialog";
 import EmptyPlaceholder from "../components/EmptyPlaceholder";
+import UserEntryStatusFilter from "../components/UserEntryStatusFilter";
 import userEntriesContainer from "../graphql/queries/userEntries";
 import batchUpdateUserEntriesContainer from "../graphql/mutations/batchUpdateUserEntries";
 
@@ -258,12 +258,10 @@ export class Entries extends PureComponent {
           {this._renderMultiSelecBar(entries)}
 
           <FilterContainer>
-            <Menu value={status} onChange={this._handleStatusFilterChange}>
-              <MenuItem value="NEW">New</MenuItem>
-              <MenuItem value="LATER">Later</MenuItem>
-              <MenuItem value="FAVORITE">Favorites</MenuItem>
-              <MenuItem value="ARCHIVED">Archived</MenuItem>
-            </Menu>
+            <UserEntryStatusFilter
+              status={status}
+              onStatusChange={this._handleStatusFilterChange}
+            />
           </FilterContainer>
 
           <MainContainer>

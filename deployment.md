@@ -32,6 +32,11 @@ dokku redis:link nomnom-redis nomnom-api
 dokku config:set nomnom-app API\*URL=https://nomnom-api.limbocitizen.com DATA\*PATH=/app/storage GOOGLE_CLIENT_ID=**\***
 dokku config:set nomnom-api IMAGES_PATH=/app/storage JWT_ALGORITHM=HS256 GOOGLE_REDIRECT_URL=https://nomnom-app.limbocitizen.com GOOGLE_CLIENT_ID=\*\** GOOGLE*CLIENT_SECRET=**\* JWT_SECRET=\*** YOUTUBE*API_KEY=*\*\*
 
+# Process stuff
+
+dokku checks:skip node-js-app worker,web
+dokku ps:scale nomnom-api web=1 worker=1
+
 # Deploy !
 
 git push
