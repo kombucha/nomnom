@@ -1,5 +1,5 @@
-const readability = require("../core/readability");
-const logger = require("../core/logger");
+const readability = require("../../core/readability");
+const logger = require("../../core/logger");
 
 function readabilityProcessor(job) {
   const { url, config } = job.data;

@@ -1,7 +1,6 @@
-const path = require("path");
 const uuid = require("node-uuid");
-const Queue = require("bull");
 
+const { queue: readabilityQueue, READABILITY_JOB } = require("../jobs/readability/queue");
 const logger = require("./logger");
 const db = require("./db");
 
@@ -10,10 +9,6 @@ const READABILITY_CONFIG = {
   imageFilePath: process.env.IMAGES_PATH,
   imageBaseUrl: "/img/"
 };
-
-const readabilityQueue = new Queue("readability", process.env.REDIS_URL);
-const readabilityProcessorPath = path.resolve(__dirname, "../jobs/readabilityProcessor.js");
-readabilityQueue.process(readabilityProcessorPath);
 
 // TODO: handle multiple types of entries (only generic "article" behavior now)
 async function createFromUrl(url) {
@@ -25,6 +20,7 @@ async function createFromUrl(url) {
   }
 
   const readabilityJob = await readabilityQueue.add(
+    READABILITY_JOB,
     { url, config: READABILITY_CONFIG },
     { attempts: 3 }
   );

@@ -1,10 +1,12 @@
 const Promise = require("bluebird");
 
 const logger = require("../../core/logger");
-const feedService = require("../../core/feed");
 const userFeedService = require("../../core/userFeed");
 const userEntryService = require("../../core/userEntry");
+
 const rss = require("./rss");
+
+// const { queue, FEED_UPDATE } = require("./feedsQueue");
 
 async function getFeedEntries(feed) {
   switch (feed.type) {
@@ -16,7 +18,6 @@ async function getFeedEntries(feed) {
 }
 
 async function createForUser(userId, entries) {
-  // TODO: optimize creation call: don't need to check for existing entry with url, when I know it exists.
   return Promise.each(entries, async entry => {
     try {
       await userEntryService.create(userId, { url: entry.url, status: "NEW" });
@@ -26,7 +27,9 @@ async function createForUser(userId, entries) {
   });
 }
 
-async function processFeed(feed) {
+async function feedProcessor(job) {
+  const { feed } = job.data;
+
   logger.info(`Processing feed ${feed.uri}`);
 
   try {
@@ -44,14 +47,4 @@ async function processFeed(feed) {
   }
 }
 
-/**
- * Check all feeds, create entries for the feed, create userentries for users subscribed to
- * the respective feeds.
- * Feeds -> Entries -> UserEntry
- */
-async function updateFeeds() {
-  const feeds = await feedService.getAll();
-  await Promise.mapSeries(feeds, processFeed);
-}
-
-module.exports = updateFeeds;
+module.exports = feedProcessor;

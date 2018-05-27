@@ -18,8 +18,6 @@ async function create(userId, userEntryParam) {
   const existingEntry = await getFromUrl(userEntryParam.url);
 
   if (existingEntry) {
-    // TODO: return an error ?
-    logger.info(`A user entry already existing for ${userEntryParam.url} for user ${userId}`);
     return existingEntry;
   }
 
