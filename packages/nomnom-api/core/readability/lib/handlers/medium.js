@@ -50,7 +50,7 @@ function grabArticle($html) {
   // Process figures
   article.find("figure").each((i, el) => {
     const $el = cheerio(el);
-    const $image = $el.find("img");
+    const $image = $el.find("img").last();
     const isEmbed = $el.attr("class").includes("iframe");
     const hasImage = $image.length > 0;
 
