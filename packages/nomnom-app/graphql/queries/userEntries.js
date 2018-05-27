@@ -1,5 +1,6 @@
 import { graphql } from "react-apollo";
 import gql from "graphql-tag";
+import uniqBy from "lodash.uniqby";
 
 import { UserEntryListFragment } from "../fragments/userEntry";
 
@@ -47,13 +48,17 @@ export const withQuery = graphql(query, {
             if (!fetchMoreResult) {
               return previousResult;
             }
+            const newEdges = uniqBy(
+              [...previousResult.me.entries.edges, ...fetchMoreResult.me.entries.edges],
+              edge => edge.node.id
+            );
 
             return {
               me: {
                 ...previousResult.me,
                 entries: {
                   ...previousResult.me.entries,
-                  edges: [...previousResult.me.entries.edges, ...fetchMoreResult.me.entries.edges],
+                  edges: newEdges,
                   pageInfo: fetchMoreResult.me.entries.pageInfo
                 }
               }

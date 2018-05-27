@@ -227,21 +227,23 @@ export class Entries extends PureComponent {
     const userEntries = entries.map(asDisplayedUserEntry);
     const selectMode = hasItemsSelected(this.state.selectedRows);
 
-    return userEntries.length ? (
-      <List>
-        {userEntries.map(userEntry => this._renderRow(userEntry, selectMode))}
+    return (
+      <React.Fragment>
+        {userEntries.length ? (
+          <List>{userEntries.map(userEntry => this._renderRow(userEntry, selectMode))}</List>
+        ) : (
+          <EmptyPlaceholder />
+        )}
         {/*
           Adding a key to the visibility sensor force a rerender when rerendering the list,
           which re-triggers the visilibity check, and thus enables the infinite scroll behavior :)
           */}
         <VisibilitySensor
-          key={userEntries.length}
+          key={`vis-${userEntries.length}`}
           resizeCheck
           onChange={this._handleInfiniteScroll}
         />
-      </List>
-    ) : (
-      <EmptyPlaceholder />
+      </React.Fragment>
     );
   };
 

@@ -52,11 +52,6 @@ function writeToNewList(proxy, userEntry) {
   try {
     const data = proxy.readQuery(queryToUpdate);
     data.me.entries.edges.unshift({ node: userEntry, cursor: null, __typename: "UserEntryEdge" });
-
-    if (data.me.entries.totalCount) {
-      data.me.entries.total += 1;
-    }
-
     proxy.writeQuery({ data, ...queryToUpdate });
   } catch (e) {
     // console.warn(e);
