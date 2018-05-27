@@ -13,7 +13,7 @@ const WORD_REGEX = /[a-zA-Z0-9_\u0392-\u03c9\u0400-\u04FF]+|[\u4E00-\u9FFF\u3400
 const AVG_WORDS_PER_SECOND = 275 / 60;
 
 function getTitle($html) {
-  return getMetaValue($html, TITLE_META_NAMES) || $html("title").text();
+  return getMetaValue($html, TITLE_META_NAMES) || $html.find("title").text();
 }
 
 function getAuthor($html) {

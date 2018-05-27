@@ -23,13 +23,9 @@ async function readability(url, config) {
   let result;
   for (const [handlerName, handler] of Object.entries(handlers)) {
     if (await handler.canHandle($html, url, config)) {
-      try {
-        logger.verbose(`Processing using ${handlerName} handler`);
-        result = await handler.process($html, url, config);
-        break;
-      } catch (e) {
-        logger.error("Failed halfway through", e);
-      }
+      logger.verbose(`Processing using ${handlerName} handler`);
+      result = await handler.process($html, url, config);
+      break;
     }
   }
 

@@ -31,7 +31,7 @@ async function process($html) {
 
   const $article = grabArticle($html);
 
-  const content = $article.html();
+  const content = $article;
   const originalContent = $html.html();
   const textContent = $article.text();
   const wordCount = getWordCount($article);
@@ -59,7 +59,7 @@ function grabArticle($page) {
   // eslint-disable-next-line no-constant-condition
   while (true) {
     const elementsToScore = [];
-    let $node = $page("body").clone();
+    let $node = $page.find("body").clone();
 
     while ($node) {
       const nodeName = getNodeName($node);
