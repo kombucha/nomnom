@@ -11,7 +11,7 @@ const feedProcessorPath = path.resolve(__dirname, "./feedProcessor.js");
 // Schedules feeds update
 feedsQueue.process(FEEDS_UPDATE, 1, feedsProcessorPath);
 // Processes feed update
-feedsQueue.process(FEED_UPDATE, 3, feedProcessorPath);
+feedsQueue.process(FEED_UPDATE, 2, feedProcessorPath);
 
 module.exports = {
   FEEDS_UPDATE,
