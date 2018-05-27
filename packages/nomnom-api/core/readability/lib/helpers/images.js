@@ -7,6 +7,8 @@ const Promise = require("bluebird");
 const got = require("got");
 const mime = require("mime-types");
 
+const logger = require("../../../logger");
+
 /**
  * Downloads all images to cache and change their urls to point to cached version.
  * @param {*} $html cheerio object
@@ -21,7 +23,7 @@ async function processImages($html, url, config) {
       const imgUrl = $img.attr("src");
 
       if (!imgUrl) {
-        console.log("Skipping image", $img.toString());
+        logger.verbose("Skipping image", $img.toString());
         return;
       }
 

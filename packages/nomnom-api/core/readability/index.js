@@ -1,4 +1,6 @@
 const cheerio = require("cheerio");
+
+const logger = require("../logger");
 const handlers = require("./lib/handlers");
 const { fixRelativeUrls, processImages, clean } = require("./lib/helpers");
 const load = require("./lib/load");
@@ -22,11 +24,11 @@ async function readability(url, config) {
   for (const [handlerName, handler] of Object.entries(handlers)) {
     if (await handler.canHandle($html, url, config)) {
       try {
-        console.log(`Processing using ${handlerName} handler`);
+        logger.verbose(`Processing using ${handlerName} handler`);
         result = await handler.process($html, url, config);
         break;
       } catch (e) {
-        console.error("Failed halfway through", e);
+        logger.error("Failed halfway through", e);
       }
     }
   }
