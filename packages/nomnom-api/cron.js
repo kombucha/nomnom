@@ -9,7 +9,7 @@ logger.info(`Cleaning queues...`);
 Promise.all([readabilityQueue.clean(AN_HOUR_AGO), feedsQueue.clean(AN_HOUR_AGO)])
   .then(() => {
     logger.info(`Cleaning repeatable jobs...`);
-    feedsQueue.getRepeatableJobs();
+    return feedsQueue.getRepeatableJobs();
   })
   .then(jobs => {
     for (let job of jobs) {
