@@ -8,6 +8,5 @@ export default context =>
     })
     .catch(() => {
       // Fail gracefully
-      console.log("Youre not logged in");
       return null;
     });

@@ -1,6 +1,6 @@
 const express = require("express");
-const compression = require("compression");
 const cookieParser = require("cookie-parser");
+const morgan = require("morgan");
 const next = require("next");
 
 const nextConfig = require("./next.config");
@@ -12,7 +12,12 @@ async function start() {
   await app.prepare();
 
   const server = express();
-  server.use(compression(), cookieParser());
+  server.use(
+    morgan("dev", {
+      skip: (req, res) => !(res.get("Content-Type") || "").includes("text/html")
+    })
+  );
+  server.use(cookieParser());
 
   // FIXME: Temp workaround
   server.use("/img", express.static(nextConfig.serverRuntimeConfig.dataPath));
