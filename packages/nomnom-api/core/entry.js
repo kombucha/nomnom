@@ -10,6 +10,8 @@ const READABILITY_CONFIG = {
   imageBaseUrl: "/img/"
 };
 
+const READABILITY_JOB_OPTS = { attempts: 3, removeOnComplete: true, timeout: 60000, backoff: 100 };
+
 // TODO: handle multiple types of entries (only generic "article" behavior now)
 async function createFromUrl(url) {
   const entryFromDb = await getFromUrl(url);
@@ -22,7 +24,7 @@ async function createFromUrl(url) {
   const readabilityJob = await readabilityQueue.add(
     READABILITY_JOB,
     { url, config: READABILITY_CONFIG },
-    { attempts: 3 }
+    READABILITY_JOB_OPTS
   );
   const readabilityResult = await readabilityJob.finished();
 
