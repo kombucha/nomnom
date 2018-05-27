@@ -9,7 +9,7 @@ feedsQueue
     for (let job of jobs) {
       const { name, cron } = job;
       logger.info(`Remove "${name}" (cron: ${cron})`);
-      feedsQueue.removeRepeatableJob(name, { repeat: { cron } });
+      feedsQueue.removeRepeatable(name, { repeat: { cron } });
     }
   })
   .then(() => {
