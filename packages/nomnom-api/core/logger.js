@@ -5,4 +5,10 @@ const logger = winston.createLogger({
   transports: [new winston.transports.Console()]
 });
 
+logger.stream = {
+  write: function(message) {
+    logger.info(message);
+  }
+};
+
 module.exports = logger;
