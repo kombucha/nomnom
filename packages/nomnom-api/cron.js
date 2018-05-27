@@ -1,10 +1,16 @@
 const { queue: feedsQueue, FEEDS_UPDATE } = require("./jobs/updateFeeds/queue");
+const { queue: readabilityQueue } = require("./jobs/readability/queue");
 const logger = require("./core/logger");
 
+const AN_HOUR_AGO = 3600000;
 const EVERY_HOUR = "0 * * * *";
 
-feedsQueue
-  .getRepeatableJobs()
+logger.info(`Cleaning queues...`);
+Promise.all([readabilityQueue.clean(AN_HOUR_AGO), feedsQueue.clean(AN_HOUR_AGO)])
+  .then(() => {
+    logger.info(`Cleaning repeatable jobs...`);
+    feedsQueue.getRepeatableJobs();
+  })
   .then(jobs => {
     for (let job of jobs) {
       const { name, cron } = job;
