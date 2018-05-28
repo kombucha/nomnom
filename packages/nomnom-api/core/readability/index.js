@@ -2,7 +2,7 @@ const cheerio = require("cheerio");
 
 const logger = require("../logger");
 const handlers = require("./lib/handlers");
-const { fixRelativeUrls, processImages, clean } = require("./lib/helpers");
+const { fixRelativeUrls, processImages, cacheImage, clean } = require("./lib/helpers");
 const load = require("./lib/load");
 
 const preProcessers = [fixRelativeUrls];
@@ -43,6 +43,11 @@ async function readability(url, config) {
   for (const postProcess of postProcessers) {
     postProcessedContent = await postProcess(postProcessedContent, url, config);
   }
+
+  if (result.imageUrl) {
+    result.imageUrl = await cacheImage(result.imageUrl, config);
+  }
+
   result.content = postProcessedContent.html();
 
   return result;
