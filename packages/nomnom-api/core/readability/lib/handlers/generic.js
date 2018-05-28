@@ -29,7 +29,13 @@ async function process($html) {
   const publicationDate = getPublicationDate($html);
   const imageUrl = getImage($html);
 
-  const $article = grabArticle($html);
+  let $article;
+
+  try {
+    $article = grabArticle($html);
+  } catch (error) {
+    $article = cheerio(`<div class="nomnom-empty-content">No content grabbed</div>`);
+  }
 
   const content = $article;
   const originalContent = $html.html();
