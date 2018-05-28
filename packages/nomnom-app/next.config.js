@@ -5,7 +5,6 @@ module.exports = {
     googleClientId: process.env.GOOGLE_CLIENT_ID
   },
   serverRuntimeConfig: {
-    port: process.env.PORT,
-    dataPath: process.env.DATA_PATH
+    port: process.env.PORT
   }
 };
