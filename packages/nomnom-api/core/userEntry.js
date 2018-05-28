@@ -12,7 +12,7 @@ const USER_ENTRY_STATE = {
 };
 
 // TODO: source (rss, user etc)
-async function create(userId, userEntryParam) {
+async function create(userId, userEntryParam, entryParam) {
   logger.debug(`Importing ${userEntryParam.url} for user ${userId}`);
 
   const existingEntry = await getFromUrl(userEntryParam.url);
@@ -21,7 +21,7 @@ async function create(userId, userEntryParam) {
     return existingEntry;
   }
 
-  const newEntry = await entry.createFromUrl(userEntryParam.url);
+  const newEntry = await entry.createFrom(userEntryParam.url, entryParam);
   const userEntry = {
     id: uuid.v4(),
     UserId: userId,

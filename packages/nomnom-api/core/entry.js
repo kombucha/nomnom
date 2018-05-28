@@ -13,7 +13,7 @@ const READABILITY_CONFIG = {
 const READABILITY_JOB_OPTS = { attempts: 3, removeOnComplete: true, timeout: 60000, backoff: 100 };
 
 // TODO: handle multiple types of entries (only generic "article" behavior now)
-async function createFromUrl(url) {
+async function createFrom(url, entryParam = {}) {
   const entryFromDb = await getFromUrl(url);
 
   if (entryFromDb) {
@@ -29,6 +29,7 @@ async function createFromUrl(url) {
   const readabilityResult = await readabilityJob.finished();
 
   const entry = Object.assign({}, readabilityResult, {
+    ...entryParam,
     id: uuid.v4(),
     creationDate: new Date(),
     url
@@ -71,5 +72,5 @@ async function getFromUrl(url) {
 }
 
 module.exports = {
-  createFromUrl
+  createFrom
 };

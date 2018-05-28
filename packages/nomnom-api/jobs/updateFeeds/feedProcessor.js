@@ -20,7 +20,7 @@ async function getFeedEntries(feed) {
 async function createForUser(userId, entries) {
   return Promise.each(entries, async entry => {
     try {
-      await userEntryService.create(userId, { url: entry.url, status: "NEW" });
+      await userEntryService.create(userId, { url: entry.url, status: "NEW" }, entry);
     } catch (error) {
       logger.error("Failed to create user entry while processing feed");
       logger.error(error);
