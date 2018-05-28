@@ -3,10 +3,16 @@ const { queue: readabilityQueue } = require("./jobs/readability/queue");
 const logger = require("./core/logger");
 
 const AN_HOUR_AGO = 3600000;
+const A_DAY_AGO = 24 * 3600000;
 const EVERY_HOUR = "0 * * * *";
 
 logger.info(`Cleaning queues...`);
-Promise.all([readabilityQueue.clean(AN_HOUR_AGO), feedsQueue.clean(AN_HOUR_AGO)])
+Promise.all([
+  readabilityQueue.clean(AN_HOUR_AGO, "completed"),
+  feedsQueue.clean(AN_HOUR_AGO, "completed"),
+  readabilityQueue.clean(A_DAY_AGO, "failed"),
+  feedsQueue.clean(A_DAY_AGO, "failed")
+])
   .then(() => {
     logger.info(`Cleaning repeatable jobs...`);
     return feedsQueue.getRepeatableJobs();
