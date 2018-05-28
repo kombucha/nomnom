@@ -6,8 +6,8 @@ const db = require("./db");
 
 const READABILITY_CONFIG = {
   youtubeApiKey: process.env.YOUTUBE_API_KEY,
-  imageFilePath: process.env.IMAGES_PATH,
-  imageBaseUrl: "/img/"
+  imageFilePath: process.env.DATA_PATH,
+  imageBaseUrl: process.env.IMG_BASE_URL
 };
 
 const READABILITY_JOB_OPTS = { attempts: 3, removeOnComplete: true, timeout: 60000, backoff: 100 };

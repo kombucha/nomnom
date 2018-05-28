@@ -25,5 +25,6 @@
       "yarn prettier --print-width=100 --jsx-bracket-same-line=true --write",
       "git add"
     ]
-  }
+  },
+  "dependencies": {}
 }

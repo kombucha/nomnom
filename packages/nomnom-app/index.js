@@ -19,9 +19,6 @@ async function start() {
   );
   server.use(cookieParser());
 
-  // FIXME: Temp workaround
-  server.use("/img", express.static(nextConfig.serverRuntimeConfig.dataPath));
-
   server.get("/entries/:entryId", (req, res) => {
     return app.render(req, res, "/entry", req.params);
   });

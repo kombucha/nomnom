@@ -5,7 +5,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "start": "PORT=4001 nodemon -r dotenv/config --watch . index.js",
+    "dev": "nodemon -r dotenv/config --watch . index.js",
     "migrate": "db-migrate",
     "readability": "node -r dotenv/config core/readability/cli.js",
     "clean": "rm -fr build/"

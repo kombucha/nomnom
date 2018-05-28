@@ -3,7 +3,7 @@ const readability = require("./index");
 async function program() {
   const url = process.argv[2];
   const config = {
-    imageFilePath: process.env.IMAGES_PATH,
+    imageFilePath: process.env.DATA_PATH,
     imageBaseUrl: "localhost"
   };
 

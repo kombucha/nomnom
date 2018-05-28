@@ -1,0 +1,24 @@
+{
+  "name": "nomnom-img",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Vincent Lemeunier",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": "^10",
+    "yarn": "1.7"
+  },
+  "devDependencies": {
+    "dotenv": "5.0.1",
+    "nodemon": "1.17.5"
+  },
+  "scripts": {
+    "dev": "nodemon -r dotenv/config --watch . index.js"
+  },
+  "dependencies": {
+    "koa": "2.5.1",
+    "mime": "2.3.1",
+    "sharp": "0.20.2"
+  }
+}

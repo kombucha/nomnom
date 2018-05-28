@@ -1,2 +1,3 @@
 nomnom-app=packages/nomnom-app
 nomnom-api=packages/nomnom-api
+nomnom-img=packages/nomnom-img
