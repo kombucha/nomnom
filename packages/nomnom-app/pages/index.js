@@ -83,7 +83,9 @@ const MultiSelectBar = styled.div`
 const asDisplayedUserEntry = userEntry => ({
   id: userEntry.id,
   title: userEntry.entry.title,
-  imageUrl: userEntry.entry.imageUrl || "http://placekitten.com/g/200/200",
+  imageUrl: userEntry.entry.imageUrl
+    ? `${userEntry.entry.imageUrl}?w=100`
+    : "http://placekitten.com/g/100/100",
   url: userEntry.entry.url,
   domain: url.parse(userEntry.entry.url).hostname,
   status: userEntry.status,
