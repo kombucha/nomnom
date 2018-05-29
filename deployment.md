@@ -31,7 +31,7 @@ dokku redis:link nomnom-redis nomnom-api
 # Config / Environment variables
 
 dokku config:set nomnom-app API_URL=https://nomnom-api.limbocitizen.com GOOGLE_CLIENT_ID=\*\*\*
-dokku config:set nomnom-api DATA_PATH=/app/storage JWT_ALGORITHM=HS256 IMG_BASE_URL=https://nomnom-img.limbocitizen.com/ GOOGLE_REDIRECT_URL=https://nomnom-app.limbocitizen.com GOOGLE_CLIENT_ID=\*\*\* GOOGLE_CLIENT_SECRET=\*\*\* JWT_SECRET=\*\*\* YOUTUBE_API_KEY=\*\*\*
+dokku config:set nomnom-api DATA_PATH=/app/storage JWT_ALGORITHM=HS256 IMG_BASE_URL=https://nomnom-img.limbocitizen.com/ GOOGLE_REDIRECT_URL=https://nomnom-app.limbocitizen.com GOOGLE_CLIENT_ID=\*\*\* GOOGLE_CLIENT_SECRET=\*\*\* JWT_SECRET=\*\*\* YOUTUBE_API_KEY=\*\*\* ARENA_USERNAME=\*\*\* ARENA_PASSWORD=\*\*\*
 dokku config:set nomnom-img DATA_PATH=/app/storage
 
 # Process stuff

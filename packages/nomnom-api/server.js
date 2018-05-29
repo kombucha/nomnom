@@ -5,8 +5,10 @@ const cors = require("cors");
 
 const logger = require("./core/logger");
 const authMiddleware = require("./middlewares/authMiddleware");
+const basicAuthMiddleware = require("./middlewares/basicAuthMiddleware");
 const loadersMiddleware = require("./middlewares/loadersMiddleware");
 const graphqlMiddleware = require("./middlewares/graphlMiddleware");
+const arenaMiddleware = require("./middlewares/arenaMiddleware");
 const loginRouter = require("./routes/login");
 
 function launchServer() {
@@ -16,8 +18,15 @@ function launchServer() {
 
     app.use(cors({ origin: true, credentials: true }));
     app.use(morgan("dev", { stream: logger.stream }));
+
+    // Arena (their setup is a bit awkward :/ )
+    app.use("/arena", basicAuthMiddleware(process.env.ARENA_USERNAME, process.env.ARENA_PASSWORD));
+    app.use("/", arenaMiddleware("/arena"));
+
+    // Login endpoints
     app.use("/login", loginRouter);
 
+    // Graphql
     app.use(
       "/graphql",
       authMiddleware(),

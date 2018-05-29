@@ -34,6 +34,11 @@ async function scheduleJobs() {
   }
 }
 
+function getQueuesNames() {
+  return queues.map(q => q.name);
+}
+
 module.exports = {
-  scheduleJobs
+  scheduleJobs,
+  getQueuesNames
 };
