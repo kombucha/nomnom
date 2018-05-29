@@ -1,42 +1,23 @@
-const express = require("express");
-const morgan = require("morgan");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-
 const logger = require("./core/logger");
-const authMiddleware = require("./middlewares/authMiddleware");
-const loadersMiddleware = require("./middlewares/loadersMiddleware");
-const graphqlMiddleware = require("./middlewares/graphlMiddleware");
-const loginRouter = require("./routes/login");
+const { launchServer } = require("./server");
+const { scheduleJobs } = require("./jobs");
 
-const app = express();
+async function start() {
+  process.on("uncaughtException", err => {
+    logger.error("uncaughtException", err.stack);
+  });
 
-app.use(cors({ origin: true, credentials: true }));
-app.use(morgan("dev", { stream: logger.stream }));
-app.use("/login", loginRouter);
+  process.on("unhandledRejection", reason => {
+    logger.error("unhandledRejection", reason);
+  });
 
-app.use(
-  "/graphql",
-  authMiddleware(),
-  loadersMiddleware(),
-  bodyParser.json({ limit: "2mb" }),
-  graphqlMiddleware()
-);
+  try {
+    await scheduleJobs();
+    await launchServer();
+  } catch (e) {
+    logger.error("Failed to launch server");
+    logger.error(e);
+  }
+}
 
-// Error handling
-app.use((err, req, res, next) => {
-  logger.error(err.stack);
-  res.status(500).send("Something broke!");
-});
-
-process.on("uncaughtException", err => {
-  logger.error("uncaughtException", err.stack);
-});
-
-process.on("unhandledRejection", reason => {
-  logger.error("unhandledRejection", reason);
-});
-
-const port = parseInt(process.env.PORT, 10);
-app.listen(port);
-logger.info(`Running api server at http://localhost:${port}`);
+start();
