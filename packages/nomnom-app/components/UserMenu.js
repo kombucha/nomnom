@@ -1,7 +1,6 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import Router from "next/router";
-import { withProps } from "recompose";
+import { withRouter } from "next/router";
 import styled from "styled-components";
 import { ellipsis } from "polished";
 
@@ -10,13 +9,17 @@ import { MenuContainer, MenuItem } from "../toolkit/Menu";
 import FlatButton from "../toolkit/FlatButton";
 import Avatar from "../toolkit/Avatar";
 
-const MenuButton = styled(FlatButton)`color: white;`;
-const UserName = styled.span`${ellipsis("160px")} padding-right: 8px;`;
+const MenuButton = styled(FlatButton)`
+  color: white;
+`;
+const UserName = styled.span`
+  ${ellipsis("160px")} padding-right: 8px;
+`;
 
 export class UserMenu extends PureComponent {
   _logout = logout;
-  _goToSettings = () => this.props.pushState("/settings");
-  _goToFeeds = () => this.props.pushState("/feeds");
+  _goToSettings = () => this.props.router.push("/settings");
+  _goToFeeds = () => this.props.router.push("/feeds");
 
   render() {
     const { user } = this.props;
@@ -40,7 +43,7 @@ export class UserMenu extends PureComponent {
 
 UserMenu.propTypes = {
   user: PropTypes.object.isRequired,
-  pushState: PropTypes.func.isRequired
+  router: PropTypes.object.isRequired
 };
 
-export default withProps({ pushState: Router.push })(UserMenu);
+export default withRouter(UserMenu);
