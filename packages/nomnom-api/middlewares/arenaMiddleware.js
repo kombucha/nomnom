@@ -7,9 +7,7 @@ const arenaMiddlewareFactory = basePath =>
       queues: getQueuesNames().map(name => ({
         name,
         hostId: "nomnom",
-        redis: {
-          url: process.env.REDIS_URL
-        }
+        url: process.env.REDIS_URL
       }))
     },
     {
