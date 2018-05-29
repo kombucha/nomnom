@@ -9,7 +9,13 @@ const EVERY_HOUR = "0 * * * *";
 
 const queues = [feedsQueue, readabilityQueue];
 
-async function scheduleJobs() {
+async function shutdownQueues() {
+  for (let queue of queues) {
+    await queue.close();
+  }
+}
+
+async function setupQueues() {
   if (process.env.NODE_ENV === "production") {
     for (let queue of queues) {
       logger.info(`Cleaning queue '${queue.name}'...`);
@@ -39,6 +45,7 @@ function getQueuesNames() {
 }
 
 module.exports = {
-  scheduleJobs,
+  setupQueues,
+  shutdownQueues,
   getQueuesNames
 };

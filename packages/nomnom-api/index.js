@@ -1,6 +1,12 @@
 const logger = require("./core/logger");
 const { launchServer } = require("./server");
-const { scheduleJobs } = require("./jobs");
+const { setupQueues, shutdownQueues } = require("./jobs");
+
+async function gracefulShutdown() {
+  logger.info("Attempting graceful shutdown...");
+  await shutdownQueues();
+  process.exit();
+}
 
 async function start() {
   process.on("uncaughtException", err => {
@@ -11,8 +17,11 @@ async function start() {
     logger.error("unhandledRejection", reason);
   });
 
+  process.on("SIGTERM", gracefulShutdown);
+  process.on("SIGINT", gracefulShutdown);
+
   try {
-    await scheduleJobs();
+    await setupQueues();
     await launchServer();
   } catch (e) {
     logger.error("Failed to launch server");
