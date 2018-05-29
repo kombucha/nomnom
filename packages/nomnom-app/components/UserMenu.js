@@ -1,5 +1,6 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
+import { ApolloConsumer } from "react-apollo";
 import { withRouter } from "next/router";
 import styled from "styled-components";
 import { ellipsis } from "polished";
@@ -17,7 +18,7 @@ const UserName = styled.span`
 `;
 
 export class UserMenu extends PureComponent {
-  _logout = logout;
+  _logout = apolloClient => () => logout(apolloClient);
   _goToSettings = () => this.props.router.push("/settings");
   _goToFeeds = () => this.props.router.push("/feeds");
 
@@ -25,18 +26,22 @@ export class UserMenu extends PureComponent {
     const { user } = this.props;
 
     return (
-      <MenuContainer
-        alignRight
-        target={
-          <MenuButton>
-            <UserName>{user.name}</UserName>
-            <Avatar size="30px" src={user.avatarUrl} alt={`${user.name}'s avatar`} />
-          </MenuButton>
-        }>
-        <MenuItem onClick={this._goToFeeds}>Feeds</MenuItem>
-        <MenuItem onClick={this._goToSettings}>Settings</MenuItem>
-        <MenuItem onClick={this._logout}>Sign out</MenuItem>
-      </MenuContainer>
+      <ApolloConsumer>
+        {apolloClient => (
+          <MenuContainer
+            alignRight
+            target={
+              <MenuButton>
+                <UserName>{user.name}</UserName>
+                <Avatar size="30px" src={user.avatarUrl} alt={`${user.name}'s avatar`} />
+              </MenuButton>
+            }>
+            <MenuItem onClick={this._goToFeeds}>Feeds</MenuItem>
+            <MenuItem onClick={this._goToSettings}>Settings</MenuItem>
+            <MenuItem onClick={this._logout(apolloClient)}>Sign out</MenuItem>
+          </MenuContainer>
+        )}
+      </ApolloConsumer>
     );
   }
 }
