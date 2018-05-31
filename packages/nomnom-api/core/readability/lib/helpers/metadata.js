@@ -32,7 +32,8 @@ function getPublicationDate($html) {
 }
 
 function getImage($html) {
-  return getMetaValue($html, IMAGE_META_NAMES);
+  const imageUrl = getMetaValue($html, IMAGE_META_NAMES);
+  return imageUrl && imageUrl.startsWith("http") ? imageUrl : null;
 }
 
 /**
