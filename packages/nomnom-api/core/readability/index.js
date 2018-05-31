@@ -12,7 +12,6 @@ async function readability(url, config) {
 
   let $html = cheerio.load(htmlStr, { useHtmlParser2: true })("html");
 
-  const preProcessHtml = require("./lib/preProcessHtml");
   $html = await preProcessHtml($html, url, config);
 
   // Run readability scripts
