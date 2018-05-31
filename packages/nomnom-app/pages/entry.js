@@ -9,6 +9,7 @@ import { Card, CardTitle } from "../toolkit/Card";
 
 import withAuth from "../components/hoc/withAuth";
 import PageTitle from "../components/PageTitle";
+import KeyboardShortcuts from "../components/KeyboardShortcuts";
 import ScrollPercentage from "../components/ScrollPercentage";
 import PageWrapper from "../components/PageWrapper";
 import EditEntryTagsDialog from "../components/EditEntryTagsDialog";
@@ -90,6 +91,13 @@ export class Entry extends PureComponent {
     this.setState({ editingTags: true });
   };
 
+  _shortcutHandlers = {
+    a: this._archiveEntry,
+    f: this._favoriteEntry,
+    v: () => window.open(this.props.userEntry.entry.url, "_blank"),
+    e: this._editTags
+  };
+
   _renderLoading = () => {
     return (
       <div>
@@ -113,7 +121,7 @@ export class Entry extends PureComponent {
       : "Unknown publication date";
 
     return (
-      <div>
+      <KeyboardShortcuts bindings={this._shortcutHandlers} global>
         <PageTitle value={userEntry.entry.title} />
         <ScrollPercentage onChange={this._handleProgressUpdate} />
 
@@ -155,7 +163,7 @@ export class Entry extends PureComponent {
             this.setState({ editingTags: false });
           }}
         />
-      </div>
+      </KeyboardShortcuts>
     );
   };
 

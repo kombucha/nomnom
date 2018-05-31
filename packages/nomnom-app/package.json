@@ -19,6 +19,7 @@
     "lodash.debounce": "4.0.8",
     "lodash.uniqby": "4.7.0",
     "morgan": "1.9.0",
+    "mousetrap": "1.6.1",
     "next": "6.0.3",
     "polished": "1.9.2",
     "prop-types": "15.6.1",
