@@ -28,8 +28,7 @@ async function createFrom(url, entryParam = {}) {
   );
   const readabilityResult = await readabilityJob.finished();
 
-  const entry = Object.assign({}, readabilityResult, {
-    ...entryParam,
+  const entry = Object.assign({}, entryParam, readabilityResult, {
     id: uuid.v4(),
     creationDate: new Date(),
     url

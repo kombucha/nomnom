@@ -42,6 +42,7 @@ async function setupQueues() {
 
   logger.info(`[PROD] Scheduling "${FEEDS_UPDATE}" (cron: ${EVERY_HOUR})`);
   feedsQueue.add(FEEDS_UPDATE, {}, { repeat: { cron: EVERY_HOUR } });
+
   logger.info(`[PROD] Scheduling maintenance (cron: ${EVERY_HOUR})`);
   maintenanceQueue.add({}, { repeat: { cron: EVERY_HOUR } });
 }

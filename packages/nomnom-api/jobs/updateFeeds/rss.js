@@ -1,6 +1,7 @@
 const FeedParser = require("feedparser");
 const got = require("got");
 const pump = require("pump");
+const postProcessReadability = require("../../core/readability/lib/postProcessResult");
 
 function asEntry(item) {
   return {
@@ -9,6 +10,7 @@ function asEntry(item) {
     author: item.author,
     excerpt: item.summary,
     content: item.description,
+    originalContent: item.description,
     published: item.pubdate
   };
 }
@@ -25,7 +27,10 @@ function getFeedEntries(url) {
   return new Promise((resolve, reject) => {
     const rssItems = [];
     const onData = data => rssItems.push(asEntry(data));
-    const onDone = err => (err ? reject(err) : resolve(rssItems));
+    const onDone = err => {
+      if (err) reject(err);
+      Promise.all(rssItems.map(postProcessReadability)).then(resolve, e => reject(e));
+    };
 
     createRSSStream(url, onDone).on("data", onData);
   });

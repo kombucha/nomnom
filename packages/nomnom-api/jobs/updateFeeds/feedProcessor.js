@@ -45,7 +45,7 @@ async function feedProcessor(job) {
     await Promise.each(users, user => createForUser(user.id, entries));
   } catch (error) {
     logger.error(`Failed to process feed ${feed.uri}`);
-    logger.error(error);
+    logger.error(error.stack);
   }
 }
 

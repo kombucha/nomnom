@@ -8,6 +8,7 @@ function readabilityProcessor(job) {
   );
 
   return readability(url, config).catch(e => {
+    logger.error(`Failed to run readability on ${url}`);
     logger.error(e.stack);
     throw e;
   });
