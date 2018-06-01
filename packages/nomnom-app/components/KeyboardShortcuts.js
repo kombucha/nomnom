@@ -21,6 +21,12 @@ class KeyboardShortcuts extends React.Component {
     if (!bindingElement) return;
 
     this.mousetrap = new Mousetrap(bindingElement);
+    this.mousetrap.stopCallback = (e, element) => {
+      return (
+        ["INPUT", "SELECT", "TEXTAREA"].includes(element.tagName) ||
+        (element.contentEditable && element.contentEditable === "true")
+      );
+    };
     Object.entries(this.props.bindings).forEach(([seq, cb]) =>
       this.mousetrap.bind(seq, cb, "keyup")
     );
