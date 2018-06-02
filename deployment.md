@@ -66,3 +66,8 @@ Content:
   copytruncate
 }
 ```
+
+# Datadog
+
+DD_API_KEY=\*\*\* bash -c "$(curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh)"
+[Docker integration](https://app.datadoghq.com/account/settings#integrations/docker)
