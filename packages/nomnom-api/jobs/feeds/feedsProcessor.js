@@ -1,15 +1,21 @@
 const logger = require("../../core/logger");
 const feedService = require("../../core/feed");
 
-const { queue, FEED_UPDATE } = require("./queue");
+const feedsQueue = require("./queue");
+const performAsync = require("../performAsync");
 
 async function feedsProcessor() {
   const feeds = await feedService.getAll();
 
   logger.info(`Scheduling ${feeds.length} feed updates`);
-  feeds.forEach(feed => {
-    queue.add(FEED_UPDATE, { feed }, { attempts: 3 });
-  });
+  await performAsync(
+    feedsQueue.create,
+    feeds.map(feed => ({
+      name: feedsQueue.FEED_UPDATE,
+      data: { feed },
+      options: { attempts: 3 }
+    }))
+  );
 }
 
 module.exports = feedsProcessor;

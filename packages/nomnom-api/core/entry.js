@@ -1,6 +1,7 @@
 const uuid = require("node-uuid");
 
-const { queue: readabilityQueue, READABILITY_JOB } = require("../jobs/readability/queue");
+const readabilityQueue = require("../jobs/readability/queue");
+const performAsync = require("../jobs/performAsync");
 const logger = require("./logger");
 const db = require("./db");
 
@@ -10,7 +11,13 @@ const READABILITY_CONFIG = {
   imageBaseUrl: process.env.IMG_BASE_URL
 };
 
-const READABILITY_JOB_OPTS = { attempts: 3, removeOnComplete: true, timeout: 60000, backoff: 100 };
+const READABILITY_JOB_OPTIONS = {
+  attempts: 3,
+  removeOnComplete: true,
+  timeout: 60000,
+  backoff: 100
+};
+const performReadability = performAsync.bind(null, readabilityQueue.create);
 
 // TODO: handle multiple types of entries (only generic "article" behavior now)
 async function createFrom(url, entryParam = {}) {
@@ -21,12 +28,13 @@ async function createFrom(url, entryParam = {}) {
     return entryFromDb;
   }
 
-  const readabilityJob = await readabilityQueue.add(
-    READABILITY_JOB,
-    { url, config: READABILITY_CONFIG },
-    READABILITY_JOB_OPTS
-  );
-  const readabilityResult = await readabilityJob.finished();
+  const [readabilityResult] = await performReadability([
+    {
+      name: readabilityQueue.READABILITY_JOB,
+      data: { url, config: READABILITY_CONFIG },
+      options: { ...READABILITY_JOB_OPTIONS, jobId: url }
+    }
+  ]);
 
   const entry = Object.assign({}, entryParam, readabilityResult, {
     id: uuid.v4(),
