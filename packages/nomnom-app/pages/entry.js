@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { compose, mapProps } from "recompose";
 import styled from "styled-components";
-import { Url as URL } from "url";
+import formatDate from "date-fns/format";
 
 import FlatButton from "../toolkit/FlatButton";
 import { Card, CardTitle } from "../toolkit/Card";
@@ -57,6 +57,17 @@ const Article = styled.article`
 
   pre {
     overflow-x: scroll;
+  }
+`;
+
+const Meta = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+
+  color: ${props => props.theme.disabledColor};
+  a {
+    color: inherit;
   }
 `;
 
@@ -130,17 +141,15 @@ export class Entry extends PureComponent {
         <EntryCard>
           <CardTitle>{userEntry.entry.title}</CardTitle>
 
-          <div>
-            <div>
-              <span>By {userEntry.entry.author},</span>
-              <a target="_blank" rel="noopener noreferrer" href={userEntry.entry.url}>
-                {domain}
-              </a>
-              <br />
-              <span>{publicationDate}</span>
-            </div>
-            <Article dangerouslySetInnerHTML={htmlContent} />
-          </div>
+          <Meta>
+            {userEntry.entry.author && <span>By {userEntry.entry.author},</span>}
+            <a target="_blank" rel="noopener noreferrer" href={userEntry.entry.url}>
+              {domain}
+            </a>
+            <span>{formatDate(publicationDate, "MMMM Do, YYYY")}</span>
+          </Meta>
+
+          <Article dangerouslySetInnerHTML={htmlContent} />
 
           <div>
             <a href={userEntry.entry.url} target="__blank">
