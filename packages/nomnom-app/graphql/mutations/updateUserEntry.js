@@ -1,8 +1,8 @@
 import { graphql } from "react-apollo";
 import gql from "graphql-tag";
 
-// TODO: Update store
-// http://dev.apollodata.com/react/cache-updates.html
+import updateStore from "./userEntryUpdateHelper";
+
 export const mutation = gql`
   mutation updateUserEntry($entryUpdateInput: EntryUpdateInput!) {
     updateUserEntry(entryUpdateInput: $entryUpdateInput) {
@@ -17,7 +17,13 @@ export const mutation = gql`
 
 export const withMutation = graphql(mutation, {
   props: ({ mutate }) => ({
-    updateUserEntry: entryUpdateInput => mutate({ variables: { entryUpdateInput } })
+    updateUserEntry: entryUpdateInput =>
+      mutate({
+        variables: { entryUpdateInput },
+        update: (proxy, result) => {
+          updateStore(proxy, result.data.updateUserEntry);
+        }
+      })
   })
 });
 
