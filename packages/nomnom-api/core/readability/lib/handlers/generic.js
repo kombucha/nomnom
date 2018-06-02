@@ -40,7 +40,7 @@ async function process($html) {
   const content = $article;
   const originalContent = $html.html();
   const textContent = $article.text();
-  const wordCount = getWordCount($article);
+  const wordCount = getWordCount(textContent);
   const duration = getDurationFromWordCount(wordCount);
 
   return {

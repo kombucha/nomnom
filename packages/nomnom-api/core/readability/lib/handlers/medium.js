@@ -25,7 +25,7 @@ async function process($html) {
   const content = grabArticle($html);
   const textContent = content ? content.text() : "";
   const originalContent = $html.html();
-  const wordCount = getWordCount(content);
+  const wordCount = getWordCount(textContent);
   const duration = getDurationFromWordCount(wordCount);
 
   return {

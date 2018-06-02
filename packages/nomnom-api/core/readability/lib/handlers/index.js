@@ -1,7 +1,13 @@
-const medium = require("./medium");
-const youtube = require("./youtube");
-const dailymotion = require("./dailymotion");
-const vimeo = require("./vimeo");
-const generic = require("./generic");
+const fs = require("fs");
 
-module.exports = { medium, youtube, vimeo, dailymotion, generic };
+const handlers = fs
+  .readdirSync(__dirname)
+  .filter(m => m !== "index.js")
+  .sort(a => (a === "generic.js" ? 1 : 0))
+  .reduce((acc, m) => {
+    const name = m.slice(0, m.lastIndexOf("."));
+    acc[name] = require(`./${name}`);
+    return acc;
+  }, {});
+
+module.exports = handlers;

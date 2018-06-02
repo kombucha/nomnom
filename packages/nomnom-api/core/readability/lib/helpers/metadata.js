@@ -38,11 +38,11 @@ function getImage($html) {
 
 /**
  * Counts the number of word in a given html,
- * @param {*} $html cheerio object
+ * @param {string} textContent
  * @return {number} number of words in the html.
  */
-function getWordCount($html) {
-  const wordCountMatch = $html.text().match(WORD_REGEX);
+function getWordCount(textContent = "") {
+  const wordCountMatch = textContent.match(WORD_REGEX);
   return wordCountMatch ? wordCountMatch.length : 0;
 }
 
