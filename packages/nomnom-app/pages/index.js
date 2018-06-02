@@ -31,12 +31,20 @@ const PageContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   padding: 16px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 const MainContainer = styled.main`
   flex: 1;
 `;
 const FilterContainer = styled.section`
   margin-right: 32px;
+
+  @media (max-width: 768px) {
+    margin: 0 0 16px 0;
+  }
 `;
 
 const List = styled.ul`
