@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { ellipsis } from "polished";
 
 const height = "36px";
 const textColor = props => {
@@ -13,6 +14,10 @@ const textColor = props => {
 };
 
 const StyledButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   min-width: 88px;
   height: ${height};
   padding: 0px 16px;
@@ -32,6 +37,7 @@ const StyledButton = styled.button`
   font-size: 14px;
   letter-spacing: 0px;
   text-transform: uppercase;
+  ${ellipsis()};
 
   transition: background-color ${props => props.theme.transitionConfig};
 
@@ -45,16 +51,9 @@ const StyledButton = styled.button`
     pointer-events: none;
   }
 `;
-const ChildrenWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 export const FlatButton = ({ children, ...rest }) => (
-  <StyledButton {...rest}>
-    <ChildrenWrapper>{children}</ChildrenWrapper>
-  </StyledButton>
+  <StyledButton {...rest}>{children}</StyledButton>
 );
 
 export default FlatButton;

@@ -81,6 +81,8 @@ const RichListItemActionsContainer = styled.div`
 
   display: flex;
   align-items: center;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 1) 8px);
+  padding-left: 16px;
 `;
 const CheckboxContainer = styled.div`
   position: absolute;
