@@ -17,11 +17,11 @@ class KeyboardShortcuts extends React.Component {
   };
 
   _bindMousetrap = el => {
-    if (!process.browser) return;
     this._reset();
 
+    if (!process.browser || !el) return;
+
     const bindingElement = this.props.global ? document.documentElement : el;
-    if (!bindingElement) return;
 
     this.mousetrap = new Mousetrap(bindingElement);
     this.mousetrap.stopCallback = (e, element) => {
