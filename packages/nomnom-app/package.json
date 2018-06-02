@@ -21,6 +21,7 @@
     "morgan": "1.9.0",
     "mousetrap": "1.6.1",
     "next": "6.0.3",
+    "numeral": "2.0.6",
     "polished": "1.9.2",
     "prop-types": "15.6.1",
     "query-string": "6.1.0",

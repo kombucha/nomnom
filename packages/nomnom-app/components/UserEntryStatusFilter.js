@@ -1,8 +1,23 @@
 import React from "react";
 import PropTypes from "prop-types";
+import styled from "styled-components";
+import numeral from "numeral";
 
 import { Menu, MenuItem } from "../toolkit/Menu";
 import userEntriesCountContainer from "../graphql/queries/userEntriesCount";
+
+const StatusWrapper = styled.div`
+  display: flex;
+  min-width: 148px;
+`;
+
+const Label = styled.span`
+  flex: 1;
+`;
+
+const Count = styled.span`
+  color: ${props => props.theme.disabledColor};
+`;
 
 export class UserEntryStatusFilter extends React.PureComponent {
   static propTypes = {
@@ -17,7 +32,10 @@ export class UserEntryStatusFilter extends React.PureComponent {
       <Menu value={status} onChange={onStatusChange}>
         {statuses.map(status => (
           <MenuItem key={status.value} value={status.value}>
-            {status.label} ({status.totalCount})
+            <StatusWrapper>
+              <Label>{status.label}</Label>{" "}
+              <Count>{numeral(status.totalCount).format("0.[0]a")}</Count>
+            </StatusWrapper>
           </MenuItem>
         ))}
       </Menu>

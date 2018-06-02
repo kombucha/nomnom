@@ -92,7 +92,7 @@ const asDisplayedUserEntry = userEntry => ({
   id: userEntry.id,
   title: userEntry.entry.title,
   imageUrl: userEntry.entry.imageUrl
-    ? `${userEntry.entry.imageUrl}?w=100`
+    ? `${userEntry.entry.imageUrl}?w=100&h=100`
     : "http://placekitten.com/g/100/100",
   url: userEntry.entry.url,
   domain: url.parse(userEntry.entry.url).hostname,
