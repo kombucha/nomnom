@@ -7,17 +7,20 @@ class KeyboardShortcuts extends React.Component {
 
   componentWillUnmount() {
     if (!process.browser) return;
+    this._reset();
   }
 
-  bindMousetrap = el => {
-    if (!process.browser) return;
-
+  _reset = () => {
     if (this.mousetrap) {
       this.mousetrap.reset();
     }
+  };
+
+  _bindMousetrap = el => {
+    if (!process.browser) return;
+    this._reset();
 
     const bindingElement = this.props.global ? document.documentElement : el;
-
     if (!bindingElement) return;
 
     this.mousetrap = new Mousetrap(bindingElement);
@@ -33,7 +36,7 @@ class KeyboardShortcuts extends React.Component {
   };
 
   render() {
-    return <div ref={this.bindMousetrap}>{this.props.children}</div>;
+    return <div ref={this._bindMousetrap}>{this.props.children}</div>;
   }
 }
 
