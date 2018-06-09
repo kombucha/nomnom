@@ -85,7 +85,7 @@ api.updateFeedMetadata = async function(feed, entries) {
     }
 
     const average = distancesSum / (publicationDates.length - 1);
-    updateFrequency = clamp(average, MIN_FREQUENCY, MAX_FREQUENCY);
+    updateFrequency = Math.round(clamp(average, MIN_FREQUENCY, MAX_FREQUENCY));
   }
 
   await api.update(feed.id, { lastUpdateDate, updateFrequency });

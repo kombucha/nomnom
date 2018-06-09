@@ -30,15 +30,18 @@ async function createForUser(userId, entries) {
 
 async function feedProcessor(job) {
   const { feedId } = job.data;
+  let feed;
 
   try {
-    const feed = await feedService.getById(feedId);
+    feed = await feedService.getById(feedId);
     logger.info(`Processing feed ${feed.uri}`);
     await job.progress(10);
 
     if (feed.updateFrequency && Date.now() - feed.lastUpdateDate < feed.updateFrequency) {
       const frequency = moment.duration(feed.updateFrequency, "ms").humanize();
-      logger.info(`Skip feed because it's been updated recently enough. (freq: ${frequency})`);
+      logger.info(
+        `Skip feed ${feed.uri} because it's been updated recently enough. (freq: ${frequency})`
+      );
       return;
     }
 
@@ -46,7 +49,7 @@ async function feedProcessor(job) {
     await job.progress(25);
 
     if (users.length === 0) {
-      logger.info(`Skip feed because no one cares about it :(`);
+      logger.info(`Skip feed ${feed.uri} because no one cares about it :(`);
       return;
     }
 
@@ -58,8 +61,10 @@ async function feedProcessor(job) {
 
     await Promise.each(users, user => createForUser(user.id, entries));
   } catch (error) {
-    logger.error(`Failed to process feed ${feedId}`);
+    logger.error(`Failed to process feed ${feed ? feed.uri : feedId}`);
     logger.error(error.stack);
+
+    throw error;
   }
 }
 
