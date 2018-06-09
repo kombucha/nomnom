@@ -34,7 +34,7 @@ async function setupQueues() {
       logger.info(`Emptying queue '${queue.name}'...`);
       await removeAllJobs(queue);
     }
-    // return;
+    return;
   }
 
   logger.info(`Cleaning repeatable jobs...`);
@@ -43,8 +43,7 @@ async function setupQueues() {
   }
 
   logger.info(`Scheduling "${feeds.FEEDS_UPDATE}" (cron: ${EVERY_HOUR})`);
-  // feedsQueue.add(feeds.FEEDS_UPDATE, {}, { repeat: { cron: EVERY_HOUR } });
-  feedsQueue.add(feeds.FEEDS_UPDATE, {});
+  feedsQueue.add(feeds.FEEDS_UPDATE, {}, { repeat: { cron: EVERY_HOUR } });
 
   logger.info(`Scheduling maintenance (cron: ${EVERY_HOUR})`);
   maintenanceQueue.add({}, { repeat: { cron: EVERY_HOUR } });
