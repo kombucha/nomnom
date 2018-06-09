@@ -60,6 +60,7 @@ async function feedProcessor(job) {
     await job.progress(75);
 
     await Promise.each(users, user => createForUser(user.id, entries));
+    await job.progress(100);
   } catch (error) {
     logger.error(`Failed to process feed ${feed ? feed.uri : feedId}`);
     logger.error(error.stack);
