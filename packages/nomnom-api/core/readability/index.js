@@ -10,7 +10,7 @@ async function readability(url, config) {
   const response = await load(url);
   const htmlStr = String(response.body);
 
-  let $html = cheerio.load(htmlStr, { useHtmlParser2: true })("html");
+  let $html = cheerio.load(htmlStr, { useHtmlParser2: true }).root();
 
   $html = await preProcessHtml($html, url, config);
 

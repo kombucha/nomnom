@@ -1,17 +1,13 @@
 const DataLoader = require("dataloader");
 
 const db = require("../core/db");
-
-const placeholders = count =>
-  Array(count)
-    .fill()
-    .map((_, idx) => `$${idx + 1}`);
+const dbPlaceholders = require("../core/utils/dbPlaceholders");
 
 const tableLoader = tableName => async ids => {
   const res = await db.query(
     `
       SELECT * FROM "${tableName}"
-      WHERE "id" IN (${placeholders(ids.length).join(", ")});`,
+      WHERE "id" IN (${dbPlaceholders(ids.length)});`,
     ids
   );
 

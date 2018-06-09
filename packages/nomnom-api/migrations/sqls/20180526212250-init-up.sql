@@ -32,6 +32,7 @@ CREATE TABLE "Entry" (
 -- -----------------------------------------------------
 -- Table "Feed"
 -- -----------------------------------------------------
+DROP TYPE IF EXISTS "FeedType";
 CREATE TYPE "FeedType" AS ENUM ('RSS');
 CREATE TABLE "Feed" (
   "id" UUID NOT NULL,
@@ -46,6 +47,7 @@ CREATE TABLE "Feed" (
 -- -----------------------------------------------------
 -- Table "UserEntry"
 -- -----------------------------------------------------
+DROP TYPE IF EXISTS "UserEntryStatus";
 CREATE TYPE "UserEntryStatus" AS ENUM ('NEW', 'LATER', 'FAVORITE', 'ARCHIVED');
 CREATE TABLE  "UserEntry" (
   "id" UUID NOT NULL,

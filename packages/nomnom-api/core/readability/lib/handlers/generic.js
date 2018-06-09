@@ -174,7 +174,7 @@ function grabArticle($page) {
 
     // Build article content
     const topCandidateScore = $topCandidate.data("readabilityScore");
-    const $articleContent = cheerio.load("<div></div>")("div");
+    const $articleContent = cheerio.load("<div></div>").root();
     const siblingScoreThreshold = Math.max(10, topCandidateScore * 0.2);
     $parentOfTopCandidate = $topCandidate.parent();
     const $siblings = $parentOfTopCandidate.children();

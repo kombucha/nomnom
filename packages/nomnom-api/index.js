@@ -3,7 +3,6 @@ const { launchServer } = require("./server");
 const { setupQueues, shutdownQueues } = require("./jobs");
 
 async function gracefulShutdown() {
-  logger.info("Attempting graceful shutdown...");
   await shutdownQueues();
   process.exit();
 }

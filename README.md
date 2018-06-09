@@ -17,8 +17,8 @@ You then need to start the database and redis
 
 ```
 # Example in dev
-docker run -p 5432:5432 --name nomnom-db -e POSTGRES_DB=nomnom -d postgres
-docker run -p 6379:6379 --name nomnom-redis -d redis
+docker run --restart always -p 5432:5432 --name nomnom-db -d postgres
+docker run --restart always -p 6379:6379 --name nomnom-redis -d redis
 ```
 
 Then install and launch the app

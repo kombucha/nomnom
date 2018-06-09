@@ -2,11 +2,10 @@ const Promise = require("bluebird");
 
 const logger = require("../../core/logger");
 const userFeedService = require("../../core/userFeed");
+const feedService = require("../../core/feed");
 const userEntryService = require("../../core/userEntry");
 
 const rss = require("./rss");
-
-// const { queue, FEED_UPDATE } = require("./feedsQueue");
 
 async function getFeedEntries(feed) {
   switch (feed.type) {
@@ -42,6 +41,8 @@ async function feedProcessor(job) {
     }
 
     const entries = await getFeedEntries(feed);
+    await feedService.updateFeedMetadata(feed, entries);
+
     await Promise.each(users, user => createForUser(user.id, entries));
   } catch (error) {
     logger.error(`Failed to process feed ${feed.uri}`);

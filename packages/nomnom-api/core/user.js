@@ -1,6 +1,6 @@
 const uuid = require("node-uuid");
 const jwt = require("jsonwebtoken");
-const promisify = require("./utils/promisify");
+const { promisify } = require("util");
 const db = require("./db");
 
 const jwtSign = promisify(jwt.sign);

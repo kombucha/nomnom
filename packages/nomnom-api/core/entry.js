@@ -1,15 +1,10 @@
 const uuid = require("node-uuid");
 
 const readabilityQueue = require("../jobs/readability/queue");
-const performAsync = require("../jobs/performAsync");
+const { performAsync } = require("../jobs/utils");
 const logger = require("./logger");
 const db = require("./db");
-
-const READABILITY_CONFIG = {
-  youtubeApiKey: process.env.YOUTUBE_API_KEY,
-  imageFilePath: process.env.DATA_PATH,
-  imageBaseUrl: process.env.IMG_BASE_URL
-};
+const readabilityConfig = require("./readabilityConfig");
 
 const READABILITY_JOB_OPTIONS = {
   attempts: 3,
@@ -31,7 +26,7 @@ async function createFrom(url, entryParam = {}) {
   const [readabilityResult] = await performReadability([
     {
       name: readabilityQueue.READABILITY_JOB,
-      data: { url, config: READABILITY_CONFIG },
+      data: { url, config: readabilityConfig },
       options: { ...READABILITY_JOB_OPTIONS, jobId: url }
     }
   ]);
@@ -79,5 +74,6 @@ async function getFromUrl(url) {
 }
 
 module.exports = {
-  createFrom
+  createFrom,
+  getFromUrl
 };

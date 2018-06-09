@@ -24,7 +24,57 @@ const removeRepeatableJobs = async q => {
   await deleteKeys(q, keys);
 };
 
+/**
+ * Send jobs to a non worker queue.
+ * @param {Function} queueFactory
+ * @param {object} job
+ */
+const performAsync = async (queueFactory, jobDefinitions) => {
+  const queue = queueFactory(false);
+  let results = [];
+  let error;
+
+  try {
+    const jobs = await Promise.all(
+      jobDefinitions.map(def => queue.add(def.name, def.data, def.options))
+    );
+
+    return Promise.all(jobs.map(job => job.finished()));
+  } catch (e) {
+    error = e;
+  }
+
+  await queue.close();
+
+  if (error) {
+    throw error;
+  }
+
+  return results;
+};
+
+const queueAsync = async (queueFactory, jobDefinitions) => {
+  const queue = queueFactory(false);
+  let error;
+  let jobs;
+
+  try {
+    jobs = await Promise.all(jobDefinitions.map(def => queue.add(def.name, def.data, def.options)));
+  } catch (e) {
+    error = e;
+  }
+
+  await queue.close();
+  if (error) {
+    throw error;
+  }
+
+  return jobs;
+};
+
 module.exports = {
+  performAsync,
+  queueAsync,
   removeAllJobs,
   removeRepeatableJobs
 };

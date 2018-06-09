@@ -9,7 +9,7 @@ async function postProcessResult(result, url, config) {
   if (processedResult.content) {
     let content =
       typeof processedResult.content === "string"
-        ? cheerio.load(processedResult.content)
+        ? cheerio.load(processedResult.content).root()
         : processedResult.content;
 
     for (const postProcess of postProcessors) {

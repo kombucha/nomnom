@@ -31,12 +31,16 @@ async function process($html, url) {
 
   const video = response.body;
   // TODO: sanitize description
-  const content = cheerio.load(`
+  const content = cheerio
+    .load(
+      `
     <article>
       ${video.embed_html}
       <p>${video.description}</p>
     </article>
-  `)("article");
+  `
+    )
+    .root();
 
   return {
     title: video.title,

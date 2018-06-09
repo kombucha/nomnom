@@ -19,9 +19,9 @@ async function process($html) {
   const publicationDate = getPublicationDate($html);
   const imageUrl = $html.find("link[rel=apple-touch-icon]").attr("href");
 
-  const content = cheerio.load(`<article>${$html.find("img.img-comic").toString()}</article>`)(
-    "article"
-  );
+  const content = cheerio
+    .load(`<article>${$html.find("img.img-comic").toString()}</article>`)
+    .root();
   const textContent = title;
   const originalContent = $html.html();
   const wordCount = getWordCount(textContent);

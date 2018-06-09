@@ -28,6 +28,8 @@ const EntryCard = styled(Card)`
 `;
 
 const Article = styled.article`
+  line-height: 1.5;
+
   .nomnom-youtube-container {
     position: relative;
     width: 100%;

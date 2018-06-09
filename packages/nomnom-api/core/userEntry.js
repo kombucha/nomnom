@@ -11,11 +11,15 @@ const USER_ENTRY_STATE = {
   ARCHIVED: "ARCHIVED"
 };
 
+const api = {
+  USER_ENTRY_STATE
+};
+
 // TODO: source (rss, user etc)
-async function create(userId, userEntryParam, entryParam) {
+api.create = async function(userId, userEntryParam, entryParam) {
   logger.debug(`Importing ${userEntryParam.url} for user ${userId}`);
 
-  const existingEntry = await getFromUrl(userEntryParam.url);
+  const existingEntry = await api.getFromUrl(userEntryParam.url);
 
   if (existingEntry) {
     return existingEntry;
@@ -50,9 +54,9 @@ async function create(userId, userEntryParam, entryParam) {
   );
 
   return userEntry;
-}
+};
 
-async function getFromUrl(url) {
+api.getFromUrl = async function(url) {
   const res = await db.query(
     `SELECT "UserEntry".*
      FROM "UserEntry" "UserEntry" INNER JOIN "Entry" "Entry" ON ("UserEntry"."EntryId" = "Entry"."id")
@@ -61,9 +65,9 @@ async function getFromUrl(url) {
   );
 
   return res.rows[0];
-}
+};
 
-async function list(userId, options) {
+api.list = async function(userId, options) {
   const filters = [`"UserId" = $1`];
   const filtersParams = [userId, options.limit];
 
@@ -88,9 +92,9 @@ async function list(userId, options) {
   );
 
   return res.rows;
-}
+};
 
-async function count(userId, status) {
+api.count = async function(userId, status) {
   const filters = [`"UserId" = $1`];
   const filtersParams = [userId];
 
@@ -105,15 +109,10 @@ async function count(userId, status) {
   );
 
   return res.rows[0].count;
-}
+};
 
 const UPDATABLE_KEYS = ["status", "tags", "progress"];
-async function update(userEntryId, updateValues) {
-  const userEntries = await batchUpdate([userEntryId], updateValues);
-  return userEntries[0];
-}
-
-async function batchUpdate(userEntryIds, updateValues) {
+api.batchUpdate = async function(userEntryIds, updateValues) {
   const updates = [];
   const params = [new Date(), ...userEntryIds];
   const varOffset = params.length + 1;
@@ -155,9 +154,14 @@ async function batchUpdate(userEntryIds, updateValues) {
   }
 
   return results.rows;
-}
+};
 
-async function deleteAll(userId) {
+api.update = async function(userEntryId, updateValues) {
+  const userEntries = await api.batchUpdate([userEntryId], updateValues);
+  return userEntries[0];
+};
+
+api.deleteAll = async function(userId) {
   try {
     await db.query(
       `DELETE FROM "UserEntry"
@@ -169,15 +173,6 @@ async function deleteAll(userId) {
   }
 
   return true;
-}
-
-module.exports = {
-  USER_ENTRY_STATE,
-
-  create,
-  list,
-  count,
-  update,
-  batchUpdate,
-  deleteAll
 };
+
+module.exports = api;

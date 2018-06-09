@@ -14,6 +14,7 @@ pool.on("connect", () => {
 });
 
 pool.on("error", err => {
+  logger.error("WTF");
   logger.error("idle client error", err.message, err.stack);
 });
 

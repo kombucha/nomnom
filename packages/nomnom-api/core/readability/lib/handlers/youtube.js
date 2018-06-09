@@ -24,7 +24,9 @@ async function processVideo($html, url, config) {
   );
 
   const video = response.body.items[0];
-  const content = cheerio.load(`
+  const content = cheerio
+    .load(
+      `
     <article>
       <div class="nomnom-youtube-container">
         ${video.player.embedHtml}
@@ -33,7 +35,9 @@ async function processVideo($html, url, config) {
         ${video.snippet.description}
       </p>
     </article>
-  `)("article");
+  `
+    )
+    .root();
 
   return {
     title: video.snippet.title,
