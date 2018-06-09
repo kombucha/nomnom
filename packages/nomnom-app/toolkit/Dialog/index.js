@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { CSSTransitionGroup } from "react-transition-group";
+import { CSSTransition } from "react-transition-group";
 
 import { Card, CardTitle } from "../Card";
 
@@ -67,23 +67,22 @@ export class Dialog extends Component {
       ) : null;
 
     return (
-      <CSSTransitionGroup
-        transitionName="animate"
-        transitionEnterTimeout={TRANSITION_TIME}
-        transitionLeave={false}
-        component="div">
-        {open ? (
-          <DialogContainer
-            onClick={this._handleDismiss}
-            innerRef={ref => (this._dialogContainer = ref)}>
-            <DialogCard>
-              {dialogTitle}
-              {children}
-              {dialogActions}
-            </DialogCard>
-          </DialogContainer>
-        ) : null}
-      </CSSTransitionGroup>
+      <CSSTransition
+        classNames="animate"
+        in={open}
+        timeout={TRANSITION_TIME}
+        exit={false}
+        unmountOnExit>
+        <DialogContainer
+          onClick={this._handleDismiss}
+          innerRef={ref => (this._dialogContainer = ref)}>
+          <DialogCard>
+            {dialogTitle}
+            {children}
+            {dialogActions}
+          </DialogCard>
+        </DialogContainer>
+      </CSSTransition>
     );
   }
 }

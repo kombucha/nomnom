@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import { CSSTransitionGroup } from "react-transition-group";
+import { CSSTransition } from "react-transition-group";
 import styled from "styled-components";
 import { lighten } from "polished";
 import { mapProps, compose } from "recompose";
@@ -78,11 +78,11 @@ const MultiSelectBar = styled.div`
     transition: opacity ${props => props.theme.transitionConfig};
   }
 
-  &.animate-leave {
+  &.animate-exit {
     opacity: 1;
   }
 
-  &.animate-leave.animate-leave-active {
+  &.animate-exit.animate-exit-active {
     opacity: 0.01;
     transition: opacity ${props => props.theme.transitionConfig};
   }
@@ -171,19 +171,18 @@ export class Entries extends PureComponent {
     const actions = this._getActions(selectedEntries);
 
     return (
-      <CSSTransitionGroup
-        transitionName="animate"
-        transitionEnterTimeout={TRANSITION_TIME}
-        transitionLeaveTimeout={TRANSITION_TIME}>
-        {shouldShowBar ? (
-          <MultiSelectBar>
-            <FlatButton onClick={this._handleExitSelectionMode}>Cancel</FlatButton>
-            <FlexSpacer />
-            <span>{selectedEntries.length} selected</span>
-            {React.Children.toArray(actions)}
-          </MultiSelectBar>
-        ) : null}
-      </CSSTransitionGroup>
+      <CSSTransition
+        classNames="animate"
+        in={shouldShowBar}
+        timeout={TRANSITION_TIME}
+        unmountOnExit>
+        <MultiSelectBar>
+          <FlatButton onClick={this._handleExitSelectionMode}>Cancel</FlatButton>
+          <FlexSpacer />
+          <span>{selectedEntries.length} selected</span>
+          {React.Children.toArray(actions)}
+        </MultiSelectBar>
+      </CSSTransition>
     );
   };
 
