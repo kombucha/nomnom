@@ -12,7 +12,7 @@ async function feedsProcessor() {
     feedsQueue.create,
     feeds.map(feed => ({
       name: feedsQueue.FEED_UPDATE,
-      data: { feed },
+      data: { feedId: feed.id },
       options: { attempts: 3 }
     }))
   );

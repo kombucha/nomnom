@@ -1,4 +1,5 @@
 const Promise = require("bluebird");
+const moment = require("moment");
 
 const logger = require("../../core/logger");
 const userFeedService = require("../../core/userFeed");
@@ -28,12 +29,21 @@ async function createForUser(userId, entries) {
 }
 
 async function feedProcessor(job) {
-  const { feed } = job.data;
-
-  logger.info(`Processing feed ${feed.uri}`);
+  const { feedId } = job.data;
 
   try {
+    const feed = await feedService.getById(feedId);
+    logger.info(`Processing feed ${feed.uri}`);
+    await job.progress(10);
+
+    if (feed.updateFrequency && Date.now() - feed.lastUpdateDate < feed.updateFrequency) {
+      const frequency = moment.duration(feed.updateFrequency, "ms").humanize();
+      logger.info(`Skip feed because it's been updated recently enough. (freq: ${frequency})`);
+      return;
+    }
+
     const users = await userFeedService.listUsersForFeed(feed.id);
+    await job.progress(25);
 
     if (users.length === 0) {
       logger.info(`Skip feed because no one cares about it :(`);
@@ -41,11 +51,14 @@ async function feedProcessor(job) {
     }
 
     const entries = await getFeedEntries(feed);
+    await job.progress(50);
+
     await feedService.updateFeedMetadata(feed, entries);
+    await job.progress(75);
 
     await Promise.each(users, user => createForUser(user.id, entries));
   } catch (error) {
-    logger.error(`Failed to process feed ${feed.uri}`);
+    logger.error(`Failed to process feed ${feedId}`);
     logger.error(error.stack);
   }
 }

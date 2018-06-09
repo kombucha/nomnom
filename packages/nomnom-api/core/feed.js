@@ -103,4 +103,16 @@ api.getFromUri = async function(uri) {
   return res.rows[0];
 };
 
+api.getById = async function(id) {
+  const res = await db.query(
+    `SELECT *
+     FROM "Feed"
+     WHERE "id" = $1
+     LIMIT 1`,
+    [id]
+  );
+
+  return res.rows[0];
+};
+
 module.exports = api;
