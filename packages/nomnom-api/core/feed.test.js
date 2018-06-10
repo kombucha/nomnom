@@ -10,6 +10,14 @@ beforeEach(() => {
   db.query.mockClear();
 });
 
+describe("Feed.getAll", () => {
+  it("should perform the same one simple query", async () => {
+    await Feed.getAll();
+    expect(db.query).toHaveBeenCalledTimes(1);
+    expect(db.query.mock.calls).toMatchSnapshot();
+  });
+});
+
 describe("Feed.createFromUri", () => {
   it("should not create a feed if it already exists", async () => {
     const fakeFeed = { id: 42 };
@@ -43,7 +51,7 @@ describe("Feed.updateFeedMetadata", () => {
     await Feed.updateFeedMetadata(feed, []);
 
     expect(updateSpy).toHaveBeenCalledWith(feed.id, {
-      lastUpdateDate: expect.any(Number),
+      lastUpdateDate: expect.any(Date),
       updateFrequency: Feed.MIN_FREQUENCY
     });
   });
@@ -60,7 +68,7 @@ describe("Feed.updateFeedMetadata", () => {
     await Feed.updateFeedMetadata(feed, entries);
 
     expect(updateSpy).toHaveBeenCalledWith(feed.id, {
-      lastUpdateDate: expect.any(Number),
+      lastUpdateDate: expect.any(Date),
       updateFrequency: Feed.MAX_FREQUENCY
     });
   });
@@ -77,7 +85,7 @@ describe("Feed.updateFeedMetadata", () => {
     await Feed.updateFeedMetadata(feed, entries);
 
     expect(updateSpy).toHaveBeenCalledWith(feed.id, {
-      lastUpdateDate: expect.any(Number),
+      lastUpdateDate: expect.any(Date),
       updateFrequency: 2 * 3600 * 1000 // Every 2 hours
     });
   });

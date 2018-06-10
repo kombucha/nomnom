@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Feed.getAll should perform the same one simple query 1`] = `
+Array [
+  Array [
+    "SELECT * FROM \\"Feed\\"",
+  ],
+]
+`;
