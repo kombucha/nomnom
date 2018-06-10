@@ -32,9 +32,13 @@ async function createFrom(url, entryParam = {}) {
     }
   ]);
 
-  const entry = Object.assign({}, entryParam, readabilityResult, {
+  const mergedResult = { ...entryParam, ...readabilityResult };
+  const entry = Object.assign({}, mergedResult, {
     id: uuid.v4(),
     creationDate: new Date(),
+    publicationDate: mergedResult.publicationDate
+      ? new Date(mergedResult.publicationDate)
+      : undefined,
     url
   });
 
