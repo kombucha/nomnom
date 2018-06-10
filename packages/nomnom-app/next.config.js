@@ -1,10 +1,28 @@
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+
+const { ANALYZE, NODE_ENV, API_URL, GOOGLE_CLIENT_ID, PORT } = process.env;
+
 module.exports = {
-  dev: process.env.NODE_ENV !== "production",
+  dev: NODE_ENV !== "production",
   publicRuntimeConfig: {
-    apiUrl: process.env.API_URL,
-    googleClientId: process.env.GOOGLE_CLIENT_ID
+    apiUrl: API_URL,
+    googleClientId: GOOGLE_CLIENT_ID
   },
   serverRuntimeConfig: {
-    port: process.env.PORT
+    port: PORT
+  },
+
+  webpack: function(config, { isServer }) {
+    if (ANALYZE) {
+      config.plugins.push(
+        new BundleAnalyzerPlugin({
+          analyzerMode: "server",
+          analyzerPort: isServer ? 8888 : 8889,
+          openAnalyzer: true
+        })
+      );
+    }
+
+    return config;
   }
 };
