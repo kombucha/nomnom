@@ -1,5 +1,8 @@
 const uuid = require("node-uuid");
+
 const db = require("./db");
+const { updateOne } = require("./utils/dbUpdate");
+const dbInsert = require("./utils/dbInsert");
 const logger = require("./logger");
 const feedService = require("./feed");
 
@@ -16,23 +19,18 @@ async function create(userId, userFeedParam) {
     enabled: true
   };
 
-  await db.query(
-    `
-    INSERT INTO
-    "UserFeed"("id", "UserId", "FeedId", "name", "creationDate", "enabled")
-    VALUES ($1, $2, $3, $4, $5, $6)
-    `,
-    [
-      userFeed.id,
-      userFeed.user,
-      userFeed.feed,
-      userFeed.name,
-      userFeed.creationDate,
-      userFeed.enabled
-    ]
-  );
+  await db.query(...dbInsert("UserFeed", userFeed));
 
   return userFeed;
+}
+
+async function update(feedId, data) {
+  const allowedFields = ["name", "enabled"];
+  const updateArgs = updateOne("UserFeed", feedId, data, allowedFields);
+
+  const results = await db.query(...updateArgs);
+
+  return results.rows[0];
 }
 
 async function list(userId) {
@@ -62,4 +60,4 @@ async function listUsersForFeed(feedId) {
   return res.rows;
 }
 
-module.exports = { create, list, listUsersForFeed };
+module.exports = { create, update, list, listUsersForFeed };

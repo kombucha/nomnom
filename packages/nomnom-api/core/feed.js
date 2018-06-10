@@ -1,8 +1,10 @@
 const uuid = require("node-uuid");
+const clamp = require("lodash/clamp");
 
 const db = require("./db");
 const logger = require("./logger");
-const clamp = require("lodash/clamp");
+const { updateOne } = require("./utils/dbUpdate");
+const dbInsert = require("./utils/dbInsert");
 
 const FEED_TYPES = {
   RSS: "RSS"
@@ -35,36 +37,14 @@ api.createFromUri = async function(uri) {
     type: FEED_TYPES.RSS
   };
 
-  await db.query(
-    `
-    INSERT INTO "Feed"("id", "creationDate", "uri", "type")
-    VALUES ($1, $2, $3, $4);
-    `,
-    [feed.id, feed.creationDate, feed.uri, feed.type]
-  );
+  await db.query(...dbInsert("Feed", feed));
 
   return feed;
 };
 
 api.update = async function(id, data) {
-  let updates = [];
-  let values = [id];
-  let idx = 2;
-  for (let [column, value] of Object.entries(data)) {
-    updates.push(`"${column}" = $${idx++}`);
-    values.push(value);
-  }
-
-  const results = await db.query(
-    `
-    UPDATE "Feed"
-    SET ${updates.join(", ")}
-    WHERE "id" = $1
-    RETURNING "Feed".*;
-  `,
-    values
-  );
-
+  const updateArgs = updateOne("Feed", id, data);
+  const results = await db.query(...updateArgs);
   return results.rows[0];
 };
 

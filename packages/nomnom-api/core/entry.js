@@ -4,6 +4,7 @@ const readabilityQueue = require("../jobs/readability/queue");
 const { performAsync } = require("../jobs/utils");
 const logger = require("./logger");
 const db = require("./db");
+const dbInsert = require("./utils/dbInsert");
 const readabilityConfig = require("./readabilityConfig");
 
 const READABILITY_JOB_OPTIONS = {
@@ -37,26 +38,7 @@ async function createFrom(url, entryParam = {}) {
     url
   });
 
-  await db.query(
-    `
-    INSERT INTO "Entry"("id", "url", "title", "originalContent",
-    "creationDate", "publicationDate", "author", "excerpt", "content", "imageUrl", "duration")
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-  `,
-    [
-      entry.id,
-      entry.url,
-      entry.title,
-      entry.originalContent,
-      entry.creationDate,
-      new Date(entry.publicationDate),
-      entry.author,
-      entry.excerpt,
-      entry.content,
-      entry.imageUrl,
-      entry.duration
-    ]
-  );
+  await db.query(...dbInsert("Entry", entry));
 
   return entry;
 }

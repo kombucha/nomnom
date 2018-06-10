@@ -1,7 +1,9 @@
 const uuid = require("node-uuid");
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
+
 const db = require("./db");
+const dbInsert = require("./utils/dbInsert");
 
 const jwtSign = promisify(jwt.sign);
 const jwtVerify = promisify(jwt.verify);
@@ -16,12 +18,7 @@ async function createUser(profile) {
     avatarUrl: profile.avatarUrl
   };
 
-  await db.query(`INSERT INTO "User"("id", "name", "email", "avatarUrl") VALUES ($1, $2, $3, $4)`, [
-    user.id,
-    user.name,
-    user.email,
-    user.avatarUrl
-  ]);
+  await db.query(...dbInsert("User", user));
 
   return user;
 }

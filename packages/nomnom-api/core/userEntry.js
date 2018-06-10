@@ -1,6 +1,7 @@
 const uuid = require("node-uuid");
 
 const db = require("./db");
+const dbInsert = require("./utils/dbInsert");
 const entry = require("./entry");
 const logger = require("./logger");
 
@@ -37,21 +38,7 @@ api.create = async function(userId, userEntryParam, entryParam) {
     tags: userEntryParam.tags || []
   };
 
-  await db.query(
-    `INSERT INTO
-    "UserEntry"("id", "UserId", "EntryId", "creationDate", "lastUpdateDate", "progress", "status", "tags")
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-    [
-      userEntry.id,
-      userEntry.UserId,
-      userEntry.EntryId,
-      userEntry.creationDate,
-      userEntry.lastUpdateDate,
-      userEntry.progress,
-      userEntry.status,
-      userEntry.tags
-    ]
-  );
+  await db.query(...dbInsert("UserEntry", userEntry));
 
   return userEntry;
 };
