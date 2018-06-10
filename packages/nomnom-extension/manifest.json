@@ -10,11 +10,5 @@
   "permissions": ["activeTab", "cookies", "*://*.nomnom-app.limbocitizen.com/"],
   "browser_action": {
     "default_title": "Add to nomnom"
-  },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["contentScript.js"]
-    }
-  ]
+  }
 }

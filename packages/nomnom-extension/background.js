@@ -1,7 +1,8 @@
 const API_URL = "https://nomnom-api.limbocitizen.com/graphql";
 
 chrome.browserAction.onClicked.addListener(tab => {
-  addToNomNom(tab.url)
+  injectScript(tab)
+    .then(() => addToNomNom(tab.url))
     .then(data => {
       chrome.tabs.sendMessage(tab.id, {
         type: "success",
@@ -15,6 +16,20 @@ chrome.browserAction.onClicked.addListener(tab => {
       });
     });
 });
+
+function injectScript(tab) {
+  return new Promise(resolve => {
+    chrome.tabs.sendMessage(tab.id, { type: "ping" }, response => {
+      if (response) {
+        resolve();
+      } else {
+        chrome.tabs.executeScript({ file: "./contentScript.js" }, resolve);
+      }
+    });
+
+    resolve();
+  });
+}
 
 function addToNomNom(url) {
   return getToken()

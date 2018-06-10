@@ -1,10 +1,10 @@
-chrome.runtime.onMessage.addListener(payload => {
+chrome.runtime.onMessage.addListener((payload, sender, sendResponse) => {
   switch (payload.type) {
+    case "ping":
+      return sendResponse("pong");
     case "success":
-      alert("Page successfully added to nomnom !");
-      return;
+      return alert("Page successfully added to nomnom !");
     case "failure":
-      alert("Failed to add page to nomnom...");
-      return;
+      return alert("Failed to add page to nomnom...");
   }
 });
