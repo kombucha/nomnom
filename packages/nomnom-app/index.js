@@ -2,6 +2,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const next = require("next");
+const helmet = require("helmet");
 
 const nextConfig = require("./next.config");
 
@@ -17,15 +18,23 @@ async function start() {
       skip: (req, res) => !(res.get("Content-Type") || "").includes("text/html")
     })
   );
+  server.use(
+    helmet({
+      referrerPolicy: { policy: "same-origin" },
+      csp: {
+        objectSrc: ["'none'"],
+        scriptSrc: ["'unsafe-inline'", "'unsafe-eval'", "'strict-dynamic'", "https: http:"],
+        baseUri: ["'none'"]
+      }
+    })
+  );
   server.use(cookieParser());
 
   server.get("/entries/:entryId", (req, res) => {
     return app.render(req, res, "/entry", req.params);
   });
 
-  server.get("*", (req, res) => {
-    return handle(req, res);
-  });
+  server.get("*", (req, res) => handle(req, res));
 
   server.listen(nextConfig.serverRuntimeConfig.port, err => {
     if (err) throw err;
