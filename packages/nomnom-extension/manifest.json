@@ -1,0 +1,20 @@
+{
+  "name": "Nomnom",
+  "version": "1.0",
+  "description": "Official extension for NomNom",
+  "manifest_version": 2,
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "permissions": ["activeTab", "cookies", "*://*.nomnom-app.limbocitizen.com/"],
+  "browser_action": {
+    "default_title": "Add to nomnom"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js"]
+    }
+  ]
+}
