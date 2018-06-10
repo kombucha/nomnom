@@ -1,4 +1,5 @@
 const uuid = require("node-uuid");
+const pick = require("lodash/pick");
 
 const db = require("./db");
 const { updateOne } = require("./utils/dbUpdate");
@@ -26,7 +27,7 @@ async function create(userId, userFeedParam) {
 
 async function update(feedId, data) {
   const allowedFields = ["name", "enabled"];
-  const updateArgs = updateOne("UserFeed", feedId, data, allowedFields);
+  const updateArgs = updateOne("UserFeed", feedId, pick(data, allowedFields));
 
   const results = await db.query(...updateArgs);
 
@@ -53,6 +54,7 @@ async function listUsersForFeed(feedId) {
       INNER JOIN "UserFeed" "UserFeed"
       ON ("User"."id" = "UserFeed"."UserId")
      WHERE "UserFeed"."FeedId" = $1
+     AND "UserFeed"."enabled" = true
      LIMIT 1`,
     [feedId]
   );

@@ -1,10 +1,9 @@
-function updateOne(tableName, id, data, allowedFields) {
+function updateOne(tableName, id, data) {
   let updates = [];
   let values = [id];
   let idx = 2;
 
   for (let [column, value] of Object.entries(data)) {
-    if (!!allowedFields && !allowedFields.includes(column)) return;
     updates.push(`"${column}" = $${idx++}`);
     values.push(value);
   }

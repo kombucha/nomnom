@@ -104,7 +104,7 @@ input SubscribeToFeedInput {
   type: FeedType!
 }
 
-input UpdateUserFeedInput {
+input UserFeedUpdateInput {
   id: ID!
   name: String
   enabled: Boolean
@@ -123,7 +123,7 @@ type Mutation {
   batchUpdateUserEntries(batchUpdateUserEntriesInput: BatchUpdateUserEntriesInput!): [UserEntry]!
   subscribeToFeed(subscribeToFeedInput: SubscribeToFeedInput!): UserFeed!
   batchSubscribeToFeeds(batchSubscribeToFeedsInput: [SubscribeToFeedInput!]!): [UserFeed]!
-  updateUserFeed(updateUserFeedInput: UpdateUserFeedInput!): UserFeed!
+  updateUserFeed(userFeedUpdateInput: UserFeedUpdateInput!): UserFeed!
   unsubscribeFromFeed(id: ID!): Boolean!
   batchUnsubscribeFromFeeds(ids: [ID!]!): [Boolean!]!
   deleteAllMyData: Boolean!

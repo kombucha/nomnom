@@ -13,6 +13,7 @@ import PageWrapper from "../components/PageWrapper";
 import PageTitle from "../components/PageTitle";
 import SubscribeToFeedDialog from "../components/SubscribeToFeedDialog";
 import feedsContainer from "../graphql/queries/feeds";
+import toggleFeedContainer from "../graphql/mutations/toggleUserFeed";
 
 const PageContainer = styled.div`
   padding: 16px;
@@ -58,7 +59,7 @@ export class FeedsPage extends PureComponent {
   };
 
   _handleFeedToggleChange = (userFeed, checked) => {
-    console.log(userFeed.id, checked);
+    this.props.toggleUserFeed(userFeed.id, checked);
   };
 
   _renderRow = userFeed => {
@@ -103,4 +104,4 @@ export class FeedsPage extends PureComponent {
   }
 }
 
-export default compose(withAuth, feedsContainer)(FeedsPage);
+export default compose(withAuth, feedsContainer, toggleFeedContainer)(FeedsPage);
