@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 
 import { UserEntryListFragment } from "../fragments/userEntry";
 import { query as EntriesListQuery } from "../queries/userEntries";
+import { query as UserEntriesCountsQuery } from "../queries/userEntriesCount";
 
 export const mutation = gql`
   mutation addUserEntry($addUserEntryInput: AddUserEntryInput!) {
@@ -19,10 +20,12 @@ export const withMutation = graphql(mutation, {
       mutate({
         variables: { addUserEntryInput },
         update: (proxy, result) => {
+          const status = "LATER";
+          // Update List
           try {
             const queryToUpdate = {
               query: EntriesListQuery,
-              variables: { status: "LATER" }
+              variables: { status }
             };
 
             const data = proxy.readQuery(queryToUpdate);
@@ -33,14 +36,17 @@ export const withMutation = graphql(mutation, {
               cursor: null, // Not sure about that...
               __typename: "UserEntryEdge"
             });
-
-            if (data.me.entries.totalCount) {
-              data.me.entries.total += 1;
-            }
-
             proxy.writeQuery({ data, ...queryToUpdate });
+          } catch (e) {}
+
+          // Update count
+          try {
+            const countQueryToUpdate = { query: UserEntriesCountsQuery };
+            const data = proxy.readQuery(countQueryToUpdate);
+            data[status].entries.totalCount += 1;
+            proxy.writeQuery({ data, ...countQueryToUpdate });
           } catch (e) {
-            console.error(e);
+            console.log(e);
           }
         }
       })
