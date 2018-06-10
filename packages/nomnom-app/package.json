@@ -9,6 +9,7 @@
   "dependencies": {
     "apollo-boost": "0.1.7",
     "apollo-link-context": "1.0.8",
+    "babel-plugin-polished": "1.1.0",
     "babel-plugin-styled-components": "1.5.1",
     "cookie-parser": "1.4.3",
     "cross-env": "5.1.6",
