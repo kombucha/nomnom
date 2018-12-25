@@ -21,7 +21,7 @@
     "prettier": "1.12.1"
   },
   "lint-staged": {
-    "*.{js,json,gql}": [
+    "*.{js,ts,tsx,json,gql}": [
       "yarn prettier --print-width=100 --jsx-bracket-same-line=true --write",
       "git add"
     ]
