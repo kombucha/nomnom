@@ -3,3 +3,13 @@
 @tailwind components;
 
 @tailwind utilities;
+
+/* Custom utilities */
+
+.pin-l-out {
+  right: 100%;
+}
+
+.pin-r-out {
+  left: 100%;
+}

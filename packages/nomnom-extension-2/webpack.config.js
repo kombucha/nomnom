@@ -27,7 +27,7 @@ module.exports = (_env, { mode }) => {
     plugins.push(
       new PurgecssPlugin({
         // Specify the locations of any files you want to scan for class names.
-        paths: glob.sync(path.join(__dirname, "src/*")),
+        paths: glob.sync(path.join(__dirname, "src/**/*"), { nodir: true }),
         extractors: [{ extractor: TailwindExtractor, extensions: ["html", "tsx"] }]
       })
     );
@@ -49,6 +49,9 @@ module.exports = (_env, { mode }) => {
         }),
         new OptimizeCSSAssetsPlugin({})
       ]
+    },
+    resolve: {
+      extensions: [".ts", ".tsx", ".js", ".css"]
     },
     module: {
       rules: [

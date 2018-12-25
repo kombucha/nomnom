@@ -1,9 +1,20 @@
 import { render } from "preact";
 
 import "./styles.css";
+import SidePanel from "./components/SidePanel";
+import Section from "./components/Section";
 
 const App = () => (
-  <div className="text-black border border-black rounded m-2 p-10 shadow">Hello world!</div>
+  <SidePanel className="w-64">
+    <Section title="Title">title</Section>
+    <Section title="Date">date</Section>
+    <Section title="Author">author</Section>
+    <Section title="Content">content</Section>
+  </SidePanel>
 );
 
-render(<App />, document.getElementById("sidebar"));
+const container = document.getElementById("sidebar");
+
+if (container) {
+  render(<App />, container);
+}
