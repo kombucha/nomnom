@@ -1,6 +1,9 @@
-import React from "react";
-import { render } from "react-dom";
+import { render } from "preact";
 
-const App = () => <div>Hello world!</div>;
+import "./styles.css";
+
+const App = () => (
+  <div className="text-black border border-black rounded m-2 p-10 shadow">Hello world!</div>
+);
 
 render(<App />, document.getElementById("sidebar"));
