@@ -5,7 +5,7 @@ interface Props {
 }
 
 const Section: FunctionalComponent<Props> = ({ title, children }) => (
-  <section className="mb-2">
+  <section className="mb-8">
     <h2>{title}</h2>
     {children}
   </section>

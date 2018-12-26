@@ -28,7 +28,7 @@ module.exports = (_env, { mode }) => {
       new PurgecssPlugin({
         // Specify the locations of any files you want to scan for class names.
         paths: glob.sync(path.join(__dirname, "src/**/*"), { nodir: true }),
-        extractors: [{ extractor: TailwindExtractor, extensions: ["html", "tsx"] }]
+        extractors: [{ extractor: TailwindExtractor, extensions: ["html", "tsx", "ts"] }]
       })
     );
   }
@@ -40,6 +40,7 @@ module.exports = (_env, { mode }) => {
       path: path.resolve(__dirname, "dist")
     },
     devServer: { contentBase: "./dist" },
+    devtool: devMode ? "eval-source-map" : "source-map",
     optimization: {
       minimizer: [
         new UglifyJsPlugin({
