@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 
 import PageWrapper from "../components/PageWrapper";
 import PageTitle from "../components/PageTitle";
@@ -12,7 +12,7 @@ import FeedbinSubscriptionsSettings from "../components/settings/FeedbinSubscrip
 import YoutubeSettings from "../components/settings/YoutubeSettings";
 import BookmarkletSettings from "../components/settings/BookmarkletSettings";
 
-const Container = styled.div`
+const SettingsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,9 +26,9 @@ const Container = styled.div`
   }
 `;
 
-export const Settings = ({ loggedInUser }) => (
+export const Settings = ({ loggedInUser }: any) => (
   <PageWrapper user={loggedInUser}>
-    <Container>
+    <SettingsContainer>
       <PageTitle value="Settings" />
       <BookmarkletSettings />
       <PocketSettings />
@@ -36,7 +36,7 @@ export const Settings = ({ loggedInUser }) => (
       <FeedbinSubscriptionsSettings />
       <YoutubeSettings />
       <PrivacySettings />
-    </Container>
+    </SettingsContainer>
   </PageWrapper>
 );
 

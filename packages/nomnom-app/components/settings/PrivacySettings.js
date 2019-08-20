@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import ActionDelete from "react-icons/lib/md/delete";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 
 import { Card, CardTitle } from "../../toolkit/Card";
 import Dialog from "../../toolkit/Dialog";
@@ -11,7 +11,9 @@ import RaisedButton from "../../toolkit/RaisedButton";
 import deleteAllMyDataContainer from "../../graphql/mutations/deleteAllMyData";
 
 const CONFIRMATION_TEXT = "Ya, I'm sure";
-const ConfirmationText = styled.b`user-select: none;`;
+const ConfirmationText = styled.b`
+  user-select: none;
+`;
 
 const DEFAULT_STATE = {
   showConfirmDelete: false,
@@ -85,9 +87,7 @@ export class PrivacySettings extends PureComponent {
           onRequestClose={handleDismissDialog}>
           <p>Are you sure you want to delete all your content (entries, feeds) ?</p>
           <p>
-            Type "
-            <ConfirmationText>{CONFIRMATION_TEXT}</ConfirmationText>
-            " to confirm
+            Type "<ConfirmationText>{CONFIRMATION_TEXT}</ConfirmationText>" to confirm
           </p>
           <TextField
             autoFocus

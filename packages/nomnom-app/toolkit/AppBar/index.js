@@ -1,6 +1,6 @@
 import React from "react";
 import { pure } from "recompose";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 
 const AppBarContainer = styled.div`
   position: ${props => (props.fixed ? "fixed" : "static")};

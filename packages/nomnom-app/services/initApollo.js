@@ -1,6 +1,7 @@
 // Lifted from https://github.com/zeit/next.js/blob/master/examples/with-apollo-auth/lib/initApollo.js
 import getConfig from "next/config";
-import { ApolloClient, InMemoryCache } from "apollo-boost";
+import ApolloClient from "apollo-client";
+import { InMemoryCache } from "apollo-cache-inmemory";
 import { createHttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
 import fetch from "isomorphic-unfetch";

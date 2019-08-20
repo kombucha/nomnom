@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import { lighten } from "polished";
 import UncheckedIcon from "react-icons/lib/md/check-box-outline-blank";
 import CheckedIcon from "react-icons/lib/md/check-box";

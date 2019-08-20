@@ -1,5 +1,6 @@
 import React, { PureComponent } from "react";
-import { graphql, compose } from "react-apollo";
+import { compose } from "recompose";
+import { graphql } from "@apollo/react-hoc";
 import gql from "graphql-tag";
 import PropTypes from "prop-types";
 
@@ -79,7 +80,7 @@ EditEntryTagsDialog.defaultProps = {
 // TODO: read doc about fragment so that queries are merged...
 // http://dev.apollodata.com/core/fragments.html
 const query = gql`
-  query userEntry($userEntryId: ID!) {
+  query UserEntryTags($userEntryId: ID!) {
     userEntry(userEntryId: $userEntryId) {
       id
       tags
@@ -93,4 +94,7 @@ const withQuery = graphql(query, {
   })
 });
 
-export default compose(withQuery, updateUserEntryContainer)(EditEntryTagsDialog);
+export default compose(
+  withQuery,
+  updateUserEntryContainer
+)(EditEntryTagsDialog);

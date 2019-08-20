@@ -1,13 +1,20 @@
 import React from "react";
-import { graphql } from "react-apollo";
 import getConfig from "next/config";
 import gql from "graphql-tag";
+import { useQuery } from "@apollo/react-hooks";
 
+import { BookmarkletTokenQuery } from "../../apollo-types";
 import { Card, CardTitle } from "../../toolkit/Card";
 
 const {
   publicRuntimeConfig: { apiUrl }
 } = getConfig();
+
+const bookmarkletQuery = gql`
+  query BookmarkletTokenQuery {
+    bookmarkletToken
+  }
+`;
 
 function bookmarkletFn() {
   const TOKEN = "%TOKEN%";
@@ -34,13 +41,12 @@ function bookmarkletFn() {
     body: JSON.stringify(payload)
   })
     .then(r => (r.ok ? r.json() : Promise.reject("Request fail")))
-    .then(
-      gqlPayload =>
-        gqlPayload.data.errors && gqlPayload.data.errors.length
-          ? Promise.reject("Request failed")
-          : alert("Link succesfuly saved !")
+    .then(gqlPayload =>
+      gqlPayload.data.errors && gqlPayload.data.errors.length
+        ? Promise.reject("Request failed")
+        : void alert("Link succesfuly saved !")
     )
-    .catch(e => alert("Failed to save link...", e));
+    .catch(e => alert(`Failed to save link: ${e}`));
 }
 
 const bookmarkletFnStr = bookmarkletFn.toString();
@@ -55,22 +61,18 @@ const createBookmarklet = token => {
 };
 
 // TODO: an extension ! CSP will prevent this from working on a lot of sites...
-export const BookmarkletSettings = ({ data }) => (
-  <Card>
-    <CardTitle> Bookmarklet </CardTitle>
-    <p> Drag and drop the following link to your bookmark bar </p>
-    {data.bookmarkletToken && (
-      <a href={createBookmarklet(data.bookmarkletToken)}> Add to nomnom </a>
-    )}
-  </Card>
-);
+const BookmarkletSettings = () => {
+  const { data } = useQuery<BookmarkletTokenQuery>(bookmarkletQuery);
 
-const bookmarkletQuery = gql`
-  query {
-    bookmarkletToken
-  }
-`;
+  return (
+    <Card>
+      <CardTitle> Bookmarklet </CardTitle>
+      <p> Drag and drop the following link to your bookmark bar </p>
+      {data.bookmarkletToken && (
+        <a href={createBookmarklet(data.bookmarkletToken)}> Add to nomnom </a>
+      )}
+    </Card>
+  );
+};
 
-export const BookmarkletSettingsWithQuery = graphql(bookmarkletQuery)(BookmarkletSettings);
-
-export default BookmarkletSettingsWithQuery;
+export default BookmarkletSettings;

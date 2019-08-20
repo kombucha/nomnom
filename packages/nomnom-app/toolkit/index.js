@@ -1,4 +1,4 @@
-export { default as styles } from "./styles";
+export { default as StylesWrapper } from "./StylesWrapper";
 export { default as theme } from "./theme";
 
 export { AppBar } from "./AppBar";

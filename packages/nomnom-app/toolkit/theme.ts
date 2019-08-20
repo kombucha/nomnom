@@ -1,4 +1,4 @@
-export default {
+const theme = {
   primary1Color: "#3f51b5",
   primary2Color: "#303f9f",
   primary3Color: "#bdbdbd",
@@ -14,3 +14,7 @@ export default {
   // AppBar
   appBarHeight: "64px"
 };
+
+export type ThemeType = typeof theme;
+
+export default theme;

@@ -1,23 +1,27 @@
 import React from "react";
-import { pure } from "recompose";
 import Link from "next/link";
-import styled, { ThemeProvider } from "styled-components";
+import styled from "@emotion/styled";
 
-import "../toolkit/styles.js";
 import { AppBar } from "../toolkit/AppBar";
-import theme from "../toolkit/theme";
+import { ThemeType } from "../toolkit/theme";
+import StylesWrapper from "../toolkit/StylesWrapper";
 import PageTitle from "./PageTitle";
 import UserMenu from "./UserMenu";
 
-const PageContainer = styled.div`padding-top: ${props => props.theme.appBarHeight};`;
+type Props = { user?: any };
+
+const PageContainer = styled.div<{}, ThemeType>`
+  padding-top: ${props => props.theme.appBarHeight};
+`;
+
 const UnstyledLink = styled.a`
   text-decoration: none;
   color: inherit;
   cursor: pointer;
 `;
 
-const PageWrapper = ({ user, children }) => (
-  <ThemeProvider theme={theme}>
+const PageWrapper: React.FC<Props> = ({ user, children }) => (
+  <StylesWrapper>
     <div id="app">
       <PageTitle value="NomNom" />
       <AppBar
@@ -31,7 +35,7 @@ const PageWrapper = ({ user, children }) => (
       />
       <PageContainer>{children}</PageContainer>
     </div>
-  </ThemeProvider>
+  </StylesWrapper>
 );
 
-export default pure(PageWrapper);
+export default PageWrapper;

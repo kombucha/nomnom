@@ -1,8 +1,8 @@
-import { graphql } from "react-apollo";
+import { graphql } from "@apollo/react-hoc";
 import gql from "graphql-tag";
 
 export const query = gql`
-  {
+  query UserEntriesCount {
     NEW: me {
       entries(status: NEW) {
         totalCount

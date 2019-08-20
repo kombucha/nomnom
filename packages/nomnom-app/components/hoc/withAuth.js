@@ -11,7 +11,13 @@ export default ComposedComponent => {
         throw new Error("WithAuth must be used -after- WithApollo");
       }
 
-      const loggedInUser = await checkLoggedIn(context);
+      let loggedInUser;
+
+      try {
+        loggedInUser = await checkLoggedIn(context);
+      } catch (err) {
+        console.log(err);
+      }
 
       if (!loggedInUser) {
         // If not signed in, send them somewhere more useful

@@ -1,7 +1,6 @@
 import React, { PureComponent } from "react";
-import PropTypes from "prop-types";
 import { CSSTransition } from "react-transition-group";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import { lighten } from "polished";
 import { mapProps, compose } from "recompose";
 import queryString from "query-string";
@@ -104,6 +103,20 @@ const hasItemsSelected = itemMap => Object.values(itemMap).some(selected => sele
 
 const preventPropagation = e => e.stopPropagation();
 
+const Placeholder = () => (
+  <DelayedComponent delay={100}>
+    <List>
+      {Array(20)
+        .fill()
+        .map((_, idx) => (
+          <li key={idx}>
+            <ListItemPlaceholder />
+          </li>
+        ))}
+    </List>
+  </DelayedComponent>
+);
+
 export class Entries extends PureComponent {
   state = { showAddEntryDialog: false, selectedRows: {} };
 
@@ -186,22 +199,6 @@ export class Entries extends PureComponent {
     );
   };
 
-  _renderPlaceholderList = () => {
-    return (
-      <DelayedComponent delay={100}>
-        <List>
-          {Array(20)
-            .fill()
-            .map((_, idx) => (
-              <li key={idx}>
-                <ListItemPlaceholder />
-              </li>
-            ))}
-        </List>
-      </DelayedComponent>
-    );
-  };
-
   _renderRow = (userEntry, selectMode) => {
     const tagsCount = userEntry.tags.length;
     const tags = tagsCount > 0 ? ` | ${userEntry.tags.join(", ")}` : "";
@@ -276,9 +273,7 @@ export class Entries extends PureComponent {
           </FilterContainer>
 
           <MainContainer>
-            <Card fullBleed>
-              {isFirstLoad ? this._renderPlaceholderList() : this._renderList(entries)}
-            </Card>
+            <Card fullBleed>{isFirstLoad ? <Placeholder /> : this._renderList(entries)}</Card>
           </MainContainer>
 
           <FloatingActionButton secondary fixed onClick={this._handleAddEntryDialogOpen}>
@@ -294,19 +289,6 @@ export class Entries extends PureComponent {
     );
   }
 }
-
-Entries.propTypes = {
-  status: PropTypes.string.isRequired, // TODO: enum
-  entries: PropTypes.array.isRequired,
-  hasMore: PropTypes.bool.isRequired,
-  loading: PropTypes.bool.isRequired,
-
-  refetch: PropTypes.func.isRequired,
-  fetchMore: PropTypes.func.isRequired,
-  batchUpdateUserEntries: PropTypes.func.isRequired,
-
-  router: PropTypes.object.isRequired
-};
 
 const mappedProps = mapProps(({ loggedInUser: user, router }) => ({
   status: router.query.status || DEFAULT_STATUS_FILTER,

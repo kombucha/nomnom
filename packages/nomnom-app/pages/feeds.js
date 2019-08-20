@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import { compose } from "recompose";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import ContentAdd from "react-icons/lib/md/add";
 
 import { Card } from "../toolkit/Card";
@@ -104,4 +104,8 @@ export class FeedsPage extends PureComponent {
   }
 }
 
-export default compose(withAuth, feedsContainer, toggleFeedContainer)(FeedsPage);
+export default compose(
+  withAuth,
+  feedsContainer,
+  toggleFeedContainer
+)(FeedsPage);

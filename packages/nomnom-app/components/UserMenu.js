@@ -1,8 +1,8 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import { ApolloConsumer } from "react-apollo";
+import { ApolloConsumer } from "@apollo/react-common";
 import { withRouter } from "next/router";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import { ellipsis } from "polished";
 
 import logout from "../services/logout";
