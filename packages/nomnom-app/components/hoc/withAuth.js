@@ -14,14 +14,14 @@ export default ComposedComponent => {
       let loggedInUser;
 
       try {
-        loggedInUser = await checkLoggedIn(context);
+        loggedInUser = await checkLoggedIn(context.apolloClient);
       } catch (err) {
         console.log(err);
       }
 
       if (!loggedInUser) {
         // If not signed in, send them somewhere more useful
-        redirect(context, "/login");
+        redirect("/login", context.res);
       }
 
       let composedInitialProps = {};

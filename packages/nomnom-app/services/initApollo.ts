@@ -13,7 +13,7 @@ const {
 let apolloClient = null;
 
 if (!process.browser) {
-  global.fetch = fetch;
+  (global as any).fetch = fetch;
 }
 
 function create(initialState, { getToken }) {

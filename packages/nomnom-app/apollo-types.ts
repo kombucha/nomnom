@@ -38,29 +38,29 @@ export interface BookmarkletTokenQuery {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: addUserEntry
+// GraphQL mutation operation: AddUserEntryMutation
 // ====================================================
 
-export interface addUserEntry_addUserEntry_entry {
+export interface AddUserEntryMutation_addUserEntry_entry {
   __typename: "Entry";
   title: string;
   imageUrl: string | null;
   url: string;
 }
 
-export interface addUserEntry_addUserEntry {
+export interface AddUserEntryMutation_addUserEntry {
   __typename: "UserEntry";
   id: string;
   status: UserEntryStatus;
   tags: string[];
-  entry: addUserEntry_addUserEntry_entry;
+  entry: AddUserEntryMutation_addUserEntry_entry;
 }
 
-export interface addUserEntry {
-  addUserEntry: addUserEntry_addUserEntry;
+export interface AddUserEntryMutation {
+  addUserEntry: AddUserEntryMutation_addUserEntry;
 }
 
-export interface addUserEntryVariables {
+export interface AddUserEntryMutationVariables {
   addUserEntryInput: AddUserEntryInput;
 }
 

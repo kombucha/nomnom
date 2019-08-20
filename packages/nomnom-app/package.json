@@ -73,6 +73,6 @@
     "prestart": "next build",
     "start": "node index.js",
     "analyze": "cross-env ANALYZE=1 next build",
-    "apollo-types": "apollo-codegen generate './{components,graphql,pages,services,toolkit}/**/*.{js,ts,tsx}' --add-typename --tag-name gql --target typescript --output apollo-types.d.ts"
+    "apollo-types": "apollo-codegen generate './{components,graphql,pages,services,toolkit}/**/*.{js,ts,tsx}' --add-typename --tag-name gql --target typescript --output apollo-types.ts"
   }
 }

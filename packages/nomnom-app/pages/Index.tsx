@@ -19,7 +19,7 @@ import DelayedComponent from "../components/DelayedComponent";
 import AddEntryDialog from "../components/AddEntryDialog";
 import EmptyPlaceholder from "../components/EmptyPlaceholder";
 import UserEntryStatusFilter from "../components/UserEntryStatusFilter";
-import useUserEntries from "../graphql/queries/userEntries";
+import useUserEntries, { UserEntry } from "../graphql/queries/userEntries";
 import useBatchUpdateUserEntries from "../graphql/mutations/batchUpdateUserEntries";
 import { ThemeType } from "../toolkit/theme";
 import { UserEntryStatus } from "../apollo-types";
@@ -121,7 +121,10 @@ const Placeholder = () => (
   </DelayedComponent>
 );
 
-type EntriesActionsProps = { userEntries: any[]; onExitSelectionMode: Function };
+type EntriesActionsProps = {
+  userEntries: Pick<UserEntry, "id" | "status">[];
+  onExitSelectionMode: Function;
+};
 
 const EntriesActions = ({ userEntries, onExitSelectionMode }: EntriesActionsProps) => {
   const isSingleMode =
@@ -178,7 +181,7 @@ const MultiSelectBar = ({ entries, selectedRows, onExitSelectionMode }: MultiSel
 };
 
 type EntriesListProps = {
-  userEntries: any[];
+  userEntries: UserEntry[];
   loading: boolean;
   hasMore: boolean;
   fetchMore: Function;

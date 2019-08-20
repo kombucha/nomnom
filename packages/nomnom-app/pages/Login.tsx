@@ -27,7 +27,7 @@ const LoginPage = () => {
         });
         return apolloClient.resetStore();
       })
-      .then(() => redirect({}, "/"));
+      .then(() => redirect("/"));
   };
 
   return (
@@ -45,10 +45,10 @@ const LoginPage = () => {
 };
 
 LoginPage.getInitialProps = async (context: NextPageContext) => {
-  const loggedInUser = await checkLoggedIn(context);
+  const loggedInUser = await checkLoggedIn((context as any).apolloClient);
 
   if (loggedInUser) {
-    redirect(context, "/");
+    redirect("/", context.res);
   }
 
   return {};

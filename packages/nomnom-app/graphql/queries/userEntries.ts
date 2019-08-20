@@ -3,7 +3,12 @@ import gql from "graphql-tag";
 import uniqBy from "lodash/uniqby";
 
 import { UserEntryListFragment } from "../fragments/userEntry";
-import { UserEntryStatus, UserEntriesQuery, UserEntriesQueryVariables } from "../../apollo-types";
+import {
+  UserEntryStatus,
+  UserEntriesQuery,
+  UserEntriesQueryVariables,
+  UserEntriesQuery_me_entries_edges_node
+} from "../../apollo-types";
 import { useQuery } from "@apollo/react-hooks";
 
 export const USER_ENTRIES_QUERY = gql`
@@ -24,6 +29,8 @@ export const USER_ENTRIES_QUERY = gql`
   }
   ${UserEntryListFragment}
 `;
+
+export type UserEntry = UserEntriesQuery_me_entries_edges_node;
 
 const useUserEntries = (status?: UserEntryStatus) => {
   const { data, loading, refetch, fetchMore } = useQuery<

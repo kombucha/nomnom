@@ -11,5 +11,5 @@ export default function logout(apolloClient) {
   });
 
   apolloClient.resetStore();
-  redirect({}, "/login");
+  redirect("/login");
 }

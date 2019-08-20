@@ -2,6 +2,7 @@ import React from "react";
 import styled from "@emotion/styled";
 import numeral from "numeral";
 
+import { UserEntryStatus } from "../apollo-types";
 import { Menu, MenuItem } from "../toolkit/Menu";
 import useUserEntriesCount from "../graphql/queries/userEntriesCount";
 import { ThemeType } from "../toolkit/theme";
@@ -28,7 +29,7 @@ const UserEntryStatusFilter = ({ status, onStatusChange }: UserEntryStatusFilter
   const statuses = useUserEntriesCount();
 
   return (
-    <Menu value={status} onChange={onStatusChange}>
+    <Menu<UserEntryStatus> value={status} onChange={onStatusChange}>
       {statuses.map(status => (
         <MenuItem key={status.value} value={status.value}>
           <StatusWrapper>
