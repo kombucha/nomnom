@@ -1,4 +1,3 @@
-import { graphql } from "@apollo/react-hoc";
 import gql from "graphql-tag";
 import uniqBy from "lodash/uniqby";
 

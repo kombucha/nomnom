@@ -159,7 +159,7 @@ const EntriesActions = ({ userEntries, onExitSelectionMode }: EntriesActionsProp
 };
 
 type MultiSelectBarProps = {
-  entries: any;
+  entries: UserEntry[];
   selectedRows: SelectedRows;
   onExitSelectionMode: Function;
 };

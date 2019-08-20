@@ -1,4 +1,3 @@
-import { graphql } from "@apollo/react-hoc";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
 import { UserEntriesCount } from "../../apollo-types";

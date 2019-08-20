@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import { useApolloClient } from "@apollo/react-hooks";
 import { ellipsis } from "polished";
 
+import { User_me as User } from "../apollo-types";
 import logout from "../services/logout";
 import { MenuContainer, MenuItem } from "../toolkit/Menu";
 import FlatButton from "../toolkit/FlatButton";
@@ -16,7 +17,7 @@ const UserName = styled.span`
   ${ellipsis("160px")} padding-right: 8px;
 `;
 
-type UserMenuProps = { user: any };
+type UserMenuProps = { user: User };
 
 const UserMenu = ({ user }: UserMenuProps) => {
   const router = useRouter();
