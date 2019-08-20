@@ -1,5 +1,4 @@
 import React from "react";
-import { pure } from "recompose";
 import styled from "@emotion/styled";
 
 const AppBarContainer = styled.div`
@@ -30,4 +29,4 @@ export const AppBar = ({ title, rightElement, fixed }) => (
   </AppBarContainer>
 );
 
-export default pure(AppBar);
+export default AppBar;

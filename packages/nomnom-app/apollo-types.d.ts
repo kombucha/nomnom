@@ -175,20 +175,20 @@ export interface subscribeToFeedVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: updateUserFeed
+// GraphQL mutation operation: ToggleUserFeedMutation
 // ====================================================
 
-export interface updateUserFeed_updateUserFeed {
+export interface ToggleUserFeedMutation_updateUserFeed {
   __typename: "UserFeed";
   id: string;
   enabled: boolean;
 }
 
-export interface updateUserFeed {
-  updateUserFeed: updateUserFeed_updateUserFeed;
+export interface ToggleUserFeedMutation {
+  updateUserFeed: ToggleUserFeedMutation_updateUserFeed;
 }
 
-export interface updateUserFeedVariables {
+export interface ToggleUserFeedMutationVariables {
   userFeedUpdateInput: UserFeedUpdateInput;
 }
 
