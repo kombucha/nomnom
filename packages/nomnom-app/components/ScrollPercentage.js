@@ -1,6 +1,6 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
-import debounce from "lodash.debounce";
+import debounce from "lodash/debounce";
 import { getScrollPercent } from "../services/scrolling";
 
 export class ScrollPercentage extends Component {

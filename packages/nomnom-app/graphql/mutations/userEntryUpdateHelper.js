@@ -1,4 +1,4 @@
-import { query as EntriesListQuery } from "../queries/userEntries";
+import { USER_ENTRIES_QUERY } from "../queries/userEntries";
 import { query as UserEntriesCountsQuery } from "../queries/userEntriesCount";
 
 function cleanUpOldLists(proxy, userEntry) {
@@ -6,7 +6,7 @@ function cleanUpOldLists(proxy, userEntry) {
 
   // Update lists
   ["NEW", "LATER", "ARCHIVED", "FAVORITE"].forEach(status => {
-    const queryToUpdate = { query: EntriesListQuery, variables: { status } };
+    const queryToUpdate = { query: USER_ENTRIES_QUERY, variables: { status } };
     try {
       const data = proxy.readQuery(queryToUpdate);
       const containsEntry = data.me.entries.edges.some(edge => edge.node.id === userEntry.id);
@@ -33,7 +33,7 @@ function cleanUpOldLists(proxy, userEntry) {
 }
 
 function writeToNewList(proxy, userEntry) {
-  const queryToUpdate = { query: EntriesListQuery, variables: { status: userEntry.status } };
+  const queryToUpdate = { query: USER_ENTRIES_QUERY, variables: { status: userEntry.status } };
 
   // Update list
   try {

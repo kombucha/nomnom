@@ -111,29 +111,29 @@ export interface batchSubscribeToFeedsVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: batchUpdateUserEntries
+// GraphQL mutation operation: BatchUpdateUserEntriesMutation
 // ====================================================
 
-export interface batchUpdateUserEntries_batchUpdateUserEntries_entry {
+export interface BatchUpdateUserEntriesMutation_batchUpdateUserEntries_entry {
   __typename: "Entry";
   title: string;
   imageUrl: string | null;
   url: string;
 }
 
-export interface batchUpdateUserEntries_batchUpdateUserEntries {
+export interface BatchUpdateUserEntriesMutation_batchUpdateUserEntries {
   __typename: "UserEntry";
   id: string;
   status: UserEntryStatus;
   tags: string[];
-  entry: batchUpdateUserEntries_batchUpdateUserEntries_entry;
+  entry: BatchUpdateUserEntriesMutation_batchUpdateUserEntries_entry;
 }
 
-export interface batchUpdateUserEntries {
-  batchUpdateUserEntries: (batchUpdateUserEntries_batchUpdateUserEntries | null)[];
+export interface BatchUpdateUserEntriesMutation {
+  batchUpdateUserEntries: (BatchUpdateUserEntriesMutation_batchUpdateUserEntries | null)[];
 }
 
-export interface batchUpdateUserEntriesVariables {
+export interface BatchUpdateUserEntriesMutationVariables {
   batchUpdateUserEntriesInput: BatchUpdateUserEntriesInput;
 }
 
@@ -270,51 +270,51 @@ export interface User {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: UserEntries
+// GraphQL query operation: UserEntriesQuery
 // ====================================================
 
-export interface UserEntries_me_entries_edges_node_entry {
+export interface UserEntriesQuery_me_entries_edges_node_entry {
   __typename: "Entry";
   title: string;
   imageUrl: string | null;
   url: string;
 }
 
-export interface UserEntries_me_entries_edges_node {
+export interface UserEntriesQuery_me_entries_edges_node {
   __typename: "UserEntry";
   id: string;
   status: UserEntryStatus;
   tags: string[];
-  entry: UserEntries_me_entries_edges_node_entry;
+  entry: UserEntriesQuery_me_entries_edges_node_entry;
 }
 
-export interface UserEntries_me_entries_edges {
+export interface UserEntriesQuery_me_entries_edges {
   __typename: "UserEntryEdge";
-  node: UserEntries_me_entries_edges_node | null;
+  node: UserEntriesQuery_me_entries_edges_node | null;
   cursor: string;
 }
 
-export interface UserEntries_me_entries_pageInfo {
+export interface UserEntriesQuery_me_entries_pageInfo {
   __typename: "PageInfo";
   hasNextPage: boolean;
 }
 
-export interface UserEntries_me_entries {
+export interface UserEntriesQuery_me_entries {
   __typename: "UserEntriesConnection";
-  edges: (UserEntries_me_entries_edges | null)[];
-  pageInfo: UserEntries_me_entries_pageInfo | null;
+  edges: (UserEntriesQuery_me_entries_edges | null)[];
+  pageInfo: UserEntriesQuery_me_entries_pageInfo | null;
 }
 
-export interface UserEntries_me {
+export interface UserEntriesQuery_me {
   __typename: "User";
-  entries: UserEntries_me_entries;
+  entries: UserEntriesQuery_me_entries;
 }
 
-export interface UserEntries {
-  me: UserEntries_me;
+export interface UserEntriesQuery {
+  me: UserEntriesQuery_me;
 }
 
-export interface UserEntriesVariables {
+export interface UserEntriesQueryVariables {
   status?: UserEntryStatus | null;
   afterCursor?: string | null;
 }
