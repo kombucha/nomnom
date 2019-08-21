@@ -2,8 +2,6 @@ const uuid = require("node-uuid");
 const pick = require("lodash/pick");
 
 const db = require("./db");
-const { updateOne } = require("./utils/dbUpdate");
-const dbInsert = require("./utils/dbInsert");
 const logger = require("./logger");
 const feedService = require("./feed");
 
@@ -20,46 +18,40 @@ async function create(userId, userFeedParam) {
     enabled: true
   };
 
-  await db.query(...dbInsert("UserFeed", userFeed));
+  await db("UserFeed").insert(userFeed);
 
   return userFeed;
 }
 
 async function update(feedId, data) {
   const allowedFields = ["name", "enabled"];
-  const updateArgs = updateOne("UserFeed", feedId, pick(data, allowedFields));
 
-  const results = await db.query(...updateArgs);
+  await db("UserFeed")
+    .where("id", feedId)
+    .update(pick(data, allowedFields));
 
-  return results.rows[0];
+  const updatedUserFeed = await db("UserFeed")
+    .where("id", feedId)
+    .first();
+
+  return updatedUserFeed;
 }
 
 async function list(userId) {
-  const res = await db.query(
-    `
-    SELECT * FROM "UserFeed"
-    WHERE "UserId" = $1
-    ORDER BY "creationDate" DESC
-  `,
-    [userId]
-  );
+  const userFeeds = await db("UserFeed")
+    .where("UserId", userId)
+    .orderBy("creationDate", "desc");
 
-  return res.rows;
+  return userFeeds;
 }
 
 async function listUsersForFeed(feedId) {
-  const res = await db.query(
-    `SELECT "User".*
-     FROM "User" "User"
-      INNER JOIN "UserFeed" "UserFeed"
-      ON ("User"."id" = "UserFeed"."UserId")
-     WHERE "UserFeed"."FeedId" = $1
-     AND "UserFeed"."enabled" = true
-     LIMIT 1`,
-    [feedId]
-  );
+  const users = await db
+    .from("User")
+    .innerJoin("UserFeed", "UserFeed.UserId", "User.id")
+    .where({ "UserFeed.FeedId": feedId, "UserFeed.enabled": true });
 
-  return res.rows;
+  return users;
 }
 
 module.exports = { create, update, list, listUsersForFeed };

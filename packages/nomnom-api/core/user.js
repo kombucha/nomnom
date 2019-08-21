@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 
 const db = require("./db");
-const dbInsert = require("./utils/dbInsert");
 
 const jwtSign = promisify(jwt.sign);
 const jwtVerify = promisify(jwt.verify);
@@ -18,7 +17,7 @@ async function createUser(profile) {
     avatarUrl: profile.avatarUrl
   };
 
-  await db.query(...dbInsert("User", user));
+  await db("User").insert(user);
 
   return user;
 }
@@ -36,13 +35,19 @@ async function getTokenPayload(token) {
 }
 
 async function getById(id) {
-  const res = await db.query(`SELECT * FROM "User" WHERE id = $1 LIMIT 1;`, [String(id)]);
-  return res.rows[0];
+  const user = await db("User")
+    .where("id", id)
+    .first();
+
+  return user;
 }
 
 async function getByEmail(email) {
-  const res = await db.query(`SELECT * FROM "User" WHERE email = $1 LIMIT 1;`, [email]);
-  return res.rows[0];
+  const user = await db("User")
+    .where("email", email)
+    .first();
+
+  return user;
 }
 
 async function login(profile) {

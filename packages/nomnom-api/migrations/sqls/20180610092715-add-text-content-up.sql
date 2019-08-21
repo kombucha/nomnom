@@ -1,3 +1,0 @@
-ALTER TABLE "Entry"
-ADD COLUMN "wordCount" INT NOT NULL DEFAULT 0,
-ADD COLUMN "textContent" TEXT NULL;

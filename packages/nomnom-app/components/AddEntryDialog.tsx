@@ -28,7 +28,6 @@ const AddEntryDialog = ({ open = false, onRequestClose }: AddEntryDialogProps) =
       <FlatButton secondary onClick={onRequestClose}>
         Cancel
       </FlatButton>
-      ,
       <FlatButton primary disabled={!url} onClick={handleAddEntry}>
         Add
       </FlatButton>

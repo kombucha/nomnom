@@ -4,7 +4,6 @@ const readabilityQueue = require("../jobs/readability/queue");
 const { performAsync } = require("../jobs/utils");
 const logger = require("./logger");
 const db = require("./db");
-const dbInsert = require("./utils/dbInsert");
 const readabilityConfig = require("./readabilityConfig");
 
 const READABILITY_JOB_OPTIONS = {
@@ -42,21 +41,17 @@ async function createFrom(url, entryParam = {}) {
     url
   });
 
-  await db.query(...dbInsert("Entry", entry));
+  await db("Entry").insert(entry);
 
   return entry;
 }
 
 async function getFromUrl(url) {
-  const res = await db.query(
-    `SELECT *
-     FROM "Entry"
-     WHERE "url" = $1
-     LIMIT 1`,
-    [url]
-  );
+  const entry = await db("Entry")
+    .where("url", url)
+    .first();
 
-  return res.rows[0];
+  return entry;
 }
 
 module.exports = {

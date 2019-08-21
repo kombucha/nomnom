@@ -88,7 +88,7 @@ export const MenuContainer: React.FC<MenuContainerProps> = ({
 
   return (
     <div>
-      {showMenu ? <Overlay onClick={this._toggleMenu} /> : null}
+      {showMenu ? <Overlay onClick={handleToggleMenu} /> : null}
       <Container>
         {menuButton}
         {showMenu ? (

@@ -20,8 +20,8 @@ async function start() {
   process.on("SIGINT", gracefulShutdown);
 
   try {
-    await setupQueues();
     await launchServer();
+    await setupQueues();
   } catch (e) {
     logger.error("Failed to launch server");
     logger.error(e);

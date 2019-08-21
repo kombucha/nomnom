@@ -3,8 +3,6 @@ const clamp = require("lodash/clamp");
 
 const db = require("./db");
 const logger = require("./logger");
-const { updateOne } = require("./utils/dbUpdate");
-const dbInsert = require("./utils/dbInsert");
 
 const FEED_TYPES = {
   RSS: "RSS"
@@ -15,8 +13,8 @@ const MAX_FREQUENCY = 24 * 3600 * 1000;
 const api = { MIN_FREQUENCY, MAX_FREQUENCY };
 
 api.getAll = async function() {
-  const res = await db.query(`SELECT * FROM "Feed"`);
-  return res.rows;
+  const feeds = await db("Feed");
+  return feeds;
 };
 
 // TODO: transactions ?
@@ -37,15 +35,21 @@ api.createFromUri = async function(uri) {
     type: FEED_TYPES.RSS
   };
 
-  await db.query(...dbInsert("Feed", feed));
+  await db("Feed").insert(feed);
 
   return feed;
 };
 
 api.update = async function(id, data) {
-  const updateArgs = updateOne("Feed", id, data);
-  const results = await db.query(...updateArgs);
-  return results.rows[0];
+  await db("Feed")
+    .where("id", id)
+    .update(data);
+
+  const updatedFeed = await db("Feed")
+    .where("id", id)
+    .first();
+
+  return updatedFeed;
 };
 
 api.updateFeedMetadata = async function(feed, entries) {
@@ -72,27 +76,19 @@ api.updateFeedMetadata = async function(feed, entries) {
 };
 
 api.getFromUri = async function(uri) {
-  const res = await db.query(
-    `SELECT *
-     FROM "Feed"
-     WHERE "uri" = $1
-     LIMIT 1`,
-    [uri]
-  );
+  const feed = await db("Feed")
+    .where("uri", uri)
+    .first();
 
-  return res.rows[0];
+  return feed;
 };
 
 api.getById = async function(id) {
-  const res = await db.query(
-    `SELECT *
-     FROM "Feed"
-     WHERE "id" = $1
-     LIMIT 1`,
-    [id]
-  );
+  const feed = await db("Feed")
+    .where("id", id)
+    .first();
 
-  return res.rows[0];
+  return feed;
 };
 
 module.exports = api;

@@ -1,15 +1,9 @@
 const DataLoader = require("dataloader");
 
 const db = require("../core/db");
-const dbPlaceholders = require("../core/utils/dbPlaceholders");
 
 const tableLoader = tableName => async ids => {
-  const res = await db.query(
-    `
-      SELECT * FROM "${tableName}"
-      WHERE "id" IN (${dbPlaceholders(ids.length)});`,
-    ids
-  );
+  const res = await db(tableName).whereIn("id", ids);
 
   const resultsById = res.rows.reduce((acc, row) => {
     acc[row.id] = row;

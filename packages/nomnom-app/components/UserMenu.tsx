@@ -32,7 +32,7 @@ const UserMenu = ({ user }: UserMenuProps) => {
           <Avatar size="30px" src={user.avatarUrl} alt={`${user.name}'s avatar`} />
         </MenuButton>
       }>
-      <MenuItem onClick={router.push("/feeds")}>Feeds</MenuItem>
+      <MenuItem onClick={() => router.push("/feeds")}>Feeds</MenuItem>
       <MenuItem onClick={() => router.push("/settings")}>Settings</MenuItem>
       <MenuItem onClick={() => logout(apolloClient)}>Sign out</MenuItem>
     </MenuContainer>

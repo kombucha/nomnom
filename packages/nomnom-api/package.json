@@ -1,5 +1,5 @@
 {
-  "name": "nomnom-server-api",
+  "name": "nomnom-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,6 +7,9 @@
   "scripts": {
     "dev": "nodemon -r dotenv/config --watch . index.js",
     "migrate": "db-migrate",
+    "migration:_base": "knex --knexfile ./core/dbConfig.js",
+    "migration:make": "yarn migration:_base migrate:make",
+    "migration:latest": "yarn migration:_base migrate:latest",
     "readability": "node -r dotenv/config core/readability/cli.js",
     "test": "jest"
   },
@@ -24,8 +27,8 @@
     "bull": "3.4.2",
     "bull-arena": "2.4.5",
     "cheerio": "1.0.0-rc.2",
-    "cookie": "0.3.1",
-    "cors": "2.8.4",
+    "cookie": "0.4.0",
+    "cors": "2.8.5",
     "dataloader": "1.4.0",
     "date-fns": "1.29.0",
     "db-migrate": "0.11.1",
@@ -40,16 +43,18 @@
     "graphql-tools": "3.0.2",
     "jest": "23.1.0",
     "jsonwebtoken": "8.2.2",
+    "knex": "0.19.2",
     "lodash": "4.17.10",
-    "mime-types": "2.1.18",
-    "moment": "2.22.2",
-    "morgan": "1.9.0",
+    "mime-types": "2.1.24",
+    "moment": "2.24.0",
+    "morgan": "1.9.1",
     "node-uuid": "1.4.8",
-    "pg": "7.4.3",
+    "pg": "7.12.1",
     "pump": "3.0.0",
-    "winston": "3.0.0-rc5"
+    "winston": "3.2.1"
   },
   "devDependencies": {
-    "nodemon": "1.17.5"
+    "nodemon": "1.19.1",
+    "sqlite3": "4.1.0"
   }
 }

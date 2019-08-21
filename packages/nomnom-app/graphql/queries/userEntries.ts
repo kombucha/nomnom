@@ -35,7 +35,7 @@ const useUserEntries = (status?: UserEntryStatus) => {
   const { data, loading, refetch, fetchMore } = useQuery<
     UserEntriesQuery,
     UserEntriesQueryVariables
-  >({
+  >(USER_ENTRIES_QUERY, {
     variables: { status },
     notifyOnNetworkStatusChange: true
   });

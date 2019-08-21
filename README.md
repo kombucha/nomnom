@@ -10,7 +10,7 @@ Like most side project, it's also a playground for experimentation with new tech
 
 ## Get Started
 
-Add .env files with relevant information filled out in packages/nomnom-server-api and packages/nomnom-app
+Add .env files with relevant information filled out in packages/nomnom-api and packages/nomnom-app
 You will need to create google credentials for the login and an api key for the youtube api (see [Google admin console](https://console.cloud.google.com/home/dashboard))
 
 You then need to start the database and redis
@@ -35,6 +35,6 @@ yarn run dev
 
 ## Stack
 
-* [Next.JS](https://github.com/zeit/next.js/) for the app client. SSR in a content heavy app === 🏆
-* [Styled components](https://github.com/styled-components/styled-components) for styling
-* GraphQL for the API using [Apollo](http://dev.apollodata.com/) both on the server and on the client
+- [Next.JS](https://github.com/zeit/next.js/) for the app client. SSR in a content heavy app === 🏆
+- [Styled components](https://github.com/styled-components/styled-components) for styling
+- GraphQL for the API using [Apollo](http://dev.apollodata.com/) both on the server and on the client

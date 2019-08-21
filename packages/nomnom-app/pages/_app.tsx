@@ -9,7 +9,7 @@ import Head from "next/head";
 import initApollo from "../services/initApollo";
 import { IncomingMessage } from "http";
 
-type Props = { apolloClient?: ApolloClient<any>; apolloState?: object };
+type Props = { apolloClient?: ApolloClient<any>; apolloState?: any };
 
 function parseCookies(req?: IncomingMessage) {
   return cookie.parse(req ? req.headers.cookie || "" : document.cookie);

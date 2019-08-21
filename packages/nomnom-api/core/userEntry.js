@@ -1,7 +1,7 @@
 const uuid = require("node-uuid");
+const pick = require("lodash/pick");
 
 const db = require("./db");
-const dbInsert = require("./utils/dbInsert");
 const entry = require("./entry");
 const logger = require("./logger");
 
@@ -38,109 +38,79 @@ api.create = async function(userId, userEntryParam, entryParam) {
     tags: userEntryParam.tags || []
   };
 
-  await db.query(...dbInsert("UserEntry", userEntry));
+  await db("UserEntry").insert({ ...userEntry, tags: JSON.stringify(userEntry.tags) });
 
   return userEntry;
 };
 
 api.getFromUrl = async function(url) {
-  const res = await db.query(
-    `SELECT "UserEntry".*
-     FROM "UserEntry" "UserEntry" INNER JOIN "Entry" "Entry" ON ("UserEntry"."EntryId" = "Entry"."id")
-     WHERE "Entry"."url" = $1`,
-    [url]
-  );
+  const userEntry = await db
+    .from("UserEntry")
+    .innerJoin("Entry", "UserEntry.EntryId", "Entry.id")
+    .where("Entry.url", url)
+    .first();
 
-  return res.rows[0];
+  return userEntry;
 };
 
 api.list = async function(userId, options) {
-  const filters = [`"UserId" = $1`];
-  const filtersParams = [userId, options.limit];
+  let query = db("UserEntry")
+    .orderBy("creationDate", "desc")
+    .limit(options.limit)
+    .where("UserId", userId);
 
   if (options.status) {
-    filters.push(`"status" = $3`);
-    filtersParams.push(options.status);
+    query = query.andWhere("status", options.status);
   }
 
   if (options.beforeCreationDate) {
-    filters.push(`"creationDate" < $4`);
-    filtersParams.push(options.beforeCreationDate);
+    query = query.andWhere("creationDate", "<", options.beforeCreationDate);
   }
 
-  const res = await db.query(
-    `
-    SELECT * FROM "UserEntry"
-    WHERE ${filters.join(" AND ")}
-    ORDER BY "creationDate" DESC
-    LIMIT $2
-  `,
-    filtersParams
-  );
+  const userEntries = await query;
 
-  return res.rows;
+  return userEntries;
 };
 
 api.count = async function(userId, status) {
-  const filters = [`"UserId" = $1`];
-  const filtersParams = [userId];
+  const filters = { UserId: userId };
 
   if (status) {
-    filters.push(`"status" = $2`);
-    filtersParams.push(status);
+    filters.status = status;
   }
 
-  const res = await db.query(
-    `SELECT COUNT(*) FROM "UserEntry" WHERE ${filters.join(" AND ")}`,
-    filtersParams
-  );
+  const result = await db("UserEntry")
+    .where(filters)
+    .count("id", { as: "count" })
+    .first();
 
-  return res.rows[0].count;
+  return parseInt(result.count, 10);
 };
 
 const UPDATABLE_KEYS = ["status", "tags", "progress"];
 api.batchUpdate = async function(userEntryIds, updateValues) {
-  const updates = [];
-  const params = [new Date(), ...userEntryIds];
-  const varOffset = params.length + 1;
-  UPDATABLE_KEYS.forEach(key => {
-    if (Object.hasOwnProperty.call(updateValues, key)) {
-      updates.push(`"${key}" = $${updates.length + varOffset}`);
-      params.push(updateValues[key]);
-    }
-  });
+  let updatedUserEntries = [];
 
-  let results;
+  const updatePayload = {
+    lastUpdateDate: new Date(),
+    ...pick(updateValues, UPDATABLE_KEYS)
+  };
 
-  try {
-    if (userEntryIds.length === 1) {
-      results = await db.query(
-        `UPDATE "UserEntry"
-       SET "lastUpdateDate" = $1,
-       ${updates.join(", ")}
-       WHERE "id" = $2
-       RETURNING "UserEntry".*;
-      `,
-        params
-      );
-    } else {
-      const idsPlaceholders = userEntryIds.map((_, idx) => `$${idx + 2}`);
-      results = await db.query(
-        `UPDATE "UserEntry"
-       SET "lastUpdateDate" = $1,
-       ${updates.join(", ")}
-       WHERE "id" IN (${idsPlaceholders.join(",")})
-       RETURNING "UserEntry".*;
-      `,
-        params
-      );
-    }
-  } catch (e) {
-    logger.error(e);
-    return null;
+  if (Array.isArray(updatePayload.tags)) {
+    updatePayload.tags = JSON.stringify(updatePayload.tags);
   }
 
-  return results.rows;
+  try {
+    await db("UserEntry")
+      .whereIn("id", userEntryIds)
+      .update();
+
+    updatedUserEntries = await db("UserEntry").whereIn("id", userEntryIds);
+  } catch (e) {
+    logger.error(e);
+  }
+
+  return updatedUserEntries;
 };
 
 api.update = async function(userEntryId, updateValues) {
@@ -150,11 +120,9 @@ api.update = async function(userEntryId, updateValues) {
 
 api.deleteAll = async function(userId) {
   try {
-    await db.query(
-      `DELETE FROM "UserEntry"
-       WHERE "UserId" = $1`,
-      [userId]
-    );
+    await db("UserEntry")
+      .where("UserId", userId)
+      .del();
   } catch (e) {
     return false;
   }
