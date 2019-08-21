@@ -17,7 +17,7 @@
     "dev": "nodemon -r dotenv/config --watch . index.js"
   },
   "dependencies": {
-    "koa": "2.5.1",
+    "koa": "2.8.1",
     "mime": "2.3.1",
     "sharp": "0.20.2"
   }
