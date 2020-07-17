@@ -44,7 +44,7 @@
     "jest": "23.1.0",
     "jsonwebtoken": "8.2.2",
     "knex": "0.19.2",
-    "lodash": "4.17.10",
+    "lodash": "4.17.19",
     "mime-types": "2.1.24",
     "moment": "2.24.0",
     "morgan": "1.9.1",
