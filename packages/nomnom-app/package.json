@@ -33,7 +33,7 @@
     "lodash": "4.17.15",
     "morgan": "1.9.1",
     "mousetrap": "1.6.3",
-    "next": "9.0.4",
+    "next": "11.1.0",
     "numeral": "2.0.6",
     "polished": "3.4.1",
     "prop-types": "15.7.2",
