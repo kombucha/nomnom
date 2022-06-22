@@ -38,7 +38,7 @@
     "feedparser": "2.2.9",
     "get-stream": "3.0.0",
     "googleapis": "32.0.0",
-    "got": "8.3.1",
+    "got": "11.8.5",
     "graphql": "0.13.2",
     "graphql-tools": "3.0.2",
     "jest": "23.1.0",
